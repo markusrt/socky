@@ -97,6 +97,26 @@ describe("sequential pair session (one sock at a time)", () => {
     expect(currentStep(s)?.targetCount).toBe(25);
   });
 
+  it("expands tip into individual rows (rechts / Abnahme)", () => {
+    const s = newSession();
+    const tipRows = s.steps.filter((x) => x.stepKey === "tip");
+    // sock-02 chart 22/23: (2 rechts, 1 Abnahme) ×1 + (1 rechts, 1 Abnahme) ×3 → 2+6=8 rows
+    expect(tipRows.length).toBe(8);
+    expect(tipRows[0]?.tipRowLabel).toBe("2 rechts");
+    expect(tipRows[0]?.tipDirection).toBe("knit");
+    expect(tipRows[1]?.tipRowLabel).toBe("1 Abnahme");
+    expect(tipRows[1]?.tipDirection).toBe("decrease");
+    expect(tipRows[0]?.tipRoundIndex).toBe(1);
+  });
+
+  it("split and pickup carry display values from the chart", () => {
+    const s = newSession();
+    const split = s.steps.find((x) => x.stepKey === "split");
+    const pickup = s.steps.find((x) => x.stepKey === "pickup");
+    expect(split?.displayValue).toBe("7-8-7");
+    expect(pickup?.displayValue).toBe("11");
+  });
+
   it("marks session DONE after both socks closed", () => {
     let s = newSession();
     for (const sock of [1, 2] as const) {

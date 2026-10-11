@@ -16,6 +16,7 @@ import {
   materializePlan,
   switchToSock2,
   tickActiveSock,
+  tipProgressSummary,
   untickActiveSock,
 } from "@knithelper/shared";
 import { useMemo, useState } from "react";
@@ -232,6 +233,15 @@ function KnitSessionView({
   const step = currentStep(session);
   const done = session.status === "DONE" || !step;
   const closeStep = step ? isCloseStep(step) : false;
+  const tipRow = step?.stepKey === "tip";
+  const onceStep = step?.unit === "once";
+
+  let confirmLabel = "Reihe fertig";
+  if (closeStep) confirmLabel = "Socke fertig";
+  else if (onceStep) confirmLabel = "Fertig";
+  else if (tipRow) confirmLabel = "Reihe fertig";
+
+  const confirmAction = closeStep ? onFinishSock : onTick;
 
   return (
     <main style={shell}>
@@ -255,50 +265,46 @@ function KnitSessionView({
         <>
           <section style={card}>
             <h2 style={{ marginTop: 0 }}>{STEP_LABELS[step.stepKey]}</h2>
-            <p style={{ fontSize: "1.25rem", margin: "0.25rem 0" }}>
-              {countLineForStep(step.stepKey, step.targetCount, step.unit, "knit")}
-            </p>
+
+            {tipRow ? (
+              <TipRowBlock session={session} step={step} />
+            ) : (
+              <p style={{ fontSize: "1.25rem", margin: "0.25rem 0" }}>
+                {step.stepKey === "split" && step.displayValue
+                  ? `Aufteilung: ${step.displayValue}`
+                  : step.stepKey === "pickup" && step.displayValue
+                    ? `${step.displayValue} Maschen aufnehmen`
+                    : countLineForStep(step.stepKey, step.targetCount, step.unit, "knit")}
+              </p>
+            )}
+
             {step.techniqueNoteKey ? (
               <p>
                 <em>{TECHNIQUE_NOTES[step.techniqueNoteKey]}</em>
               </p>
             ) : null}
 
-            <div style={{ display: "flex", gap: "1rem", marginTop: "0.75rem" }}>
-              <SockProgress
-                label="Socke 1"
-                done={step.sock1Done}
-                target={step.targetCount}
-                active={session.activeSock === 1}
-              />
-              <SockProgress
-                label="Socke 2"
-                done={step.sock2Done}
-                target={step.targetCount}
-                active={session.activeSock === 2}
-              />
-            </div>
-
-            {step.tipRounds?.length ? (
-              <ul style={{ marginTop: "0.75rem" }}>
-                {step.tipRounds.map((r) => (
-                  <li key={r.index}>
-                    {r.title}: {formatTipRound(r)}
-                  </li>
-                ))}
-              </ul>
+            {!tipRow ? (
+              <div style={{ display: "flex", gap: "1rem", marginTop: "0.75rem" }}>
+                <SockProgress
+                  label="Socke 1"
+                  done={step.sock1Done}
+                  target={step.targetCount}
+                  active={session.activeSock === 1}
+                />
+                <SockProgress
+                  label="Socke 2"
+                  done={step.sock2Done}
+                  target={step.targetCount}
+                  active={session.activeSock === 2}
+                />
+              </div>
             ) : null}
           </section>
 
-          {closeStep ? (
-            <button type="button" style={bigBtn} onClick={onFinishSock}>
-              Socke fertig
-            </button>
-          ) : (
-            <button type="button" style={bigBtn} onClick={onTick}>
-              Reihe fertig
-            </button>
-          )}
+          <button type="button" style={bigBtn} onClick={confirmAction}>
+            {confirmLabel}
+          </button>
 
           <div style={{ display: "flex", gap: "0.5rem", marginTop: "0.75rem" }}>
             {!closeStep ? (
@@ -318,6 +324,70 @@ function KnitSessionView({
   );
 }
 
+function TipRowBlock({
+  session,
+  step,
+}: {
+  session: PairSession;
+  step: NonNullable<ReturnType<typeof currentStep>>;
+}) {
+  const summary = tipProgressSummary(session, step);
+  const tipSteps = session.steps.filter((s) => s.stepKey === "tip");
+  const roundRows = tipSteps.filter((s) => s.tipRoundIndex === step.tipRoundIndex);
+
+  return (
+    <div>
+      <p style={{ margin: "0.25rem 0", color: "#555" }}>
+        Bandspitze · Runde {summary.roundIndex} von {summary.totalRounds} · Reihe{" "}
+        {summary.rowInRound} von {summary.rowsInRound}
+      </p>
+      <p style={{ fontSize: "1.5rem", margin: "0.25rem 0", fontWeight: 700 }}>
+        {step.tipRowLabel}
+        {step.tipDirection === "decrease" ? (
+          <span style={{ marginLeft: "0.5rem", fontSize: "1rem", color: "#b45309" }}>Abnahme</span>
+        ) : (
+          <span style={{ marginLeft: "0.5rem", fontSize: "1rem", color: "#15803d" }}>rechts</span>
+        )}
+      </p>
+      <div style={{ display: "flex", flexWrap: "wrap", gap: "0.35rem", marginTop: "0.5rem" }}>
+        {roundRows.map((row) => {
+          const done = session.activeSock === 1 ? row.sock1Done > 0 : row.sock2Done > 0;
+          const isCurrent = row === step;
+          return (
+            <span
+              key={row.sortIndex}
+              style={{
+                padding: "0.25rem 0.5rem",
+                borderRadius: 6,
+                fontSize: "0.85em",
+                border: isCurrent ? "2px solid #2563eb" : "1px solid #ccc",
+                background: done ? "#dcfce7" : isCurrent ? "#eff6ff" : "#fff",
+              }}
+            >
+              {done ? "✓ " : ""}
+              {row.tipRowLabel}
+            </span>
+          );
+        })}
+      </div>
+      <div style={{ display: "flex", gap: "1rem", marginTop: "0.75rem" }}>
+        <SockProgress
+          label="Socke 1"
+          done={step.sock1Done}
+          target={step.targetCount}
+          active={session.activeSock === 1}
+        />
+        <SockProgress
+          label="Socke 2"
+          done={step.sock2Done}
+          target={step.targetCount}
+          active={session.activeSock === 2}
+        />
+      </div>
+    </div>
+  );
+}
+
 function SockProgress({
   label,
   done,
@@ -329,22 +399,31 @@ function SockProgress({
   target: number;
   active: boolean;
 }) {
+  const complete = done >= target;
   return (
     <div
       style={{
         flex: 1,
         padding: "0.5rem",
         borderRadius: 8,
-        border: active ? "2px solid #2563eb" : "1px solid #ccc",
-        background: active ? "#eff6ff" : "#fff",
+        border: active ? "2px solid #2563eb" : complete ? "2px solid #16a34a" : "1px solid #ccc",
+        background: active ? "#eff6ff" : complete ? "#dcfce7" : "#fff",
       }}
     >
       <div style={{ fontWeight: active ? 700 : 400 }}>
         {label}
         {active ? " ●" : ""}
       </div>
-      <div>
-        {done} / {target}
+      <div style={{ fontSize: "1.15rem" }}>
+        {complete ? (
+          <span style={{ color: "#15803d", fontWeight: 700 }} title="fertig">
+            ✓
+          </span>
+        ) : (
+          <>
+            {done} / {target}
+          </>
+        )}
       </div>
     </div>
   );

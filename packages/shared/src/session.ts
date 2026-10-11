@@ -4,12 +4,17 @@ import type {
   Pattern,
   SessionStepProgress,
   SteppedPlan,
+  TipRound,
+  TipRowDirection,
 } from "./domain";
 import { materializePlan } from "./materialize";
 
 /**
  * Pair session: two socks knitted **one after the other** (not in parallel).
  * Sock 1 runs through all steps first; only then sock 2 starts.
+ *
+ * Tip (Bandspitze) is expanded into one session step per knit/decrease row
+ * so “Reihe fertig” walks every row and loop.
  */
 export function createPairSession(input: {
   userId: string;
@@ -18,17 +23,39 @@ export function createPairSession(input: {
   plan?: SteppedPlan;
 }): PairSession {
   const plan = input.plan ?? materializePlan(input.pattern, input.actualSize);
-  const steps: SessionStepProgress[] = plan.steps.map((step) => ({
-    stepKey: step.stepKey,
-    sortIndex: step.sortIndex,
-    titleKey: step.titleKey,
-    ...(step.techniqueNoteKey !== undefined ? { techniqueNoteKey: step.techniqueNoteKey } : {}),
-    unit: step.unit,
-    targetCount: step.targetCount,
-    ...(step.tipRounds ? { tipRounds: step.tipRounds } : {}),
-    sock1Done: 0,
-    sock2Done: 0,
-  }));
+  const steps: SessionStepProgress[] = [];
+  let sortIndex = 0;
+
+  for (const step of plan.steps) {
+    if (step.stepKey === "tip" && step.tipRounds?.length) {
+      for (const row of expandTipRows(step.tipRounds, sortIndex)) {
+        steps.push(row);
+        sortIndex += 1;
+      }
+      continue;
+    }
+
+    const displayValue =
+      step.stepKey === "split"
+        ? `${plan.chart.heelSplit[0]}-${plan.chart.heelSplit[1]}-${plan.chart.heelSplit[2]}`
+        : step.stepKey === "pickup"
+          ? String(plan.chart.pickupStitchesBothSides)
+          : undefined;
+
+    steps.push({
+      stepKey: step.stepKey,
+      sortIndex,
+      titleKey: step.titleKey,
+      ...(step.techniqueNoteKey !== undefined ? { techniqueNoteKey: step.techniqueNoteKey } : {}),
+      unit: step.unit,
+      targetCount: step.targetCount,
+      ...(displayValue !== undefined ? { displayValue } : {}),
+      ...(step.tipRounds ? { tipRounds: step.tipRounds } : {}),
+      sock1Done: 0,
+      sock2Done: 0,
+    });
+    sortIndex += 1;
+  }
 
   return {
     id: `session-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`,
@@ -41,6 +68,42 @@ export function createPairSession(input: {
     activeSock: 1,
     createdAt: new Date().toISOString(),
   };
+}
+
+function tipDirection(label: string): TipRowDirection {
+  return label.toLowerCase().includes("abnahme") ? "decrease" : "knit";
+}
+
+/** Flatten tip rounds into one tickable row each (rechts / Abnahme). */
+export function expandTipRows(
+  tipRounds: TipRound[],
+  startSortIndex: number
+): SessionStepProgress[] {
+  const rows: SessionStepProgress[] = [];
+  let sortIndex = startSortIndex;
+
+  for (const round of tipRounds) {
+    for (let time = 0; time < round.times; time++) {
+      for (const segment of round.unitSegments) {
+        rows.push({
+          stepKey: "tip",
+          sortIndex,
+          titleKey: "step.tip",
+          unit: "rows",
+          targetCount: 1,
+          tipRoundIndex: round.index,
+          tipRoundTitle: round.title,
+          tipRowLabel: segment.label,
+          tipDirection: tipDirection(segment.label),
+          sock1Done: 0,
+          sock2Done: 0,
+        });
+        sortIndex += 1;
+      }
+    }
+  }
+
+  return rows;
 }
 
 function sockDoneCount(step: SessionStepProgress, sock: 1 | 2): number {
@@ -64,7 +127,6 @@ export function canSwitchToSock2(session: PairSession): boolean {
   return isSockComplete(session, 1);
 }
 
-/** Current step for the active sock (not the pair). */
 export function currentStepIndex(session: PairSession): number {
   return currentStepIndexForSock(session, session.activeSock);
 }
@@ -75,9 +137,8 @@ export function currentStep(session: PairSession): SessionStepProgress | undefin
 }
 
 /**
- * One finished row on the active sock.
- * When the step target is reached, the session moves to the next step automatically.
- * After sock 1 finishes every step, active sock becomes 2.
+ * One finished unit on the active sock (row, tip row, or once/finish step).
+ * Auto-advances when the step is full.
  */
 export function tickActiveSock(session: PairSession): PairSession {
   const sock = session.activeSock;
@@ -99,21 +160,18 @@ export function tickActiveSock(session: PairSession): PairSession {
 
 /**
  * Undo one tick on the active sock.
- * If the current step is already at 0, move back to the previous step and
- * decrease it (so undo can walk through the whole plan).
+ * If the current step is already at 0, move back to the previous step.
  */
 export function untickActiveSock(session: PairSession): PairSession {
   const sock = session.activeSock;
   let index = currentStepIndexForSock(session, sock);
 
-  // Current step at 0 → fall back to previous incomplete-or-just-finished step.
   if (index >= 0) {
     const step = session.steps[index];
     if (step && sockDoneCount(step, sock) === 0 && index > 0) {
       index = index - 1;
     }
   } else {
-    // Sock fully complete → undo last step.
     index = session.steps.length - 1;
   }
 
@@ -131,19 +189,13 @@ export function untickActiveSock(session: PairSession): PairSession {
   return next;
 }
 
-/**
- * Switch to sock 2 only after sock 1 is complete.
- * Switching back to sock 1 is not offered (one sock at a time).
- */
+/** Switch to sock 2 only after sock 1 is complete. */
 export function switchToSock2(session: PairSession): PairSession {
   if (!canSwitchToSock2(session)) return session;
   return { ...session, activeSock: 2 };
 }
 
-/**
- * Mark the active sock finished (close/abketten step).
- * Only valid on a `close` step (unit "finish").
- */
+/** Mark active sock finished on the close step. */
 export function finishActiveSock(session: PairSession): PairSession {
   const sock = session.activeSock;
   const index = currentStepIndexForSock(session, sock);
@@ -177,7 +229,25 @@ export function isPairStepFinished(step: SessionStepProgress): boolean {
   return step.sock1Done >= step.targetCount && step.sock2Done >= step.targetCount;
 }
 
-/** True when this step is the final close (not a row-tick step). */
 export function isCloseStep(step: SessionStepProgress): boolean {
   return step.stepKey === "close";
+}
+
+/** Tip progress summary for UI: round i of n and row within the round. */
+export function tipProgressSummary(
+  session: PairSession,
+  step: SessionStepProgress
+): { roundIndex: number; totalRounds: number; rowInRound: number; rowsInRound: number } {
+  const tipSteps = session.steps.filter((s) => s.stepKey === "tip");
+  const totalRounds = new Set(tipSteps.map((s) => s.tipRoundIndex ?? 0)).size || 1;
+  const roundIndex = step.tipRoundIndex ?? 1;
+  const rowsInRound = tipSteps.filter((s) => s.tipRoundIndex === roundIndex).length;
+  const rowInRound =
+    tipSteps.filter((s) => s.tipRoundIndex === roundIndex).findIndex((s) => s === step) + 1;
+  return {
+    roundIndex,
+    totalRounds,
+    rowInRound: Math.max(rowInRound, 1),
+    rowsInRound: Math.max(rowsInRound, 1),
+  };
 }

@@ -119,6 +119,8 @@ export interface ActualSizeConfig {
   notes?: string;
 }
 
+export type TipRowDirection = "knit" | "decrease";
+
 export interface SessionStepProgress {
   stepKey: StepKey;
   sortIndex: number;
@@ -126,6 +128,14 @@ export interface SessionStepProgress {
   techniqueNoteKey?: string;
   unit: StepUnit;
   targetCount: number;
+  /** e.g. "11-12-11" or "17" for split/pickup. */
+  displayValue?: string;
+  /** Expanded tip: which tip round this row belongs to (1-based). */
+  tipRoundIndex?: number;
+  tipRoundTitle?: string;
+  /** e.g. "3 rechts" / "1 Abnahme" */
+  tipRowLabel?: string;
+  tipDirection?: TipRowDirection;
   tipRounds?: TipRound[];
   sock1Done: number;
   sock2Done: number;

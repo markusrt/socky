@@ -12,6 +12,7 @@ export type {
   StepUnit,
   TipDecreaseSchedule,
   TipRound,
+  TipRowDirection,
   TipSegment,
   UserRole,
 } from "./domain";
@@ -30,12 +31,14 @@ export {
   currentStep,
   currentStepIndex,
   currentStepIndexForSock,
+  expandTipRows,
   finishActiveSock,
   isCloseStep,
   isPairStepFinished,
   isSockComplete,
   switchToSock2,
   tickActiveSock,
+  tipProgressSummary,
   untickActiveSock,
 } from "./session";
 
