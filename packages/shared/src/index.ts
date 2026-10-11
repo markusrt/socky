@@ -26,6 +26,7 @@ export {
 
 export {
   formatCountLine,
+  formatTipCount,
   STEP_LABELS,
   STEP_NOTES_HINT,
   STITCH_LABELS,

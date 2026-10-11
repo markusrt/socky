@@ -13,7 +13,7 @@ export const STEP_LABELS: Record<StepKey, string> = {
   split: "Aufteilung der Maschen",
   pickup: "Maschen aufnehmen",
   postJoin: "Nach dem Zusammenstricken",
-  plainFoot: "Nur rechte Runden (Fuß)",
+  plainFoot: "Nur rechte Reihen (Fuß)",
   tip: "Maschenreduzieren (Bandspitze)",
 };
 
@@ -32,7 +32,7 @@ export const STEP_NOTES_HINT: Record<StepKey, string> = {
   split: "Aufteilung 11-12-11",
   pickup: "17 Maschen aufnehmen",
   postJoin: "Nach dem zusammenstricken 5 rechte Reihen",
-  plainFoot: "Nach dem maschreduzieren nur rechte Runden 51",
+  plainFoot: "Nach dem maschreduzieren nur rechte Reihen 51",
   tip: "Maschenreduzieren … 1./2./3. Runde",
 };
 
@@ -43,14 +43,25 @@ export const STITCH_LABELS: Record<StitchDirection, string> = {
   none: "",
 };
 
-/** e.g. "5 rechte Runden" / "40 Reihen" / "32 Reihen (rechte + linke)" */
+/**
+ * Count line as she writes it.
+ * - Almost everything is **Reihen** (Bund, Bein, Ferse, Fuß, …).
+ * - Only the tip (Bandspitze) is counted in **Runden**, and without “rechte”
+ *   (each tip round mixes rechts + Abnahme).
+ */
 export function formatCountLine(
   count: number,
   unit: "rows" | "rounds" | "once",
   stitch: StitchDirection
 ): string {
   if (unit === "once") return "einmal";
-  const unitWord = unit === "rows" ? "Reihen" : "Runden";
-  const stitchPart = STITCH_LABELS[stitch];
-  return stitchPart ? `${count} ${stitchPart} ${unitWord}` : `${count} ${unitWord}`;
+  if (stitch === "rechte" || stitch === "linke" || stitch === "gemischt") {
+    return `${count} ${STITCH_LABELS[stitch]} Reihen`;
+  }
+  return `${count} Reihen`;
+}
+
+/** Tip header, e.g. "3 Runden" — never "rechte Runden". */
+export function formatTipCount(roundCount: number): string {
+  return `${roundCount} Runden`;
 }

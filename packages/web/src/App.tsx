@@ -7,6 +7,7 @@ import {
   TECHNIQUE_NOTES,
   type TipRound,
   formatCountLine,
+  formatTipCount,
   materializePlan,
 } from "@knithelper/shared";
 import { useMemo, useState } from "react";
@@ -119,7 +120,9 @@ export function App() {
                       ? fmtAufteilung(plan.chart.aufteilung)
                       : step.stepKey === "pickup"
                         ? `${plan.chart.beidseitigeAufnahme} Maschen`
-                        : formatCountLine(step.targetCount, step.unit, step.stitch)}
+                        : step.stepKey === "tip"
+                          ? formatTipCount(step.targetCount)
+                          : formatCountLine(step.targetCount, step.unit, step.stitch)}
                   </div>
                   {note ? (
                     <div>

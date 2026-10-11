@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { ACTUAL_SIZES, REGIA_4_FAEDIG_PATTERN, mustActualSize } from "./fixtures/pattern-seed";
+import { formatCountLine, formatTipCount } from "./labels";
 import { isPairStepComplete, materializePlan, tickRow, untickRow } from "./materialize";
 import {
   SIZE_CHART,
@@ -138,7 +139,7 @@ describe("materializePlan", () => {
     expect(tip?.tipRounds?.[0]?.unitSegments[0]?.label).toBe("2 rechts");
   });
 
-  it("preserves stitch direction (rechte Reihen / Runden)", () => {
+  it("preserves stitch direction (rechte Reihen)", () => {
     const plan = materializePlan(REGIA_4_FAEDIG_PATTERN, mustActualSize("sock-03"));
     const byKey = Object.fromEntries(plan.steps.map((s) => [s.stepKey, s]));
     expect(byKey.postJoin?.stitch).toBe("rechte");
@@ -162,6 +163,17 @@ describe("materializePlan", () => {
       "sock-03",
       "sock-04",
     ]);
+  });
+});
+
+describe("German wording (Reihen vs Runden)", () => {
+  it("uses Reihen for normal steps and Runden only for tip", () => {
+    expect(formatCountLine(5, "rounds", "rechte")).toBe("5 rechte Reihen");
+    expect(formatCountLine(51, "rounds", "rechte")).toBe("51 rechte Reihen");
+    expect(formatCountLine(32, "rows", "gemischt")).toBe("32 rechte + linke Reihen");
+    expect(formatCountLine(40, "rows", "none")).toBe("40 Reihen");
+    expect(formatTipCount(3)).toBe("3 Runden");
+    expect(formatTipCount(2)).toBe("2 Runden");
   });
 });
 
