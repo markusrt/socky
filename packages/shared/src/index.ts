@@ -25,6 +25,17 @@ export {
 } from "./materialize";
 
 export {
+  completeCurrentStep,
+  createPairSession,
+  currentStep,
+  currentStepIndex,
+  isPairStepFinished,
+  switchActiveSock,
+  tickActiveSock,
+  untickActiveSock,
+} from "./session";
+
+export {
   formatCountLine,
   formatTipCount,
   STEP_LABELS,

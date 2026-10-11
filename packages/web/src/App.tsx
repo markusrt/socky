@@ -1,16 +1,33 @@
 import {
   ACTUAL_SIZES,
+  type PairSession,
   REGIA_4_FAEDIG_PATTERN,
   STEP_LABELS,
   STEP_NOTES_HINT,
   type SteppedPlan,
   TECHNIQUE_NOTES,
   type TipRound,
+  completeCurrentStep,
+  createPairSession,
+  currentStep,
   formatCountLine,
   formatTipCount,
+  isPairStepFinished,
   materializePlan,
+  switchActiveSock,
+  tickActiveSock,
+  untickActiveSock,
 } from "@knithelper/shared";
 import { useMemo, useState } from "react";
+import { loadSessions, upsertSession } from "./storage";
+
+type View =
+  | { name: "home" }
+  | { name: "new" }
+  | { name: "knit"; sessionId: string }
+  | { name: "preview"; actualSizeId: string };
+
+const DEMO_USER = "local";
 
 function formatTipRound(round: TipRound): string {
   const [knit, decrease] = round.unitSegments;
@@ -18,152 +35,438 @@ function formatTipRound(round: TipRound): string {
   return round.times > 1 ? `(${unit}) ×${round.times}` : unit;
 }
 
-function fmtAufteilung(t: readonly [number, number, number] | [number, number, number]): string {
+function fmtHeelSplit(t: readonly [number, number, number]): string {
   return `${t[0]}-${t[1]}-${t[2]}`;
 }
 
-/**
- * G1 preview: looks like her Notes / the REGIA sheet so she can compare.
- */
+function countLineForStep(
+  stepKey: string,
+  targetCount: number,
+  unit: "rows" | "rounds" | "once",
+  stitch: "knit" | "purl" | "mixed" | "none"
+): string {
+  if (stepKey === "tip") return formatTipCount(targetCount);
+  return formatCountLine(targetCount, unit, stitch);
+}
+
 export function App() {
-  const [selectedId, setSelectedId] = useState(ACTUAL_SIZES[0]?.id ?? "");
-  const plan: SteppedPlan | null = useMemo(() => {
-    const actual = ACTUAL_SIZES.find((s) => s.id === selectedId);
-    return actual ? materializePlan(REGIA_4_FAEDIG_PATTERN, actual) : null;
-  }, [selectedId]);
+  const [view, setView] = useState<View>({ name: "home" });
+  const [sessions, setSessions] = useState<PairSession[]>(() => loadSessions());
+
+  const session = useMemo(
+    () => (view.name === "knit" ? sessions.find((s) => s.id === view.sessionId) : undefined),
+    [view, sessions]
+  );
+
+  function commit(session: PairSession) {
+    setSessions(upsertSession(session));
+  }
+
+  if (view.name === "new") {
+    return (
+      <NewSessionView
+        onCancel={() => setView({ name: "home" })}
+        onCreate={(s) => {
+          commit(s);
+          setView({ name: "knit", sessionId: s.id });
+        }}
+      />
+    );
+  }
+
+  if (view.name === "knit" && session) {
+    return (
+      <KnitSessionView
+        session={session}
+        onBack={() => setView({ name: "home" })}
+        onTick={() => commit(tickActiveSock(session))}
+        onUndo={() => commit(untickActiveSock(session))}
+        onSwitchSock={() => commit(switchActiveSock(session))}
+        onCompleteStep={() => commit(completeCurrentStep(session))}
+      />
+    );
+  }
+
+  if (view.name === "preview") {
+    return (
+      <PreviewView actualSizeId={view.actualSizeId} onBack={() => setView({ name: "home" })} />
+    );
+  }
 
   return (
-    <main
-      style={{
-        fontFamily: "system-ui, sans-serif",
-        maxWidth: "42rem",
-        margin: "0 auto",
-        padding: "1rem",
-      }}
-    >
-      <h1>KnitHelper – Strickplan-Vorschau</h1>
-      <p>
-        Bitte mit der Notiz vergleichen. Das ist <em>noch nicht</em> die spätere Strick-UI.
-      </p>
+    <HomeView
+      sessions={sessions}
+      onNew={() => setView({ name: "new" })}
+      onOpen={(id) => setView({ name: "knit", sessionId: id })}
+      onPreview={(id) => setView({ name: "preview", actualSizeId: id })}
+    />
+  );
+}
 
-      <label htmlFor="size">
-        Socke / Notiz:{" "}
-        <select id="size" value={selectedId} onChange={(e) => setSelectedId(e.target.value)}>
+function HomeView({
+  sessions,
+  onNew,
+  onOpen,
+  onPreview,
+}: {
+  sessions: PairSession[];
+  onNew: () => void;
+  onOpen: (id: string) => void;
+  onPreview: (id: string) => void;
+}) {
+  return (
+    <main style={shell}>
+      <h1>KnitHelper</h1>
+      <button type="button" onClick={onNew} style={primaryBtn}>
+        Neue Socke starten
+      </button>
+
+      <h2>Meine Strickprojekte</h2>
+      {sessions.length === 0 ? (
+        <p>Noch keine Socke angelegt.</p>
+      ) : (
+        <ul style={{ listStyle: "none", padding: 0 }}>
+          {sessions.map((s) => {
+            const step = currentStep(s);
+            return (
+              <li key={s.id} style={{ marginBottom: "0.75rem" }}>
+                <button type="button" onClick={() => onOpen(s.id)} style={listBtn}>
+                  <strong>
+                    {s.actualSizeLabel} <small>(Tabelle {s.chartSizeLabel})</small>
+                  </strong>
+                  <div>
+                    {s.status === "DONE"
+                      ? "Fertig"
+                      : step
+                        ? `${STEP_LABELS[step.stepKey]} · ${step.sock1Done}/${step.targetCount} · Socke ${s.activeSock}`
+                        : "…"}
+                  </div>
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+      )}
+
+      <h2>Pläne prüfen (G1)</h2>
+      <ul>
+        {ACTUAL_SIZES.map((s) => (
+          <li key={s.id}>
+            <button type="button" onClick={() => onPreview(s.id)} style={linkBtn}>
+              {s.id} — Größe {s.label} (Tabelle {s.chartSizeLabel})
+            </button>
+          </li>
+        ))}
+      </ul>
+    </main>
+  );
+}
+
+function NewSessionView({
+  onCancel,
+  onCreate,
+}: {
+  onCancel: () => void;
+  onCreate: (s: PairSession) => void;
+}) {
+  const [actualSizeId, setActualSizeId] = useState(ACTUAL_SIZES[0]?.id ?? "");
+
+  return (
+    <main style={shell}>
+      <h1>Neue Socke</h1>
+      <p>
+        Muster: <strong>REGIA 4-fädig</strong> · ein Paar (2 Socken)
+      </p>
+      <label htmlFor="actual">
+        Ist-Größe / Notiz:{" "}
+        <select id="actual" value={actualSizeId} onChange={(e) => setActualSizeId(e.target.value)}>
           {ACTUAL_SIZES.map((s) => (
             <option key={s.id} value={s.id}>
-              {s.id} — Größe {s.label} (Tabelle {s.chartSizeLabel})
+              {s.label} (Tabelle {s.chartSizeLabel})
             </option>
           ))}
         </select>
       </label>
-
-      {plan ? (
-        <>
-          <section
-            style={{
-              marginTop: "1.25rem",
-              padding: "0.75rem 1rem",
-              border: "1px solid #ccc",
-              borderRadius: 8,
-              background: "#f8f8f8",
-            }}
-          >
-            <h2 style={{ marginTop: 0 }}>
-              {plan.patternName}
-              <small style={{ fontWeight: "normal" }}>
-                {" "}
-                · Ist-Größe {plan.actualSizeLabel} · Tabelle {plan.chartSizeLabel}
-              </small>
-            </h2>
-            <p style={{ margin: "0.25rem 0" }}>
-              <strong>Größentabelle (Käppchenferse)</strong> – Fersenaufbau folgt immer der Tabelle:
-            </p>
-            <ul style={{ margin: "0.25rem 0", paddingLeft: "1.25rem" }}>
-              <li>
-                Anschlag: <strong>{plan.chart.castOnTotal} Maschen</strong>{" "}
-                <small>
-                  ({plan.needleCount} Nadeln = {plan.chart.castOnPerNeedle2} / Nadel; Tabelle
-                  4&nbsp;Nadeln: {plan.chart.castOnPerNeedleChart})
-                </small>
-              </li>
-              <li>
-                Maschen für Ferse: <strong>{plan.chart.heelStitches}</strong>
-              </li>
-              <li>
-                Fersenhöhe: <strong>{plan.chart.heelHeightRows} Reihen</strong>{" "}
-                <small>(rechte + linke Hälften)</small>
-              </li>
-              <li>
-                Aufteilung der M: <strong>{fmtAufteilung(plan.chart.heelSplit)}</strong>
-              </li>
-              <li>
-                Beidseitige M-Aufnahme: <strong>{plan.chart.pickupStitchesBothSides}</strong>
-              </li>
-            </ul>
-            <p style={{ margin: "0.5rem 0 0", fontSize: "0.85em", color: "#666" }}>
-              Fußlängen aus der Tabelle sind nur Referenz (hängt von Maschenprobe / Rundenzahl ab).
-            </p>
-          </section>
-
-          <h2>Strickfolge</h2>
-          <ol style={{ paddingLeft: "1.25rem" }}>
-            {plan.steps.map((step) => {
-              const title = STEP_LABELS[step.stepKey] ?? step.stepKey;
-              const note = step.techniqueNoteKey
-                ? TECHNIQUE_NOTES[step.techniqueNoteKey]
-                : undefined;
-              return (
-                <li key={step.stepKey} style={{ marginBottom: "1rem" }}>
-                  <strong>{title}</strong>
-                  <div style={{ color: "#333" }}>
-                    {step.stepKey === "split"
-                      ? fmtAufteilung(plan.chart.heelSplit)
-                      : step.stepKey === "pickup"
-                        ? `${plan.chart.pickupStitchesBothSides} Maschen`
-                        : step.stepKey === "tip"
-                          ? formatTipCount(step.targetCount)
-                          : formatCountLine(step.targetCount, step.unit, step.stitch)}
-                  </div>
-                  {note ? (
-                    <div>
-                      <em>{note}</em>
-                    </div>
-                  ) : null}
-                  {step.tipRounds?.length ? (
-                    <ul style={{ marginTop: "0.35rem" }}>
-                      {step.tipRounds.map((r) => (
-                        <li key={r.index}>
-                          {r.title}: {formatTipRound(r)}
-                        </li>
-                      ))}
-                    </ul>
-                  ) : null}
-                  <div style={{ fontSize: "0.85em", color: "#666", marginTop: "0.25rem" }}>
-                    Notiz: „{STEP_NOTES_HINT[step.stepKey]}“
-                  </div>
-                </li>
-              );
-            })}
-          </ol>
-
-          <section
-            style={{
-              marginTop: "1.5rem",
-              padding: "0.75rem 1rem",
-              border: "1px dashed #999",
-              borderRadius: 8,
-            }}
-          >
-            <strong>Bitte prüfen:</strong>
-            <ul style={{ marginBottom: 0 }}>
-              <li>Stimmen Anschlag, Ferse, Aufteilung, Aufnahme mit der Tabelle überein?</li>
-              <li>Stimmen die Reihen-/Rundenzahlen und rechte/linke mit der Notiz überein?</li>
-              <li>Stimmt die Bandspitze (Runden + Wiederholungen)?</li>
-              <li>Ist „2 Nadeln“ (z.&nbsp;B. 34 statt 17 pro Nadel) richtig?</li>
-            </ul>
-          </section>
-        </>
-      ) : null}
+      <div style={{ marginTop: "1rem", display: "flex", gap: "0.5rem" }}>
+        <button
+          type="button"
+          style={primaryBtn}
+          onClick={() => {
+            const actual = ACTUAL_SIZES.find((s) => s.id === actualSizeId);
+            if (!actual) return;
+            onCreate(
+              createPairSession({
+                userId: DEMO_USER,
+                pattern: REGIA_4_FAEDIG_PATTERN,
+                actualSize: actual,
+              })
+            );
+          }}
+        >
+          Starten
+        </button>
+        <button type="button" style={secondaryBtn} onClick={onCancel}>
+          Zurück
+        </button>
+      </div>
     </main>
   );
 }
+
+function KnitSessionView({
+  session,
+  onBack,
+  onTick,
+  onUndo,
+  onSwitchSock,
+  onCompleteStep,
+}: {
+  session: PairSession;
+  onBack: () => void;
+  onTick: () => void;
+  onUndo: () => void;
+  onSwitchSock: () => void;
+  onCompleteStep: () => void;
+}) {
+  const step = currentStep(session);
+  const done = session.status === "DONE" || !step;
+
+  return (
+    <main style={shell}>
+      <button type="button" style={linkBtn} onClick={onBack}>
+        ← Übersicht
+      </button>
+      <h1>
+        Größe {session.actualSizeLabel}{" "}
+        <small style={{ fontWeight: "normal" }}>(Tabelle {session.chartSizeLabel})</small>
+      </h1>
+
+      {done ? (
+        <section style={card}>
+          <h2 style={{ marginTop: 0 }}>Paar fertig 🎉</h2>
+          <p>Beide Socken sind durch.</p>
+        </section>
+      ) : (
+        <>
+          <section style={card}>
+            <h2 style={{ marginTop: 0 }}>{STEP_LABELS[step.stepKey]}</h2>
+            <p style={{ fontSize: "1.25rem", margin: "0.25rem 0" }}>
+              {countLineForStep(step.stepKey, step.targetCount, step.unit, "knit")}
+            </p>
+            {step.techniqueNoteKey ? (
+              <p>
+                <em>{TECHNIQUE_NOTES[step.techniqueNoteKey]}</em>
+              </p>
+            ) : null}
+
+            <div style={{ display: "flex", gap: "1rem", marginTop: "0.75rem" }}>
+              <SockProgress
+                label="Socke 1"
+                done={step.sock1Done}
+                target={step.targetCount}
+                active={session.activeSock === 1}
+              />
+              <SockProgress
+                label="Socke 2"
+                done={step.sock2Done}
+                target={step.targetCount}
+                active={session.activeSock === 2}
+              />
+            </div>
+
+            {step.tipRounds?.length ? (
+              <ul style={{ marginTop: "0.75rem" }}>
+                {step.tipRounds.map((r) => (
+                  <li key={r.index}>
+                    {r.title}: {formatTipRound(r)}
+                  </li>
+                ))}
+              </ul>
+            ) : null}
+
+            <div style={{ fontSize: "0.85em", color: "#666", marginTop: "0.5rem" }}>
+              Notiz: „{STEP_NOTES_HINT[step.stepKey]}“
+            </div>
+          </section>
+
+          <button type="button" style={bigBtn} onClick={onTick}>
+            Reihe fertig
+          </button>
+
+          <div style={{ display: "flex", gap: "0.5rem", marginTop: "0.75rem" }}>
+            <button type="button" style={secondaryBtn} onClick={onUndo}>
+              Rückgängig
+            </button>
+            <button type="button" style={secondaryBtn} onClick={onSwitchSock}>
+              Socke wechseln
+            </button>
+            {isPairStepFinished(step) ? (
+              <button type="button" style={primaryBtn} onClick={onCompleteStep}>
+                Nächster Schritt
+              </button>
+            ) : null}
+          </div>
+        </>
+      )}
+    </main>
+  );
+}
+
+function SockProgress({
+  label,
+  done,
+  target,
+  active,
+}: {
+  label: string;
+  done: number;
+  target: number;
+  active: boolean;
+}) {
+  return (
+    <div
+      style={{
+        flex: 1,
+        padding: "0.5rem",
+        borderRadius: 8,
+        border: active ? "2px solid #2563eb" : "1px solid #ccc",
+        background: active ? "#eff6ff" : "#fff",
+      }}
+    >
+      <div style={{ fontWeight: active ? 700 : 400 }}>
+        {label}
+        {active ? " ●" : ""}
+      </div>
+      <div>
+        {done} / {target}
+      </div>
+    </div>
+  );
+}
+
+function PreviewView({ actualSizeId, onBack }: { actualSizeId: string; onBack: () => void }) {
+  const plan: SteppedPlan | null = useMemo(() => {
+    const actual = ACTUAL_SIZES.find((s) => s.id === actualSizeId);
+    return actual ? materializePlan(REGIA_4_FAEDIG_PATTERN, actual) : null;
+  }, [actualSizeId]);
+
+  if (!plan) return null;
+
+  return (
+    <main style={shell}>
+      <button type="button" style={linkBtn} onClick={onBack}>
+        ← Übersicht
+      </button>
+      <h1>
+        {plan.patternName} · {plan.actualSizeLabel}{" "}
+        <small style={{ fontWeight: "normal" }}>(Tabelle {plan.chartSizeLabel})</small>
+      </h1>
+      <section style={card}>
+        <ul style={{ margin: 0, paddingLeft: "1.25rem" }}>
+          <li>
+            Anschlag: <strong>{plan.chart.castOnTotal}</strong> ({plan.needleCount} Nadeln ={" "}
+            {plan.chart.castOnPerNeedle2} / Nadel)
+          </li>
+          <li>
+            Fersenhöhe: <strong>{plan.chart.heelHeightRows} Reihen</strong>
+          </li>
+          <li>
+            Aufteilung: <strong>{fmtHeelSplit(plan.chart.heelSplit)}</strong>
+          </li>
+          <li>
+            Aufnahme: <strong>{plan.chart.pickupStitchesBothSides}</strong>
+          </li>
+        </ul>
+      </section>
+      <ol>
+        {plan.steps.map((step) => (
+          <li key={step.stepKey} style={{ marginBottom: "0.75rem" }}>
+            <strong>{STEP_LABELS[step.stepKey]}</strong>
+            <div>
+              {step.stepKey === "split"
+                ? fmtHeelSplit(plan.chart.heelSplit)
+                : step.stepKey === "pickup"
+                  ? `${plan.chart.pickupStitchesBothSides} Maschen`
+                  : countLineForStep(step.stepKey, step.targetCount, step.unit, step.stitch)}
+            </div>
+            {step.tipRounds?.length ? (
+              <ul>
+                {step.tipRounds.map((r) => (
+                  <li key={r.index}>
+                    {r.title}: {formatTipRound(r)}
+                  </li>
+                ))}
+              </ul>
+            ) : null}
+          </li>
+        ))}
+      </ol>
+    </main>
+  );
+}
+
+// Wire preview into App via view state — keep App as single switch
+// (PreviewView used when view.name === "preview")
+
+const shell: React.CSSProperties = {
+  fontFamily: "system-ui, sans-serif",
+  maxWidth: "28rem",
+  margin: "0 auto",
+  padding: "1rem",
+};
+
+const card: React.CSSProperties = {
+  padding: "0.75rem 1rem",
+  border: "1px solid #ccc",
+  borderRadius: 8,
+  background: "#f8f8f8",
+  marginBottom: "1rem",
+};
+
+const primaryBtn: React.CSSProperties = {
+  fontSize: "1rem",
+  padding: "0.75rem 1.25rem",
+  borderRadius: 10,
+  border: "none",
+  background: "#2563eb",
+  color: "#fff",
+  cursor: "pointer",
+};
+
+const bigBtn: React.CSSProperties = {
+  ...primaryBtn,
+  width: "100%",
+  fontSize: "1.35rem",
+  padding: "1.1rem",
+  background: "#16a34a",
+};
+
+const secondaryBtn: React.CSSProperties = {
+  fontSize: "1rem",
+  padding: "0.65rem 1rem",
+  borderRadius: 10,
+  border: "1px solid #ccc",
+  background: "#fff",
+  cursor: "pointer",
+};
+
+const listBtn: React.CSSProperties = {
+  width: "100%",
+  textAlign: "left",
+  fontSize: "1rem",
+  padding: "0.75rem 1rem",
+  borderRadius: 10,
+  border: "1px solid #ccc",
+  background: "#fff",
+  cursor: "pointer",
+};
+
+const linkBtn: React.CSSProperties = {
+  background: "none",
+  border: "none",
+  color: "#2563eb",
+  cursor: "pointer",
+  fontSize: "1rem",
+  padding: "0.25rem 0",
+  textAlign: "left",
+};
