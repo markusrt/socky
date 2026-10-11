@@ -1,0 +1,9 @@
+name = "knithelper-api"
+main = "src/index.ts"
+compatibility_date = "2024-12-01"
+
+# D1 binding enabled in M3 (persistence). Local dev can omit until then.
+# [[d1_databases]]
+# binding = "DB"
+# database_name = "knithelper"
+# database_id = "placeholder"
