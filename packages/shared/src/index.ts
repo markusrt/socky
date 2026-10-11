@@ -1,6 +1,5 @@
 export type {
   ActualSizeConfig,
-  BandspitzeSchedule,
   PairSession,
   PairSessionStatus,
   Pattern,
@@ -11,6 +10,7 @@ export type {
   StitchDirection,
   StepKey,
   StepUnit,
+  TipDecreaseSchedule,
   TipRound,
   TipSegment,
   UserRole,

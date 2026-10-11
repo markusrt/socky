@@ -1,8 +1,7 @@
 import type { StepKey, StitchDirection } from "./domain";
 
 /**
- * German labels as written in her Notes / the REGIA sheet.
- * Keep domain vocabulary (Bund, Ferse, Aufteilung, …).
+ * User-facing German strings. Technical keys stay English (Constitution §7).
  */
 export const STEP_LABELS: Record<StepKey, string> = {
   cuff: "Bund / Bündchen",
@@ -18,11 +17,11 @@ export const STEP_LABELS: Record<StepKey, string> = {
 };
 
 export const TECHNIQUE_NOTES: Record<string, string> = {
-  "note.pickup_verschraenkt": "Erst zusammen dann verschränkt",
-  "note.tip_verschraenkt": "Maschenreduzieren erst verschränkt dann zusammen",
+  "note.pickup_together_then_twisted": "Erst zusammen dann verschränkt",
+  "note.decrease_twisted_then_together": "Maschenreduzieren erst verschränkt dann zusammen",
 };
 
-/** Notes-text snippets the step maps to (for G1 side-by-side review). */
+/** Notes-text snippets for G1 side-by-side review (user-facing). */
 export const STEP_NOTES_HINT: Record<StepKey, string> = {
   cuff: "Bündchen 40 Reihen / Bund 40 Reihen",
   leg: "Rechte Reihen 15",
@@ -37,17 +36,15 @@ export const STEP_NOTES_HINT: Record<StepKey, string> = {
 };
 
 export const STITCH_LABELS: Record<StitchDirection, string> = {
-  rechte: "rechte",
-  linke: "linke",
-  gemischt: "rechte + linke",
+  knit: "rechte",
+  purl: "linke",
+  mixed: "rechte + linke",
   none: "",
 };
 
 /**
  * Count line as she writes it.
- * - Almost everything is **Reihen** (Bund, Bein, Ferse, Fuß, …).
- * - Only the tip (Bandspitze) is counted in **Runden**, and without “rechte”
- *   (each tip round mixes rechts + Abnahme).
+ * Almost everything is **Reihen**; only the tip is **Runden** (no “rechte”).
  */
 export function formatCountLine(
   count: number,
@@ -55,7 +52,7 @@ export function formatCountLine(
   stitch: StitchDirection
 ): string {
   if (unit === "once") return "einmal";
-  if (stitch === "rechte" || stitch === "linke" || stitch === "gemischt") {
+  if (stitch === "knit" || stitch === "purl" || stitch === "mixed") {
     return `${count} ${STITCH_LABELS[stitch]} Reihen`;
   }
   return `${count} Reihen`;

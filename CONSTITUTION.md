@@ -44,10 +44,17 @@ CI green before merge. No `--no-verify`. No force-push to `main`.
 Household scale (2–10 users). Prefer Cloudflare free tier (Workers, D1, R2).
 Do not introduce paid-only Cloudflare features or heavy compute without an ADR.
 
-## 7. German product language
+## 7. German product language, English technical code
 
-Domain terms stay German (Bündchen, Ferse, Abnahme, Runde, Reihe, …).
-All UI chrome goes through i18n keys (`de` default, `en` scaffold). No hard-coded UI strings.
+Domain **display** text stays German (Bündchen, Ferse, Abnahme, …) in names, titles, tags, notes, and i18n strings.
+
+**Technical code is English only:** type names, field names, enum values, i18n/technique keys, API routes, DB columns.
+
+- `stitch: "knit" | "purl" | "mixed" | "none"` — not `"rechte"`
+- `techniqueNoteKey: "note.pickup_together_then_twisted"` — not `"note.…verschraenkt"`
+- Chart fields: `castOnTotal`, `heelSplit`, `tipSchedule.fourthRound`, …
+
+UI strings still go through i18n keys (`de` default).
 
 ## 8. Security by default
 

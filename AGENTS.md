@@ -31,6 +31,7 @@ Playwright is required for knitting UI changes (M2+).
 ## Code rules
 
 - TypeScript strict; no `any` in shared/api domain code
+- German only in user-facing strings; technical identifiers English (Constitution §7)
 - New API route: zod input schema + role guard + unit test
 - New domain field: update fixtures + `materialize` tests in the same change
 - UI strings: i18n keys only (`packages/web/src/i18n/`)

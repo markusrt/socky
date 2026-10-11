@@ -80,24 +80,24 @@ export function App() {
             </p>
             <ul style={{ margin: "0.25rem 0", paddingLeft: "1.25rem" }}>
               <li>
-                Anschlag: <strong>{plan.chart.anschlagGesamt} Maschen</strong>{" "}
+                Anschlag: <strong>{plan.chart.castOnTotal} Maschen</strong>{" "}
                 <small>
-                  ({plan.needleCount} Nadeln = {plan.chart.anschlagProNadel2} / Nadel; Tabelle
-                  4&nbsp;Nadeln: {plan.chart.anschlagProNadelChart})
+                  ({plan.needleCount} Nadeln = {plan.chart.castOnPerNeedle2} / Nadel; Tabelle
+                  4&nbsp;Nadeln: {plan.chart.castOnPerNeedleChart})
                 </small>
               </li>
               <li>
-                Maschen für Ferse: <strong>{plan.chart.maschenFuerFerse}</strong>
+                Maschen für Ferse: <strong>{plan.chart.heelStitches}</strong>
               </li>
               <li>
-                Fersenhöhe: <strong>{plan.chart.fersenhoeheReihen} Reihen</strong>{" "}
+                Fersenhöhe: <strong>{plan.chart.heelHeightRows} Reihen</strong>{" "}
                 <small>(rechte + linke Hälften)</small>
               </li>
               <li>
-                Aufteilung der M: <strong>{fmtAufteilung(plan.chart.aufteilung)}</strong>
+                Aufteilung der M: <strong>{fmtAufteilung(plan.chart.heelSplit)}</strong>
               </li>
               <li>
-                Beidseitige M-Aufnahme: <strong>{plan.chart.beidseitigeAufnahme}</strong>
+                Beidseitige M-Aufnahme: <strong>{plan.chart.pickupStitchesBothSides}</strong>
               </li>
             </ul>
             <p style={{ margin: "0.5rem 0 0", fontSize: "0.85em", color: "#666" }}>
@@ -117,9 +117,9 @@ export function App() {
                   <strong>{title}</strong>
                   <div style={{ color: "#333" }}>
                     {step.stepKey === "split"
-                      ? fmtAufteilung(plan.chart.aufteilung)
+                      ? fmtAufteilung(plan.chart.heelSplit)
                       : step.stepKey === "pickup"
-                        ? `${plan.chart.beidseitigeAufnahme} Maschen`
+                        ? `${plan.chart.pickupStitchesBothSides} Maschen`
                         : step.stepKey === "tip"
                           ? formatTipCount(step.targetCount)
                           : formatCountLine(step.targetCount, step.unit, step.stitch)}

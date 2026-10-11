@@ -18,28 +18,28 @@ describe("size chart seed (REGIA 4-fädig PDF)", () => {
 
   it("2-needle counts are half the total (wife's method)", () => {
     const s = getChartSize("44/45");
-    expect(s?.anschlagGesamt).toBe(68);
-    expect(s?.anschlagProNadel2).toBe(34);
-    expect(s?.anschlagProNadelChart).toBe(17);
+    expect(s?.castOnTotal).toBe(68);
+    expect(s?.castOnPerNeedle2).toBe(34);
+    expect(s?.castOnPerNeedleChart).toBe(17);
   });
 
   it("matches chart 44/45 construction used by sock-03/04", () => {
     expect(getChartSize("44/45")).toMatchObject({
-      anschlagGesamt: 68,
-      maschenFuerFerse: 34,
-      fersenhoeheReihen: 32,
-      aufteilung: [11, 12, 11],
-      beidseitigeAufnahme: 17,
+      castOnTotal: 68,
+      heelStitches: 34,
+      heelHeightRows: 32,
+      heelSplit: [11, 12, 11],
+      pickupStitchesBothSides: 17,
     });
   });
 
-  it("bandspitze 44/45: 1×3rechts, 2×2rechts, 4×1rechts (PDF)", () => {
+  it("tip schedule 44/45: 1×3knit, 2×2knit, 4×1knit (PDF)", () => {
     const chart = getChartSize("44/45");
-    expect(chart?.bandspitze).toEqual({
-      inDer4Runde: 1,
-      inJeder3Runde: 2,
-      inJeder2Runde: 4,
-      inJederRunde: 7,
+    expect(chart?.tipSchedule).toEqual({
+      fourthRound: 1,
+      every3rdRound: 2,
+      every2ndRound: 4,
+      everyRound: 7,
     });
   });
 });
@@ -62,7 +62,7 @@ describe("deriveTipRounds", () => {
     });
   });
 
-  it("22/23 → 2 tip rounds (no 3-rechts round) matching sock-02", () => {
+  it("22/23 → 2 tip rounds (no 3-knit round) matching sock-02", () => {
     const tip = tipRoundsForChartSize("22/23");
     expect(tip).toHaveLength(2);
     expect(tip[0]?.unitSegments[0]?.label).toBe("2 rechts");
@@ -77,12 +77,12 @@ describe("deriveTipRounds", () => {
     expect(tip[2]?.times).toBe(5);
   });
 
-  it("skips zero counts and never emits 'In jeder Runde' close", () => {
+  it("skips zero counts and never emits the final close round", () => {
     const tip = deriveTipRounds({
-      inDer4Runde: 0,
-      inJeder3Runde: 0,
-      inJeder2Runde: 0,
-      inJederRunde: 8,
+      fourthRound: 0,
+      every3rdRound: 0,
+      every2ndRound: 0,
+      everyRound: 8,
     });
     expect(tip).toHaveLength(0);
   });
@@ -95,11 +95,10 @@ describe("materializePlan", () => {
     expect(plan.patternName).toBe("REGIA 4-fädig");
     expect(plan.chartSizeLabel).toBe("44/45");
     expect(plan.actualSizeLabel).toBe("40/41");
-    // Construction snapshot for the preview (Aufteilung etc.)
-    expect(plan.chart.aufteilung).toEqual([11, 12, 11]);
-    expect(plan.chart.beidseitigeAufnahme).toBe(17);
+    expect(plan.chart.heelSplit).toEqual([11, 12, 11]);
+    expect(plan.chart.pickupStitchesBothSides).toBe(17);
     expect(plan.needleCount).toBe(2);
-    expect(plan.chart.anschlagProNadel2).toBe(34);
+    expect(plan.chart.castOnPerNeedle2).toBe(34);
 
     const byKey = Object.fromEntries(plan.steps.map((s) => [s.stepKey, s]));
     expect(byKey.cuff?.targetCount).toBe(40);
@@ -139,13 +138,13 @@ describe("materializePlan", () => {
     expect(tip?.tipRounds?.[0]?.unitSegments[0]?.label).toBe("2 rechts");
   });
 
-  it("preserves stitch direction (rechte Reihen)", () => {
+  it("preserves stitch direction (knit / mixed)", () => {
     const plan = materializePlan(REGIA_4_FAEDIG_PATTERN, mustActualSize("sock-03"));
     const byKey = Object.fromEntries(plan.steps.map((s) => [s.stepKey, s]));
-    expect(byKey.postJoin?.stitch).toBe("rechte");
-    expect(byKey.plainFoot?.stitch).toBe("rechte");
-    expect(byKey.leg?.stitch).toBe("rechte");
-    expect(byKey.heel?.stitch).toBe("gemischt");
+    expect(byKey.postJoin?.stitch).toBe("knit");
+    expect(byKey.plainFoot?.stitch).toBe("knit");
+    expect(byKey.leg?.stitch).toBe("knit");
+    expect(byKey.heel?.stitch).toBe("mixed");
   });
 
   it("throws when a step has no configured count (never invent)", () => {
@@ -168,9 +167,9 @@ describe("materializePlan", () => {
 
 describe("German wording (Reihen vs Runden)", () => {
   it("uses Reihen for normal steps and Runden only for tip", () => {
-    expect(formatCountLine(5, "rounds", "rechte")).toBe("5 rechte Reihen");
-    expect(formatCountLine(51, "rounds", "rechte")).toBe("51 rechte Reihen");
-    expect(formatCountLine(32, "rows", "gemischt")).toBe("32 rechte + linke Reihen");
+    expect(formatCountLine(5, "rounds", "knit")).toBe("5 rechte Reihen");
+    expect(formatCountLine(51, "rounds", "knit")).toBe("51 rechte Reihen");
+    expect(formatCountLine(32, "rows", "mixed")).toBe("32 rechte + linke Reihen");
     expect(formatCountLine(40, "rows", "none")).toBe("40 Reihen");
     expect(formatTipCount(3)).toBe("3 Runden");
     expect(formatTipCount(2)).toBe("2 Runden");
