@@ -168,5 +168,9 @@ export interface SteppedPlan {
   patternName: string;
   chartSizeLabel: string;
   actualSizeLabel: string;
+  /** Construction snapshot from the chart (always followed for heel etc.). */
+  chart: ChartSize;
+  /** Number of needles used (2 — wife's method). */
+  needleCount: number;
   steps: PlannedStep[];
 }

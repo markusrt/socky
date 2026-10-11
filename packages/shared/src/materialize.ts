@@ -1,4 +1,5 @@
 import type { ActualSizeConfig, Pattern, PatternStep, PlannedStep, SteppedPlan } from "./domain";
+import { NEEDLE_COUNT, getChartSize } from "./size-chart-seed";
 
 /**
  * Materialize a stepped plan for one chart base + actual size.
@@ -7,6 +8,13 @@ import type { ActualSizeConfig, Pattern, PatternStep, PlannedStep, SteppedPlan }
  * from the actual-size config. Pattern steps supply the step list and defaults.
  */
 export function materializePlan(pattern: Pattern, actualSize: ActualSizeConfig): SteppedPlan {
+  const chart = getChartSize(actualSize.chartSizeLabel);
+  if (!chart) {
+    throw new Error(
+      `Unknown chart size "${actualSize.chartSizeLabel}" for actual size ${actualSize.label}.`
+    );
+  }
+
   const steps: PlannedStep[] = pattern.steps.map((step, sortIndex) =>
     materializeStep(step, sortIndex, actualSize)
   );
@@ -16,6 +24,8 @@ export function materializePlan(pattern: Pattern, actualSize: ActualSizeConfig):
     patternName: pattern.name,
     chartSizeLabel: actualSize.chartSizeLabel,
     actualSizeLabel: actualSize.label,
+    chart,
+    needleCount: NEEDLE_COUNT,
     steps,
   };
 }

@@ -94,6 +94,11 @@ describe("materializePlan", () => {
     expect(plan.patternName).toBe("REGIA 4-fädig");
     expect(plan.chartSizeLabel).toBe("44/45");
     expect(plan.actualSizeLabel).toBe("40/41");
+    // Construction snapshot for the preview (Aufteilung etc.)
+    expect(plan.chart.aufteilung).toEqual([11, 12, 11]);
+    expect(plan.chart.beidseitigeAufnahme).toBe(17);
+    expect(plan.needleCount).toBe(2);
+    expect(plan.chart.anschlagProNadel2).toBe(34);
 
     const byKey = Object.fromEntries(plan.steps.map((s) => [s.stepKey, s]));
     expect(byKey.cuff?.targetCount).toBe(40);

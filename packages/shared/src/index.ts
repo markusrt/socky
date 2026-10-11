@@ -23,6 +23,8 @@ export {
   untickRow,
 } from "./materialize";
 
+export { STEP_LABELS, STEP_NOTES_HINT, TECHNIQUE_NOTES } from "./labels";
+
 export {
   deriveTipRounds,
   getChartSize,
