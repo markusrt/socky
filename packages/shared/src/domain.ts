@@ -18,9 +18,10 @@ export type StepKey =
   | "pickup"
   | "postJoin"
   | "plainFoot"
-  | "tip";
+  | "tip"
+  | "close";
 
-export type StepUnit = "rows" | "rounds" | "once";
+export type StepUnit = "rows" | "rounds" | "once" | "finish";
 
 /**
  * Stitch direction (universal knitting term).

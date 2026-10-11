@@ -44,6 +44,13 @@ export const REGIA_4_FAEDIG_PATTERN: Pattern = {
       unit: "rounds",
       stitch: "knit",
     },
+    {
+      key: "close",
+      titleKey: "step.close",
+      unit: "finish",
+      stitch: "none",
+      defaultCount: 1,
+    },
   ],
 };
 

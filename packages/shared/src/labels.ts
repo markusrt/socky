@@ -14,6 +14,7 @@ export const STEP_LABELS: Record<StepKey, string> = {
   postJoin: "Nach dem Zusammenstricken",
   plainFoot: "Nur rechte Reihen (Fuß)",
   tip: "Maschenreduzieren (Bandspitze)",
+  close: "Socke abketten (Abschluss)",
 };
 
 export const TECHNIQUE_NOTES: Record<string, string> = {
@@ -33,6 +34,7 @@ export const STEP_NOTES_HINT: Record<StepKey, string> = {
   postJoin: "Nach dem zusammenstricken 5 rechte Reihen",
   plainFoot: "Nach dem maschreduzieren nur rechte Reihen 51",
   tip: "Maschenreduzieren … 1./2./3. Runde",
+  close: "Abschluss / Abketten (wird nicht mit „Reihe fertig“ gezählt)",
 };
 
 export const STITCH_LABELS: Record<StitchDirection, string> = {
@@ -48,9 +50,10 @@ export const STITCH_LABELS: Record<StitchDirection, string> = {
  */
 export function formatCountLine(
   count: number,
-  unit: "rows" | "rounds" | "once",
+  unit: "rows" | "rounds" | "once" | "finish",
   stitch: StitchDirection
 ): string {
+  if (unit === "finish") return "Abschluss — nicht mit Reihen zählen";
   if (unit === "once") return "einmal";
   if (stitch === "knit" || stitch === "purl" || stitch === "mixed") {
     return `${count} ${STITCH_LABELS[stitch]} Reihen`;

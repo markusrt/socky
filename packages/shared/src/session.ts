@@ -7,7 +7,10 @@ import type {
 } from "./domain";
 import { materializePlan } from "./materialize";
 
-/** Create a pair session (two socks) from a materialized plan. */
+/**
+ * Pair session: two socks knitted **one after the other** (not in parallel).
+ * Sock 1 runs through all steps first; only then sock 2 starts.
+ */
 export function createPairSession(input: {
   userId: string;
   pattern: Pattern;
@@ -40,8 +43,30 @@ export function createPairSession(input: {
   };
 }
 
+function sockDoneCount(step: SessionStepProgress, sock: 1 | 2): number {
+  return sock === 1 ? step.sock1Done : step.sock2Done;
+}
+
+function withSockDone(step: SessionStepProgress, sock: 1 | 2, done: number): SessionStepProgress {
+  return sock === 1 ? { ...step, sock1Done: done } : { ...step, sock2Done: done };
+}
+
+/** First incomplete step for one sock (sequential). */
+export function currentStepIndexForSock(session: PairSession, sock: 1 | 2): number {
+  return session.steps.findIndex((s) => sockDoneCount(s, sock) < s.targetCount);
+}
+
+export function isSockComplete(session: PairSession, sock: 1 | 2): boolean {
+  return currentStepIndexForSock(session, sock) < 0;
+}
+
+export function canSwitchToSock2(session: PairSession): boolean {
+  return isSockComplete(session, 1);
+}
+
+/** Current step for the active sock (not the pair). */
 export function currentStepIndex(session: PairSession): number {
-  return session.steps.findIndex((s) => s.sock1Done < s.targetCount || s.sock2Done < s.targetCount);
+  return currentStepIndexForSock(session, session.activeSock);
 }
 
 export function currentStep(session: PairSession): SessionStepProgress | undefined {
@@ -49,53 +74,71 @@ export function currentStep(session: PairSession): SessionStepProgress | undefin
   return index >= 0 ? session.steps[index] : undefined;
 }
 
-/** One finished row on the active sock of the pair. */
+/**
+ * One finished row on the active sock.
+ * When the step target is reached, the session moves to the next step automatically.
+ * After sock 1 finishes every step, active sock becomes 2.
+ */
 export function tickActiveSock(session: PairSession): PairSession {
-  const index = currentStepIndex(session);
-  if (index < 0) return session;
-
-  const steps = session.steps.map((step, i) => {
-    if (i !== index) return step;
-    if (session.activeSock === 1) {
-      return { ...step, sock1Done: Math.min(step.sock1Done + 1, step.targetCount) };
-    }
-    return { ...step, sock2Done: Math.min(step.sock2Done + 1, step.targetCount) };
-  });
-
-  return finishIfDone({ ...session, steps });
+  return advanceAfterTick(session, +1);
 }
 
-/** Undo one tick on the active sock. */
+/** Undo one tick on the active sock (stays on the same or previous step). */
 export function untickActiveSock(session: PairSession): PairSession {
-  const index = currentStepIndex(session);
-  if (index < 0) return session;
-
-  const steps = session.steps.map((step, i) => {
-    if (i !== index) return step;
-    if (session.activeSock === 1) {
-      return { ...step, sock1Done: Math.max(step.sock1Done - 1, 0) };
-    }
-    return { ...step, sock2Done: Math.max(step.sock2Done - 1, 0) };
-  });
-
-  return { ...session, steps };
+  return advanceAfterTick(session, -1);
 }
 
-export function switchActiveSock(session: PairSession): PairSession {
-  return { ...session, activeSock: session.activeSock === 1 ? 2 : 1 };
-}
-
-/** Explicit “next step” when both socks finished the current step. */
-export function completeCurrentStep(session: PairSession): PairSession {
-  const index = currentStepIndex(session);
+function advanceAfterTick(session: PairSession, delta: 1 | -1): PairSession {
+  const sock = session.activeSock;
+  const index = currentStepIndexForSock(session, sock);
   if (index < 0) return session;
+
   const step = session.steps[index];
   if (!step) return session;
 
+  const nextDone = Math.max(0, Math.min(step.targetCount, sockDoneCount(step, sock) + delta));
+  const steps = session.steps.map((s, i) => (i === index ? withSockDone(s, sock, nextDone) : s));
+
+  let next: PairSession = finishIfDone({ ...session, steps });
+
+  // Sequential: after sock 1 is fully done, start sock 2.
+  if (sock === 1 && isSockComplete(next, 1) && !isSockComplete(next, 2)) {
+    next = { ...next, activeSock: 2 };
+  }
+
+  return next;
+}
+
+/**
+ * Switch to sock 2 only after sock 1 is complete.
+ * Switching back to sock 1 is not offered (one sock at a time).
+ */
+export function switchToSock2(session: PairSession): PairSession {
+  if (!canSwitchToSock2(session)) return session;
+  return { ...session, activeSock: 2 };
+}
+
+/**
+ * Mark the active sock finished (close/abketten step).
+ * Only valid on a `close` step (unit "finish").
+ */
+export function finishActiveSock(session: PairSession): PairSession {
+  const sock = session.activeSock;
+  const index = currentStepIndexForSock(session, sock);
+  if (index < 0) return session;
+
+  const step = session.steps[index];
+  if (!step || step.stepKey !== "close") return session;
+
   const steps = session.steps.map((s, i) =>
-    i === index ? { ...s, sock1Done: s.targetCount, sock2Done: s.targetCount } : s
+    i === index ? withSockDone(s, sock, s.targetCount) : s
   );
-  return finishIfDone({ ...session, steps });
+  let next = finishIfDone({ ...session, steps });
+
+  if (sock === 1 && isSockComplete(next, 1) && !isSockComplete(next, 2)) {
+    next = { ...next, activeSock: 2 };
+  }
+  return next;
 }
 
 function finishIfDone(session: PairSession): PairSession {
@@ -110,4 +153,9 @@ function finishIfDone(session: PairSession): PairSession {
 
 export function isPairStepFinished(step: SessionStepProgress): boolean {
   return step.sock1Done >= step.targetCount && step.sock2Done >= step.targetCount;
+}
+
+/** True when this step is the final close (not a row-tick step). */
+export function isCloseStep(step: SessionStepProgress): boolean {
+  return step.stepKey === "close";
 }

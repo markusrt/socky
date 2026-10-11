@@ -7,14 +7,15 @@ import {
   type SteppedPlan,
   TECHNIQUE_NOTES,
   type TipRound,
-  completeCurrentStep,
+  canSwitchToSock2,
   createPairSession,
   currentStep,
+  finishActiveSock,
   formatCountLine,
   formatTipCount,
-  isPairStepFinished,
+  isCloseStep,
   materializePlan,
-  switchActiveSock,
+  switchToSock2,
   tickActiveSock,
   untickActiveSock,
 } from "@knithelper/shared";
@@ -42,10 +43,11 @@ function fmtHeelSplit(t: readonly [number, number, number]): string {
 function countLineForStep(
   stepKey: string,
   targetCount: number,
-  unit: "rows" | "rounds" | "once",
+  unit: "rows" | "rounds" | "once" | "finish",
   stitch: "knit" | "purl" | "mixed" | "none"
 ): string {
   if (stepKey === "tip") return formatTipCount(targetCount);
+  if (unit === "finish") return "Abschluss — bitte abketten";
   return formatCountLine(targetCount, unit, stitch);
 }
 
@@ -81,8 +83,8 @@ export function App() {
         onBack={() => setView({ name: "home" })}
         onTick={() => commit(tickActiveSock(session))}
         onUndo={() => commit(untickActiveSock(session))}
-        onSwitchSock={() => commit(switchActiveSock(session))}
-        onCompleteStep={() => commit(completeCurrentStep(session))}
+        onFinishSock={() => commit(finishActiveSock(session))}
+        onStartSock2={() => commit(switchToSock2(session))}
       />
     );
   }
@@ -218,18 +220,19 @@ function KnitSessionView({
   onBack,
   onTick,
   onUndo,
-  onSwitchSock,
-  onCompleteStep,
+  onFinishSock,
+  onStartSock2,
 }: {
   session: PairSession;
   onBack: () => void;
   onTick: () => void;
   onUndo: () => void;
-  onSwitchSock: () => void;
-  onCompleteStep: () => void;
+  onFinishSock: () => void;
+  onStartSock2: () => void;
 }) {
   const step = currentStep(session);
   const done = session.status === "DONE" || !step;
+  const closeStep = step ? isCloseStep(step) : false;
 
   return (
     <main style={shell}>
@@ -240,11 +243,14 @@ function KnitSessionView({
         Größe {session.actualSizeLabel}{" "}
         <small style={{ fontWeight: "normal" }}>(Tabelle {session.chartSizeLabel})</small>
       </h1>
+      <p style={{ marginTop: 0 }}>
+        Aktuell: <strong>Socke {session.activeSock}</strong> von 2 (nacheinander)
+      </p>
 
       {done ? (
         <section style={card}>
-          <h2 style={{ marginTop: 0 }}>Paar fertig 🎉</h2>
-          <p>Beide Socken sind durch.</p>
+          <h2 style={{ marginTop: 0 }}>Paar fertig</h2>
+          <p>Beide Socken sind abgeschlossen.</p>
         </section>
       ) : (
         <>
@@ -289,20 +295,25 @@ function KnitSessionView({
             </div>
           </section>
 
-          <button type="button" style={bigBtn} onClick={onTick}>
-            Reihe fertig
-          </button>
+          {closeStep ? (
+            <button type="button" style={bigBtn} onClick={onFinishSock}>
+              Socke fertig
+            </button>
+          ) : (
+            <button type="button" style={bigBtn} onClick={onTick}>
+              Reihe fertig
+            </button>
+          )}
 
           <div style={{ display: "flex", gap: "0.5rem", marginTop: "0.75rem" }}>
-            <button type="button" style={secondaryBtn} onClick={onUndo}>
-              Rückgängig
-            </button>
-            <button type="button" style={secondaryBtn} onClick={onSwitchSock}>
-              Socke wechseln
-            </button>
-            {isPairStepFinished(step) ? (
-              <button type="button" style={primaryBtn} onClick={onCompleteStep}>
-                Nächster Schritt
+            {!closeStep ? (
+              <button type="button" style={secondaryBtn} onClick={onUndo}>
+                Rückgängig
+              </button>
+            ) : null}
+            {session.activeSock === 1 && canSwitchToSock2(session) ? (
+              <button type="button" style={primaryBtn} onClick={onStartSock2}>
+                Socke 2 starten
               </button>
             ) : null}
           </div>

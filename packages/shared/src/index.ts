@@ -25,12 +25,16 @@ export {
 } from "./materialize";
 
 export {
-  completeCurrentStep,
+  canSwitchToSock2,
   createPairSession,
   currentStep,
   currentStepIndex,
+  currentStepIndexForSock,
+  finishActiveSock,
+  isCloseStep,
   isPairStepFinished,
-  switchActiveSock,
+  isSockComplete,
+  switchToSock2,
   tickActiveSock,
   untickActiveSock,
 } from "./session";

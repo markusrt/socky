@@ -1,11 +1,13 @@
 import { describe, expect, it } from "vitest";
 import { REGIA_4_FAEDIG_PATTERN, mustActualSize } from "./fixtures/pattern-seed";
 import {
-  completeCurrentStep,
+  canSwitchToSock2,
   createPairSession,
   currentStep,
-  isPairStepFinished,
-  switchActiveSock,
+  finishActiveSock,
+  isCloseStep,
+  isSockComplete,
+  switchToSock2,
   tickActiveSock,
   untickActiveSock,
 } from "./session";
@@ -14,64 +16,99 @@ function newSession() {
   return createPairSession({
     userId: "u1",
     pattern: REGIA_4_FAEDIG_PATTERN,
-    actualSize: mustActualSize("sock-03"),
+    actualSize: mustActualSize("sock-02"),
   });
 }
 
-describe("pair session knitting loop", () => {
-  it("starts at cuff with zero progress on both socks", () => {
+describe("sequential pair session (one sock at a time)", () => {
+  it("starts on sock 1 at the first step", () => {
     const s = newSession();
-    expect(s.status).toBe("ACTIVE");
     expect(s.activeSock).toBe(1);
-    expect(s.steps[0]?.stepKey).toBe("cuff");
-    expect(s.steps[0]?.sock1Done).toBe(0);
-    expect(s.steps[0]?.sock2Done).toBe(0);
-    expect(currentStep(s)?.targetCount).toBe(40);
-  });
-
-  it("tickActiveSock only advances the active sock and clamps", () => {
-    let s = newSession();
-    s = tickActiveSock(s);
-    expect(currentStep(s)?.sock1Done).toBe(1);
-    expect(currentStep(s)?.sock2Done).toBe(0);
-
-    s = switchActiveSock(s);
-    s = tickActiveSock(s);
-    s = tickActiveSock(s);
-    expect(currentStep(s)?.sock1Done).toBe(1);
-    expect(currentStep(s)?.sock2Done).toBe(2);
-
-    s = untickActiveSock(s);
-    expect(currentStep(s)?.sock2Done).toBe(1);
-    s = untickActiveSock(s);
-    s = untickActiveSock(s);
-    expect(currentStep(s)?.sock2Done).toBe(0);
-  });
-
-  it("advances when both socks complete a step (manual complete)", () => {
-    let s = newSession();
-    const target = currentStep(s)?.targetCount ?? 0;
-    for (let i = 0; i < target; i++) {
-      s = tickActiveSock(s);
-    }
     expect(currentStep(s)?.stepKey).toBe("cuff");
-    s = switchActiveSock(s);
-    for (let i = 0; i < target; i++) {
+    expect(currentStep(s)?.targetCount).toBe(25);
+    expect(canSwitchToSock2(s)).toBe(false);
+  });
+
+  it("auto-advances to the next step when the current step is full", () => {
+    let s = newSession();
+    for (let i = 0; i < 25; i++) {
       s = tickActiveSock(s);
     }
     expect(currentStep(s)?.stepKey).toBe("leg");
+    expect(currentStep(s)?.targetCount).toBe(5);
+    expect(s.activeSock).toBe(1);
   });
 
-  it("completeCurrentStep fills both socks and marks DONE at end", () => {
+  it("cannot switch to sock 2 before sock 1 finished all steps", () => {
     let s = newSession();
-    s = completeCurrentStep(s);
-    expect(s.steps[0]).toMatchObject({ sock1Done: 40, sock2Done: 40 });
-    expect(currentStep(s)?.stepKey).toBe("leg");
-    expect(s.steps[0] && isPairStepFinished(s.steps[0])).toBe(true);
+    s = switchToSock2(s);
+    expect(s.activeSock).toBe(1);
 
-    // finish all remaining steps
-    while (currentStep(s)) {
-      s = completeCurrentStep(s);
+    while (!isSockComplete(s, 1)) {
+      const step = currentStep(s);
+      if (!step) break;
+      if (isCloseStep(step)) {
+        s = finishActiveSock(s);
+      } else {
+        for (let i = 0; i < step.targetCount; i++) {
+          s = tickActiveSock(s);
+        }
+      }
+    }
+    expect(isSockComplete(s, 1)).toBe(true);
+    expect(canSwitchToSock2(s)).toBe(true);
+    expect(s.activeSock).toBe(2);
+    expect(currentStep(s)?.stepKey).toBe("cuff");
+  });
+
+  it("close step uses finishActiveSock (Socke fertig), not row ticks", () => {
+    let s = newSession();
+    while (!isSockComplete(s, 1)) {
+      const step = currentStep(s);
+      if (!step) break;
+      if (isCloseStep(step)) break;
+      for (let i = 0; i < step.targetCount; i++) {
+        s = tickActiveSock(s);
+      }
+    }
+    const close = currentStep(s);
+    expect(close?.stepKey).toBe("close");
+    expect(close && isCloseStep(close)).toBe(true);
+
+    s = finishActiveSock(s);
+    expect(isSockComplete(s, 1)).toBe(true);
+    expect(s.activeSock).toBe(2);
+  });
+
+  it("undo only affects the active sock's current step", () => {
+    let s = newSession();
+    for (let i = 0; i < 25; i++) {
+      s = tickActiveSock(s);
+    }
+    expect(currentStep(s)?.stepKey).toBe("leg");
+    s = untickActiveSock(s);
+    expect(currentStep(s)?.stepKey).toBe("leg");
+    expect(currentStep(s)?.sock1Done).toBe(0);
+  });
+
+  it("marks session DONE after both socks closed", () => {
+    let s = newSession();
+    for (const sock of [1, 2] as const) {
+      if (sock === 2) {
+        expect(canSwitchToSock2(s)).toBe(true);
+        s = switchToSock2(s);
+      }
+      while (!isSockComplete(s, sock)) {
+        const step = currentStep(s);
+        if (!step) break;
+        if (isCloseStep(step)) {
+          s = finishActiveSock(s);
+        } else {
+          for (let i = 0; i < step.targetCount; i++) {
+            s = tickActiveSock(s);
+          }
+        }
+      }
     }
     expect(s.status).toBe("DONE");
   });

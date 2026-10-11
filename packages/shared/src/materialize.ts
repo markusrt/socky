@@ -55,8 +55,8 @@ function materializeStep(
     };
   }
 
-  if (step.unit === "once") {
-    // Aufteilung / Aufnehmen: informational — no row counter.
+  if (step.unit === "once" || step.unit === "finish") {
+    // Aufteilung / Aufnehmen / close: single confirmation, no row counter.
     return {
       ...base,
       targetCount: 1,
