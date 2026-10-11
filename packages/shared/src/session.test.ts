@@ -80,15 +80,21 @@ describe("sequential pair session (one sock at a time)", () => {
     expect(s.activeSock).toBe(2);
   });
 
-  it("undo only affects the active sock's current step", () => {
+  it("undo walks back across steps when current step is at 0", () => {
     let s = newSession();
     for (let i = 0; i < 25; i++) {
       s = tickActiveSock(s);
     }
-    expect(currentStep(s)?.stepKey).toBe("leg");
-    s = untickActiveSock(s);
+    // now on leg (0/5) after cuff finished — actually auto-advance leaves us on leg 0 after last tick of cuff
+    // After 25 ticks cuff is full and we advanced to leg; last tick filled cuff so leg is 0.
     expect(currentStep(s)?.stepKey).toBe("leg");
     expect(currentStep(s)?.sock1Done).toBe(0);
+
+    // undo at 0 goes to previous step (cuff 25 → 24)
+    s = untickActiveSock(s);
+    expect(currentStep(s)?.stepKey).toBe("cuff");
+    expect(currentStep(s)?.sock1Done).toBe(24);
+    expect(currentStep(s)?.targetCount).toBe(25);
   });
 
   it("marks session DONE after both socks closed", () => {

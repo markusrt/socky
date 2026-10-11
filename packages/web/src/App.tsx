@@ -3,7 +3,6 @@ import {
   type PairSession,
   REGIA_4_FAEDIG_PATTERN,
   STEP_LABELS,
-  STEP_NOTES_HINT,
   type SteppedPlan,
   TECHNIQUE_NOTES,
   type TipRound,
@@ -289,10 +288,6 @@ function KnitSessionView({
                 ))}
               </ul>
             ) : null}
-
-            <div style={{ fontSize: "0.85em", color: "#666", marginTop: "0.5rem" }}>
-              Notiz: „{STEP_NOTES_HINT[step.stepKey]}“
-            </div>
           </section>
 
           {closeStep ? (

@@ -80,15 +80,6 @@ export function currentStep(session: PairSession): SessionStepProgress | undefin
  * After sock 1 finishes every step, active sock becomes 2.
  */
 export function tickActiveSock(session: PairSession): PairSession {
-  return advanceAfterTick(session, +1);
-}
-
-/** Undo one tick on the active sock (stays on the same or previous step). */
-export function untickActiveSock(session: PairSession): PairSession {
-  return advanceAfterTick(session, -1);
-}
-
-function advanceAfterTick(session: PairSession, delta: 1 | -1): PairSession {
   const sock = session.activeSock;
   const index = currentStepIndexForSock(session, sock);
   if (index < 0) return session;
@@ -96,16 +87,47 @@ function advanceAfterTick(session: PairSession, delta: 1 | -1): PairSession {
   const step = session.steps[index];
   if (!step) return session;
 
-  const nextDone = Math.max(0, Math.min(step.targetCount, sockDoneCount(step, sock) + delta));
+  const nextDone = Math.min(step.targetCount, sockDoneCount(step, sock) + 1);
   const steps = session.steps.map((s, i) => (i === index ? withSockDone(s, sock, nextDone) : s));
 
-  let next: PairSession = finishIfDone({ ...session, steps });
-
-  // Sequential: after sock 1 is fully done, start sock 2.
+  let next = finishIfDone({ ...session, steps });
   if (sock === 1 && isSockComplete(next, 1) && !isSockComplete(next, 2)) {
     next = { ...next, activeSock: 2 };
   }
+  return next;
+}
 
+/**
+ * Undo one tick on the active sock.
+ * If the current step is already at 0, move back to the previous step and
+ * decrease it (so undo can walk through the whole plan).
+ */
+export function untickActiveSock(session: PairSession): PairSession {
+  const sock = session.activeSock;
+  let index = currentStepIndexForSock(session, sock);
+
+  // Current step at 0 → fall back to previous incomplete-or-just-finished step.
+  if (index >= 0) {
+    const step = session.steps[index];
+    if (step && sockDoneCount(step, sock) === 0 && index > 0) {
+      index = index - 1;
+    }
+  } else {
+    // Sock fully complete → undo last step.
+    index = session.steps.length - 1;
+  }
+
+  if (index < 0) return session;
+  const step = session.steps[index];
+  if (!step) return session;
+
+  const nextDone = Math.max(0, sockDoneCount(step, sock) - 1);
+  const steps = session.steps.map((s, i) => (i === index ? withSockDone(s, sock, nextDone) : s));
+
+  let next = finishIfDone({ ...session, steps });
+  if (sock === 1 && isSockComplete(next, 1) && !isSockComplete(next, 2)) {
+    next = { ...next, activeSock: 2 };
+  }
   return next;
 }
 
