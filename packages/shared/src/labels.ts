@@ -1,4 +1,4 @@
-import type { StepKey } from "./domain";
+import type { StepKey, StitchDirection } from "./domain";
 
 /**
  * German labels as written in her Notes / the REGIA sheet.
@@ -35,3 +35,22 @@ export const STEP_NOTES_HINT: Record<StepKey, string> = {
   plainFoot: "Nach dem maschreduzieren nur rechte Runden 51",
   tip: "Maschenreduzieren … 1./2./3. Runde",
 };
+
+export const STITCH_LABELS: Record<StitchDirection, string> = {
+  rechte: "rechte",
+  linke: "linke",
+  gemischt: "rechte + linke",
+  none: "",
+};
+
+/** e.g. "5 rechte Runden" / "40 Reihen" / "32 Reihen (rechte + linke)" */
+export function formatCountLine(
+  count: number,
+  unit: "rows" | "rounds" | "once",
+  stitch: StitchDirection
+): string {
+  if (unit === "once") return "einmal";
+  const unitWord = unit === "rows" ? "Reihen" : "Runden";
+  const stitchPart = STITCH_LABELS[stitch];
+  return stitchPart ? `${count} ${stitchPart} ${unitWord}` : `${count} ${unitWord}`;
+}

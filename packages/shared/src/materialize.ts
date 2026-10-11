@@ -43,6 +43,7 @@ function materializeStep(
     titleKey: step.titleKey,
     ...notePart,
     unit: step.unit,
+    stitch: step.stitch,
   };
 
   if (step.key === "tip") {

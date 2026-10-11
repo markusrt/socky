@@ -138,6 +138,15 @@ describe("materializePlan", () => {
     expect(tip?.tipRounds?.[0]?.unitSegments[0]?.label).toBe("2 rechts");
   });
 
+  it("preserves stitch direction (rechte Reihen / Runden)", () => {
+    const plan = materializePlan(REGIA_4_FAEDIG_PATTERN, mustActualSize("sock-03"));
+    const byKey = Object.fromEntries(plan.steps.map((s) => [s.stepKey, s]));
+    expect(byKey.postJoin?.stitch).toBe("rechte");
+    expect(byKey.plainFoot?.stitch).toBe("rechte");
+    expect(byKey.leg?.stitch).toBe("rechte");
+    expect(byKey.heel?.stitch).toBe("gemischt");
+  });
+
   it("throws when a step has no configured count (never invent)", () => {
     const broken = {
       ...mustActualSize("sock-03"),

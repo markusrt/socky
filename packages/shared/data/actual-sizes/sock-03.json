@@ -1,0 +1,15 @@
+{
+  "id": "sock-03",
+  "patternId": "regia-4-faedig",
+  "label": "40/41",
+  "chartSizeLabel": "44/45",
+  "tags": ["aktuelle Socken", "Referenz sock-03"],
+  "notes": "68 Maschen aufnehmen (2 Nadeln: 34); Bund 40; plain 51",
+  "counts": {
+    "cuff": 40,
+    "leg": 15,
+    "heel": 32,
+    "postJoin": 5,
+    "plainFoot": 51
+  }
+}

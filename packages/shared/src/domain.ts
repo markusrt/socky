@@ -20,6 +20,15 @@ export type StepKey =
 
 export type StepUnit = "rows" | "rounds" | "once";
 
+/**
+ * Stitch direction as written in the Notes (“rechte Reihen” vs “linke Reihen”).
+ * - rechte: knit rows/rounds
+ * - linke: purl rows/rounds
+ * - gemischt: both (e.g. heel cap: rechte + linke halves)
+ * - none: not specified (e.g. Bund)
+ */
+export type StitchDirection = "rechte" | "linke" | "gemischt" | "none";
+
 export type UserRole = "ADMIN" | "KNITTER";
 
 /** One instruction fragment inside a tip round, e.g. "3 rechts" or "1 Abnahme". */
@@ -83,6 +92,8 @@ export interface PatternStep {
   /** Optional technique note i18n key. */
   techniqueNoteKey?: string;
   unit: StepUnit;
+  /** Stitch direction (rechte/linke) — preserved from Notes wording. */
+  stitch: StitchDirection;
   /**
    * For non-tip steps: default count when an actual size has no override.
    * For tip: undefined — tip rounds are explicit.
@@ -159,6 +170,7 @@ export interface PlannedStep {
   titleKey: string;
   techniqueNoteKey?: string;
   unit: StepUnit;
+  stitch: StitchDirection;
   targetCount: number;
   tipRounds?: TipRound[];
 }

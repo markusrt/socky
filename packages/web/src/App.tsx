@@ -6,6 +6,7 @@ import {
   type SteppedPlan,
   TECHNIQUE_NOTES,
   type TipRound,
+  formatCountLine,
   materializePlan,
 } from "@knithelper/shared";
 import { useMemo, useState } from "react";
@@ -74,7 +75,7 @@ export function App() {
               </small>
             </h2>
             <p style={{ margin: "0.25rem 0" }}>
-              <strong>Größentabelle (Käppchenferse)</strong> – wird immer eingehalten:
+              <strong>Größentabelle (Käppchenferse)</strong> – Fersenaufbau folgt immer der Tabelle:
             </p>
             <ul style={{ margin: "0.25rem 0", paddingLeft: "1.25rem" }}>
               <li>
@@ -88,7 +89,8 @@ export function App() {
                 Maschen für Ferse: <strong>{plan.chart.maschenFuerFerse}</strong>
               </li>
               <li>
-                Fersenhöhe: <strong>{plan.chart.fersenhoeheReihen} Reihen</strong>
+                Fersenhöhe: <strong>{plan.chart.fersenhoeheReihen} Reihen</strong>{" "}
+                <small>(rechte + linke Hälften)</small>
               </li>
               <li>
                 Aufteilung der M: <strong>{fmtAufteilung(plan.chart.aufteilung)}</strong>
@@ -96,10 +98,10 @@ export function App() {
               <li>
                 Beidseitige M-Aufnahme: <strong>{plan.chart.beidseitigeAufnahme}</strong>
               </li>
-              <li>
-                Fußlänge bis Spitze: <strong>{plan.chart.fusslaengeBisSpitzeCm} cm</strong>
-              </li>
             </ul>
+            <p style={{ margin: "0.5rem 0 0", fontSize: "0.85em", color: "#666" }}>
+              Fußlängen aus der Tabelle sind nur Referenz (hängt von Maschenprobe / Rundenzahl ab).
+            </p>
           </section>
 
           <h2>Strickfolge</h2>
@@ -117,9 +119,7 @@ export function App() {
                       ? fmtAufteilung(plan.chart.aufteilung)
                       : step.stepKey === "pickup"
                         ? `${plan.chart.beidseitigeAufnahme} Maschen`
-                        : step.unit === "once"
-                          ? "einmal"
-                          : `${step.targetCount} ${step.unit === "rows" ? "Reihen" : "Runden"}`}
+                        : formatCountLine(step.targetCount, step.unit, step.stitch)}
                   </div>
                   {note ? (
                     <div>
@@ -154,7 +154,7 @@ export function App() {
             <strong>Bitte prüfen:</strong>
             <ul style={{ marginBottom: 0 }}>
               <li>Stimmen Anschlag, Ferse, Aufteilung, Aufnahme mit der Tabelle überein?</li>
-              <li>Stimmen die Reihen-/Rundenzahlen mit der Notiz überein?</li>
+              <li>Stimmen die Reihen-/Rundenzahlen und rechte/linke mit der Notiz überein?</li>
               <li>Stimmt die Bandspitze (Runden + Wiederholungen)?</li>
               <li>Ist „2 Nadeln“ (z.&nbsp;B. 34 statt 17 pro Nadel) richtig?</li>
             </ul>

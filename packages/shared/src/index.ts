@@ -8,6 +8,7 @@ export type {
   PlannedStep,
   SessionStepProgress,
   SteppedPlan,
+  StitchDirection,
   StepKey,
   StepUnit,
   TipRound,
@@ -23,7 +24,13 @@ export {
   untickRow,
 } from "./materialize";
 
-export { STEP_LABELS, STEP_NOTES_HINT, TECHNIQUE_NOTES } from "./labels";
+export {
+  formatCountLine,
+  STEP_LABELS,
+  STEP_NOTES_HINT,
+  STITCH_LABELS,
+  TECHNIQUE_NOTES,
+} from "./labels";
 
 export {
   deriveTipRounds,
