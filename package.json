@@ -1,0 +1,24 @@
+{
+  "name": "knithelper",
+  "private": true,
+  "packageManager": "pnpm@9.15.9",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "lint": "pnpm -r --if-present lint",
+    "format": "biome format --write .",
+    "test": "pnpm -r --if-present test",
+    "typecheck": "pnpm -r --if-present typecheck",
+    "dep:cruise": "depcruise packages --config .dependency-cruiser.cjs",
+    "verify": "pnpm lint && pnpm typecheck && pnpm dep:cruise && pnpm test",
+    "dev:api": "pnpm --filter @knithelper/api dev",
+    "dev:web": "pnpm --filter @knithelper/web dev"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.9.4",
+    "dependency-cruiser": "^16.8.0",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  }
+}
