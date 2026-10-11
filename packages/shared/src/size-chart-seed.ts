@@ -7,7 +7,7 @@
  *
  * German appears only in user-facing names/labels, not in field names.
  */
-import type { ChartSize, TipDecreaseSchedule, TipRound, TipSegment } from "./domain";
+import type { ChartSize, TipDecreaseSchedule, TipRound } from "./domain";
 
 export const PATTERN_NAME = "REGIA 4-fädig";
 export const SIZE_CHART_NEEDLE_MM = "2–3 mm";
@@ -223,34 +223,31 @@ export function getChartSize(label: string): ChartSize | undefined {
  * - "In jeder 3. Runde" → (2 knit, 1 decrease) ×Nx
  * - "In jeder 2. Runde" → (1 knit, 1 decrease) ×Nx
  * - "In jeder Runde"    → final close; not counted
+ *
+ * Each segment is expanded to `count` single rows when knitting
+ * (e.g. knit count 2 → "rechts", "rechts", then "Abnahme").
  */
 export function deriveTipRounds(schedule: TipDecreaseSchedule): TipRound[] {
   const rounds: TipRound[] = [];
   let index = 1;
 
-  const push = (times: number, unitSegments: [TipSegment, TipSegment]): void => {
+  const push = (times: number, knitCount: number): void => {
     if (times <= 0) return;
     rounds.push({
       index,
       title: `${index}. Runde`,
       times,
-      unitSegments,
+      unitSegments: [
+        { kind: "knit", count: knitCount },
+        { kind: "decrease", count: 1 },
+      ],
     });
     index += 1;
   };
 
-  push(schedule.fourthRound, [
-    { label: "3 rechts", repeats: 1 },
-    { label: "1 Abnahme", repeats: 1 },
-  ]);
-  push(schedule.every3rdRound, [
-    { label: "2 rechts", repeats: 1 },
-    { label: "1 Abnahme", repeats: 1 },
-  ]);
-  push(schedule.every2ndRound, [
-    { label: "1 rechts", repeats: 1 },
-    { label: "1 Abnahme", repeats: 1 },
-  ]);
+  push(schedule.fourthRound, 3);
+  push(schedule.every3rdRound, 2);
+  push(schedule.every2ndRound, 1);
 
   return rounds;
 }

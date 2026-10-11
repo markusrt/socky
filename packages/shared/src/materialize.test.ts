@@ -50,24 +50,33 @@ describe("deriveTipRounds", () => {
     expect(tip).toHaveLength(3);
     expect(tip[0]).toMatchObject({
       times: 1,
-      unitSegments: [{ label: "3 rechts" }, { label: "1 Abnahme" }],
+      unitSegments: [
+        { kind: "knit", count: 3 },
+        { kind: "decrease", count: 1 },
+      ],
     });
     expect(tip[1]).toMatchObject({
       times: 2,
-      unitSegments: [{ label: "2 rechts" }, { label: "1 Abnahme" }],
+      unitSegments: [
+        { kind: "knit", count: 2 },
+        { kind: "decrease", count: 1 },
+      ],
     });
     expect(tip[2]).toMatchObject({
       times: 4,
-      unitSegments: [{ label: "1 rechts" }, { label: "1 Abnahme" }],
+      unitSegments: [
+        { kind: "knit", count: 1 },
+        { kind: "decrease", count: 1 },
+      ],
     });
   });
 
   it("22/23 → 2 tip rounds (no 3-knit round) matching sock-02", () => {
     const tip = tipRoundsForChartSize("22/23");
     expect(tip).toHaveLength(2);
-    expect(tip[0]?.unitSegments[0]?.label).toBe("2 rechts");
+    expect(tip[0]?.unitSegments[0]).toEqual({ kind: "knit", count: 2 });
     expect(tip[0]?.times).toBe(1);
-    expect(tip[1]?.unitSegments[0]?.label).toBe("1 rechts");
+    expect(tip[1]?.unitSegments[0]).toEqual({ kind: "knit", count: 1 });
     expect(tip[1]?.times).toBe(3);
   });
 
@@ -75,6 +84,7 @@ describe("deriveTipRounds", () => {
     const tip = tipRoundsForChartSize("50/51");
     expect(tip).toHaveLength(3);
     expect(tip[2]?.times).toBe(5);
+    expect(tip[2]?.unitSegments[1]).toEqual({ kind: "decrease", count: 1 });
   });
 
   it("skips zero counts and never emits the final close round", () => {
@@ -135,7 +145,7 @@ describe("materializePlan", () => {
     expect(plain?.targetCount).toBe(25);
     expect(tip?.targetCount).toBe(2);
     expect(tip?.tipRounds).toHaveLength(2);
-    expect(tip?.tipRounds?.[0]?.unitSegments[0]?.label).toBe("2 rechts");
+    expect(tip?.tipRounds?.[0]?.unitSegments[0]).toEqual({ kind: "knit", count: 2 });
   });
 
   it("preserves stitch direction (knit / mixed)", () => {

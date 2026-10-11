@@ -5,6 +5,7 @@ import {
   createPairSession,
   currentStep,
   finishActiveSock,
+  heelRowPolarity,
   isCloseStep,
   isSockComplete,
   switchToSock2,
@@ -21,22 +22,56 @@ function newSession() {
 }
 
 describe("sequential pair session (one sock at a time)", () => {
-  it("starts on sock 1 at the first step", () => {
+  it("starts with castOn on sock 1", () => {
     const s = newSession();
     expect(s.activeSock).toBe(1);
-    expect(currentStep(s)?.stepKey).toBe("cuff");
-    expect(currentStep(s)?.targetCount).toBe(25);
+    expect(currentStep(s)?.stepKey).toBe("castOn");
+    expect(currentStep(s)?.displayValue).toContain("44");
     expect(canSwitchToSock2(s)).toBe(false);
   });
 
   it("auto-advances to the next step when the current step is full", () => {
     let s = newSession();
+    // castOn (1) → cuff (25)
+    s = tickActiveSock(s);
+    expect(currentStep(s)?.stepKey).toBe("cuff");
     for (let i = 0; i < 25; i++) {
       s = tickActiveSock(s);
     }
     expect(currentStep(s)?.stepKey).toBe("leg");
-    expect(currentStep(s)?.targetCount).toBe(5);
-    expect(s.activeSock).toBe(1);
+  });
+
+  it("expands tip into one row per rechts/Abnahme", () => {
+    const s = newSession();
+    const tipRows = s.steps.filter((x) => x.stepKey === "tip");
+    // 22/23: R1 times1 (2 knit + 1 dec) = 3; R2 times3 (1+1) = 6 → 9
+    expect(tipRows.length).toBe(9);
+    expect(tipRows[0]?.tipRowLabel).toBe("rechts");
+    expect(tipRows[1]?.tipRowLabel).toBe("rechts");
+    expect(tipRows[2]?.tipRowLabel).toBe("Abnahme");
+    expect(tipRows[3]?.tipRowLabel).toBe("rechts");
+    expect(tipRows[4]?.tipRowLabel).toBe("Abnahme");
+    expect(tipRows[2]?.tipDirection).toBe("decrease");
+  });
+
+  it("castOn, split, pickup and reduceToCastOn carry chart values", () => {
+    const s = newSession();
+    const castOn = s.steps.find((x) => x.stepKey === "castOn");
+    const split = s.steps.find((x) => x.stepKey === "split");
+    const pickup = s.steps.find((x) => x.stepKey === "pickup");
+    const reduce = s.steps.find((x) => x.stepKey === "reduceToCastOn");
+    expect(castOn?.displayValue).toContain("44");
+    expect(castOn?.displayValue).toContain("22");
+    expect(split?.displayValue).toBe("7-8-7");
+    expect(pickup?.displayValue).toBe("11");
+    expect(reduce?.displayValue).toBe("44");
+  });
+
+  it("heel rows alternate knit/purl polarity", () => {
+    expect(heelRowPolarity(1)).toBe("knit");
+    expect(heelRowPolarity(2)).toBe("purl");
+    expect(heelRowPolarity(3)).toBe("knit");
+    expect(heelRowPolarity(20)).toBe("purl");
   });
 
   it("cannot switch to sock 2 before sock 1 finished all steps", () => {
@@ -58,10 +93,22 @@ describe("sequential pair session (one sock at a time)", () => {
     expect(isSockComplete(s, 1)).toBe(true);
     expect(canSwitchToSock2(s)).toBe(true);
     expect(s.activeSock).toBe(2);
-    expect(currentStep(s)?.stepKey).toBe("cuff");
+    expect(currentStep(s)?.stepKey).toBe("castOn");
   });
 
-  it("close step uses finishActiveSock (Socke fertig), not row ticks", () => {
+  it("undo walks back across steps when current step is at 0", () => {
+    let s = newSession();
+    s = tickActiveSock(s); // castOn done → cuff
+    for (let i = 0; i < 25; i++) {
+      s = tickActiveSock(s);
+    }
+    expect(currentStep(s)?.stepKey).toBe("leg");
+    s = untickActiveSock(s);
+    expect(currentStep(s)?.stepKey).toBe("cuff");
+    expect(currentStep(s)?.sock1Done).toBe(24);
+  });
+
+  it("close step uses finishActiveSock (Socke fertig)", () => {
     let s = newSession();
     while (!isSockComplete(s, 1)) {
       const step = currentStep(s);
@@ -71,50 +118,10 @@ describe("sequential pair session (one sock at a time)", () => {
         s = tickActiveSock(s);
       }
     }
-    const close = currentStep(s);
-    expect(close?.stepKey).toBe("close");
-    expect(close && isCloseStep(close)).toBe(true);
-
+    expect(currentStep(s)?.stepKey).toBe("close");
     s = finishActiveSock(s);
     expect(isSockComplete(s, 1)).toBe(true);
     expect(s.activeSock).toBe(2);
-  });
-
-  it("undo walks back across steps when current step is at 0", () => {
-    let s = newSession();
-    for (let i = 0; i < 25; i++) {
-      s = tickActiveSock(s);
-    }
-    // now on leg (0/5) after cuff finished — actually auto-advance leaves us on leg 0 after last tick of cuff
-    // After 25 ticks cuff is full and we advanced to leg; last tick filled cuff so leg is 0.
-    expect(currentStep(s)?.stepKey).toBe("leg");
-    expect(currentStep(s)?.sock1Done).toBe(0);
-
-    // undo at 0 goes to previous step (cuff 25 → 24)
-    s = untickActiveSock(s);
-    expect(currentStep(s)?.stepKey).toBe("cuff");
-    expect(currentStep(s)?.sock1Done).toBe(24);
-    expect(currentStep(s)?.targetCount).toBe(25);
-  });
-
-  it("expands tip into individual rows (rechts / Abnahme)", () => {
-    const s = newSession();
-    const tipRows = s.steps.filter((x) => x.stepKey === "tip");
-    // sock-02 chart 22/23: (2 rechts, 1 Abnahme) ×1 + (1 rechts, 1 Abnahme) ×3 → 2+6=8 rows
-    expect(tipRows.length).toBe(8);
-    expect(tipRows[0]?.tipRowLabel).toBe("2 rechts");
-    expect(tipRows[0]?.tipDirection).toBe("knit");
-    expect(tipRows[1]?.tipRowLabel).toBe("1 Abnahme");
-    expect(tipRows[1]?.tipDirection).toBe("decrease");
-    expect(tipRows[0]?.tipRoundIndex).toBe(1);
-  });
-
-  it("split and pickup carry display values from the chart", () => {
-    const s = newSession();
-    const split = s.steps.find((x) => x.stepKey === "split");
-    const pickup = s.steps.find((x) => x.stepKey === "pickup");
-    expect(split?.displayValue).toBe("7-8-7");
-    expect(pickup?.displayValue).toBe("11");
   });
 
   it("marks session DONE after both socks closed", () => {

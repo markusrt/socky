@@ -35,12 +35,16 @@ export function createPairSession(input: {
       continue;
     }
 
-    const displayValue =
-      step.stepKey === "split"
-        ? `${plan.chart.heelSplit[0]}-${plan.chart.heelSplit[1]}-${plan.chart.heelSplit[2]}`
-        : step.stepKey === "pickup"
-          ? String(plan.chart.pickupStitchesBothSides)
-          : undefined;
+    let displayValue: string | undefined;
+    if (step.stepKey === "castOn") {
+      displayValue = `${plan.chart.castOnTotal} Maschen (${plan.needleCount} Nadeln = ${plan.chart.castOnPerNeedle2} / Nadel)`;
+    } else if (step.stepKey === "split") {
+      displayValue = `${plan.chart.heelSplit[0]}-${plan.chart.heelSplit[1]}-${plan.chart.heelSplit[2]}`;
+    } else if (step.stepKey === "pickup") {
+      displayValue = String(plan.chart.pickupStitchesBothSides);
+    } else if (step.stepKey === "reduceToCastOn") {
+      displayValue = String(plan.chart.castOnTotal);
+    }
 
     steps.push({
       stepKey: step.stepKey,
@@ -70,11 +74,15 @@ export function createPairSession(input: {
   };
 }
 
-function tipDirection(label: string): TipRowDirection {
-  return label.toLowerCase().includes("abnahme") ? "decrease" : "knit";
+function tipRowLabel(kind: "knit" | "decrease"): string {
+  return kind === "knit" ? "rechts" : "Abnahme";
 }
 
-/** Flatten tip rounds into one tickable row each (rechts / Abnahme). */
+/**
+ * Flatten tip rounds into one tickable row per single rechts/Abnahme.
+ * e.g. knit count 2 + decrease 1, times 2 →
+ * rechts, rechts, Abnahme, rechts, rechts, Abnahme.
+ */
 export function expandTipRows(
   tipRounds: TipRound[],
   startSortIndex: number
@@ -85,20 +93,22 @@ export function expandTipRows(
   for (const round of tipRounds) {
     for (let time = 0; time < round.times; time++) {
       for (const segment of round.unitSegments) {
-        rows.push({
-          stepKey: "tip",
-          sortIndex,
-          titleKey: "step.tip",
-          unit: "rows",
-          targetCount: 1,
-          tipRoundIndex: round.index,
-          tipRoundTitle: round.title,
-          tipRowLabel: segment.label,
-          tipDirection: tipDirection(segment.label),
-          sock1Done: 0,
-          sock2Done: 0,
-        });
-        sortIndex += 1;
+        for (let n = 0; n < segment.count; n++) {
+          rows.push({
+            stepKey: "tip",
+            sortIndex,
+            titleKey: "step.tip",
+            unit: "rows",
+            targetCount: 1,
+            tipRoundIndex: round.index,
+            tipRoundTitle: round.title,
+            tipRowLabel: tipRowLabel(segment.kind),
+            tipDirection: segment.kind,
+            sock1Done: 0,
+            sock2Done: 0,
+          });
+          sortIndex += 1;
+        }
       }
     }
   }
@@ -231,6 +241,14 @@ export function isPairStepFinished(step: SessionStepProgress): boolean {
 
 export function isCloseStep(step: SessionStepProgress): boolean {
   return step.stepKey === "close";
+}
+
+/**
+ * Heel cap rows alternate: odd = rechts (knit), even = links (purl).
+ * `rowNumber` is 1-based (next row to knit = sockDone + 1).
+ */
+export function heelRowPolarity(rowNumber: number): "knit" | "purl" {
+  return rowNumber % 2 === 1 ? "knit" : "purl";
 }
 
 /** Tip progress summary for UI: round i of n and row within the round. */

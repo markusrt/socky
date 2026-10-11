@@ -18,16 +18,18 @@ export const REGIA_4_FAEDIG_PATTERN: Pattern = {
   nameKey: "pattern.regia4faedig",
   description: "Socken mit Käppchenferse — REGIA 4-fädig und Cotton, 2–3 mm",
   steps: [
+    { key: "castOn", titleKey: "step.castOn", unit: "once", stitch: "none", defaultCount: 1 },
     { key: "cuff", titleKey: "step.cuff", unit: "rows", stitch: "none", defaultCount: 40 },
     { key: "leg", titleKey: "step.leg", unit: "rows", stitch: "knit", defaultCount: 15 },
     { key: "heel", titleKey: "step.heel", unit: "rows", stitch: "mixed", defaultCount: 32 },
-    { key: "split", titleKey: "step.split", unit: "once", stitch: "none" },
+    { key: "split", titleKey: "step.split", unit: "once", stitch: "none", defaultCount: 1 },
     {
       key: "pickup",
       titleKey: "step.pickup",
       techniqueNoteKey: "note.pickup_together_then_twisted",
       unit: "once",
       stitch: "none",
+      defaultCount: 1,
     },
     {
       key: "postJoin",
@@ -35,6 +37,13 @@ export const REGIA_4_FAEDIG_PATTERN: Pattern = {
       unit: "rounds",
       stitch: "knit",
       defaultCount: 5,
+    },
+    {
+      key: "reduceToCastOn",
+      titleKey: "step.reduceToCastOn",
+      unit: "once",
+      stitch: "none",
+      defaultCount: 1,
     },
     { key: "plainFoot", titleKey: "step.plainFoot", unit: "rounds", stitch: "knit" },
     {

@@ -12,6 +12,7 @@ import {
   finishActiveSock,
   formatCountLine,
   formatTipCount,
+  heelRowPolarity,
   isCloseStep,
   materializePlan,
   switchToSock2,
@@ -32,7 +33,7 @@ const DEMO_USER = "local";
 
 function formatTipRound(round: TipRound): string {
   const [knit, decrease] = round.unitSegments;
-  const unit = `${knit?.label ?? ""}, ${decrease?.label ?? ""}`;
+  const unit = `${knit?.count ?? 0} rechts, ${decrease?.count ?? 0} Abnahme`;
   return round.times > 1 ? `(${unit}) ×${round.times}` : unit;
 }
 
@@ -268,13 +269,19 @@ function KnitSessionView({
 
             {tipRow ? (
               <TipRowBlock session={session} step={step} />
+            ) : step.stepKey === "heel" ? (
+              <HeelBlock session={session} step={step} />
             ) : (
               <p style={{ fontSize: "1.25rem", margin: "0.25rem 0" }}>
-                {step.stepKey === "split" && step.displayValue
-                  ? `Aufteilung: ${step.displayValue}`
-                  : step.stepKey === "pickup" && step.displayValue
-                    ? `${step.displayValue} Maschen aufnehmen`
-                    : countLineForStep(step.stepKey, step.targetCount, step.unit, "knit")}
+                {step.stepKey === "castOn" && step.displayValue
+                  ? step.displayValue
+                  : step.stepKey === "split" && step.displayValue
+                    ? `Aufteilung: ${step.displayValue}`
+                    : step.stepKey === "pickup" && step.displayValue
+                      ? `${step.displayValue} Maschen aufnehmen`
+                      : step.stepKey === "reduceToCastOn" && step.displayValue
+                        ? `Reduzieren auf ${step.displayValue} Maschen (wie Anschlag)`
+                        : countLineForStep(step.stepKey, step.targetCount, step.unit, "knit")}
               </p>
             )}
 
@@ -321,6 +328,36 @@ function KnitSessionView({
         </>
       )}
     </main>
+  );
+}
+
+function HeelBlock({
+  session,
+  step,
+}: {
+  session: PairSession;
+  step: NonNullable<ReturnType<typeof currentStep>>;
+}) {
+  const rowNumber = (session.activeSock === 1 ? step.sock1Done : step.sock2Done) + 1;
+  const polarity = heelRowPolarity(rowNumber);
+  return (
+    <div>
+      <p style={{ fontSize: "1.25rem", margin: "0.25rem 0" }}>
+        {step.targetCount} Reihen · abwechselnd rechts / links
+      </p>
+      <p style={{ fontSize: "1.5rem", margin: "0.25rem 0", fontWeight: 700 }}>
+        Reihe {Math.min(rowNumber, step.targetCount)} von {step.targetCount}
+        <span
+          style={{
+            marginLeft: "0.75rem",
+            fontSize: "1.1rem",
+            color: polarity === "knit" ? "#15803d" : "#b45309",
+          }}
+        >
+          {polarity === "knit" ? "rechts" : "links"}
+        </span>
+      </p>
+    </div>
   );
 }
 

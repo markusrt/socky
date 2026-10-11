@@ -33,6 +33,7 @@ export {
   currentStepIndexForSock,
   expandTipRows,
   finishActiveSock,
+  heelRowPolarity,
   isCloseStep,
   isPairStepFinished,
   isSockComplete,

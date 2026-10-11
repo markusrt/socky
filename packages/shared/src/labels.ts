@@ -4,6 +4,7 @@ import type { StepKey, StitchDirection } from "./domain";
  * User-facing German strings. Technical keys stay English (Constitution §7).
  */
 export const STEP_LABELS: Record<StepKey, string> = {
+  castOn: "Maschen anschlagen",
   cuff: "Bund / Bündchen",
   leg: "Rechte Reihen (Bein)",
   heel: "Ferse (Käppchen)",
@@ -12,6 +13,7 @@ export const STEP_LABELS: Record<StepKey, string> = {
   split: "Aufteilung der Maschen",
   pickup: "Maschen aufnehmen",
   postJoin: "Nach dem Zusammenstricken",
+  reduceToCastOn: "Maschen reduzieren",
   plainFoot: "Nur rechte Reihen (Fuß)",
   tip: "Maschenreduzieren (Bandspitze)",
   close: "Socke abketten (Abschluss)",
@@ -24,15 +26,17 @@ export const TECHNIQUE_NOTES: Record<string, string> = {
 
 /** Notes-text snippets for G1 side-by-side review (user-facing). */
 export const STEP_NOTES_HINT: Record<StepKey, string> = {
+  castOn: "44 Maschen aufnehmen (2 Nadeln = 22)",
   cuff: "Bündchen 40 Reihen / Bund 40 Reihen",
   leg: "Rechte Reihen 15",
-  heel: "Ferse in Reihen 32 (Rechte 16 + Linke 16)",
-  heelKnit: "Rechte Reihen 16",
-  heelPurl: "Linke Reihen 16",
-  split: "Aufteilung 11-12-11",
-  pickup: "17 Maschen aufnehmen",
-  postJoin: "Nach dem zusammenstricken 5 rechte Reihen",
-  plainFoot: "Nach dem maschreduzieren nur rechte Reihen 51",
+  heel: "Ferse in Reihen 20 (abwechselnd rechts / links)",
+  heelKnit: "Rechte Reihen",
+  heelPurl: "Linke Reihen",
+  split: "Aufteilung 7-8-7",
+  pickup: "11 Maschen aufnehmen",
+  postJoin: "Nach dem zusammenstricken 3 rechte Reihen",
+  reduceToCastOn: "Maschen reduzieren bis Anschlag (z. B. 44)",
+  plainFoot: "Nach dem maschreduzieren nur rechte Reihen 25",
   tip: "Maschenreduzieren … 1./2./3. Runde",
   close: "Abschluss / Abketten (wird nicht mit „Reihe fertig“ gezählt)",
 };

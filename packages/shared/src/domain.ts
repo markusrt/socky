@@ -9,6 +9,7 @@
 
 /** Stable step identity across patterns and sessions. */
 export type StepKey =
+  | "castOn"
   | "cuff"
   | "leg"
   | "heel"
@@ -17,6 +18,7 @@ export type StepKey =
   | "split"
   | "pickup"
   | "postJoin"
+  | "reduceToCastOn"
   | "plainFoot"
   | "tip"
   | "close";
@@ -32,12 +34,14 @@ export type StitchDirection = "knit" | "purl" | "mixed" | "none";
 export type UserRole = "ADMIN" | "KNITTER";
 
 /**
- * One instruction fragment inside a tip round.
- * `label` is user-facing domain text (may be German, e.g. "3 rechts").
+ * One fragment inside a tip round (e.g. knit 3 then decrease 1).
+ * Each unit becomes one tickable row when expanded.
  */
 export interface TipSegment {
-  label: string;
-  repeats: number;
+  /** knit = "rechts", decrease = "Abnahme" */
+  kind: "knit" | "decrease";
+  /** How many single rows (e.g. 3 → "rechts", "rechts", "rechts"). */
+  count: number;
 }
 
 /** One tip round (heel-toe decrease). `title` is user-facing (e.g. "1. Runde"). */
@@ -46,7 +50,7 @@ export interface TipRound {
   title: string;
   /**
    * How often the (knit + decrease) unit appears in this round.
-   * e.g. 4 → (1 rechts, 1 Abnahme) ×4 as in sock-03 tip round 3.
+   * e.g. 4 → (1 knit, 1 decrease) ×4 as in sock-03 tip round 3.
    */
   times: number;
   unitSegments: [TipSegment, TipSegment];
@@ -128,14 +132,16 @@ export interface SessionStepProgress {
   techniqueNoteKey?: string;
   unit: StepUnit;
   targetCount: number;
-  /** e.g. "11-12-11" or "17" for split/pickup. */
+  /** e.g. "44 (22 / Nadel)" or "11-12-11" or "44". */
   displayValue?: string;
   /** Expanded tip: which tip round this row belongs to (1-based). */
   tipRoundIndex?: number;
   tipRoundTitle?: string;
-  /** e.g. "3 rechts" / "1 Abnahme" */
+  /** Single row label: "rechts" or "Abnahme". */
   tipRowLabel?: string;
   tipDirection?: TipRowDirection;
+  /** Heel: odd row = knit, even row = purl (alternating). */
+  rowPolarity?: "knit" | "purl";
   tipRounds?: TipRound[];
   sock1Done: number;
   sock2Done: number;
