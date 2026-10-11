@@ -1,0 +1,33 @@
+# dependencies
+node_modules/
+.pnpm-store/
+
+# build
+dist/
+build/
+*.tsbuildinfo
+.wrangler/
+.dev.vars
+
+# test / tooling
+coverage/
+playwright-report/
+test-results/
+.vite/
+
+# env / secrets
+.env
+.env.*
+!.env.example
+
+# os / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
