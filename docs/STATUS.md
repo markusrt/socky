@@ -15,10 +15,14 @@ Deploy so wife can use it on a phone (not localhost).
 
 ## Remaining roadmap
 
-1. **Deploy** — GitHub Pages (static, no secrets) and/or Cloudflare Pages/Workers
-2. **M3** — Google auth (Better Auth), ADMIN/KNITTER, D1, admin for sizes
-3. **M4** — offline PWA, production workers.dev
-4. Polish: i18n EN, print/export
+1. **Deploy (GitHub Pages)** — after push to GitHub:
+   - Repo **Settings → Pages → Source: GitHub Actions**
+   - Push `main` → `deploy-pages.yml` publishes `packages/web/dist`
+   - URL: `https://<user>.github.io/<repo>/`
+2. Optional **Cloudflare Pages** — secrets `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID` + `deploy-cloudflare.yml`
+3. **M3** — Google auth (Better Auth), ADMIN/KNITTER, D1, admin for sizes
+4. **M4** — offline PWA, production workers.dev
+5. Polish: i18n EN, print/export
 
 ## Domain gotchas (do not regress)
 
