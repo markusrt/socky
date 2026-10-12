@@ -23,6 +23,7 @@ import {
 import { useMemo, useState } from "react";
 import { loadSessions, upsertSession } from "./storage";
 import { colors } from "./theme";
+import { Button } from "./ui/Button";
 
 type View =
   | { name: "home" }
@@ -123,12 +124,12 @@ function HomeView({
       <header
         style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "0.5rem" }}
       >
-        <img src="./logo-socky.svg" alt="" width={140} height={45} />
+        <img src="./logo-socky.png" alt="Socky" width={220} height={144} />
       </header>
       <p style={{ marginTop: 0, color: colors.ink }}>Knit. Track. Cozy.</p>
-      <button type="button" onClick={onNew} style={primaryBtn}>
+      <Button onClick={onNew} fullWidth>
         Neue Socke starten
-      </button>
+      </Button>
 
       <h2>Meine Strickprojekte</h2>
       {sessions.length === 0 ? (
@@ -139,18 +140,20 @@ function HomeView({
             const step = currentStep(s);
             return (
               <li key={s.id} style={{ marginBottom: "0.75rem" }}>
-                <button type="button" onClick={() => onOpen(s.id)} style={listBtn}>
-                  <strong>
-                    {s.actualSizeLabel} <small>(Tabelle {s.chartSizeLabel})</small>
-                  </strong>
-                  <div>
-                    {s.status === "DONE"
-                      ? "Fertig"
-                      : step
-                        ? `${STEP_LABELS[step.stepKey]} · ${step.sock1Done}/${step.targetCount} · Socke ${s.activeSock}`
-                        : "…"}
-                  </div>
-                </button>
+                <Button variant="secondary" fullWidth onClick={() => onOpen(s.id)}>
+                  <span style={{ textAlign: "left", display: "block" }}>
+                    <strong>
+                      {s.actualSizeLabel} <small>(Tabelle {s.chartSizeLabel})</small>
+                    </strong>
+                    <div>
+                      {s.status === "DONE"
+                        ? "Fertig"
+                        : step
+                          ? `${STEP_LABELS[step.stepKey]} · ${step.sock1Done}/${step.targetCount} · Socke ${s.activeSock}`
+                          : "…"}
+                    </div>
+                  </span>
+                </Button>
               </li>
             );
           })}
@@ -161,9 +164,9 @@ function HomeView({
       <ul>
         {ACTUAL_SIZES.map((s) => (
           <li key={s.id}>
-            <button type="button" onClick={() => onPreview(s.id)} style={linkBtn}>
+            <Button variant="ghost" onClick={() => onPreview(s.id)}>
               {s.id} — Größe {s.label} (Tabelle {s.chartSizeLabel})
-            </button>
+            </Button>
           </li>
         ))}
       </ul>
@@ -197,9 +200,7 @@ function NewSessionView({
         </select>
       </label>
       <div style={{ marginTop: "1rem", display: "flex", gap: "0.5rem" }}>
-        <button
-          type="button"
-          style={primaryBtn}
+        <Button
           onClick={() => {
             const actual = ACTUAL_SIZES.find((s) => s.id === actualSizeId);
             if (!actual) return;
@@ -213,10 +214,10 @@ function NewSessionView({
           }}
         >
           Starten
-        </button>
-        <button type="button" style={secondaryBtn} onClick={onCancel}>
+        </Button>
+        <Button variant="secondary" onClick={onCancel}>
           Zurück
-        </button>
+        </Button>
       </div>
     </main>
   );
@@ -252,9 +253,9 @@ function KnitSessionView({
 
   return (
     <main style={shell}>
-      <button type="button" style={linkBtn} onClick={onBack}>
+      <Button variant="ghost" onClick={onBack}>
         ← Übersicht
-      </button>
+      </Button>
       <h1>
         Größe {session.actualSizeLabel}{" "}
         <small style={{ fontWeight: "normal" }}>(Tabelle {session.chartSizeLabel})</small>
@@ -315,20 +316,18 @@ function KnitSessionView({
             ) : null}
           </section>
 
-          <button type="button" style={bigBtn} onClick={confirmAction}>
+          <Button fullWidth large onClick={confirmAction}>
             {confirmLabel}
-          </button>
+          </Button>
 
           <div style={{ display: "flex", gap: "0.5rem", marginTop: "0.75rem" }}>
             {!closeStep ? (
-              <button type="button" style={secondaryBtn} onClick={onUndo}>
+              <Button variant="secondary" onClick={onUndo}>
                 Rückgängig
-              </button>
+              </Button>
             ) : null}
             {session.activeSock === 1 && canSwitchToSock2(session) ? (
-              <button type="button" style={primaryBtn} onClick={onStartSock2}>
-                Socke 2 starten
-              </button>
+              <Button onClick={onStartSock2}>Socke 2 starten</Button>
             ) : null}
           </div>
         </>
@@ -357,7 +356,7 @@ function HeelBlock({
           style={{
             marginLeft: "0.75rem",
             fontSize: "1.1rem",
-            color: polarity === "knit" ? "#15803d" : "#b45309",
+            color: polarity === "knit" ? colors.woolyTeal : colors.warmMustard,
           }}
         >
           {polarity === "knit" ? "rechts" : "links"}
@@ -387,9 +386,13 @@ function TipRowBlock({
       <p style={{ fontSize: "1.5rem", margin: "0.25rem 0", fontWeight: 700 }}>
         {step.tipRowLabel}
         {step.tipDirection === "decrease" ? (
-          <span style={{ marginLeft: "0.5rem", fontSize: "1rem", color: "#b45309" }}>Abnahme</span>
+          <span style={{ marginLeft: "0.5rem", fontSize: "1rem", color: colors.warmMustard }}>
+            Abnahme
+          </span>
         ) : (
-          <span style={{ marginLeft: "0.5rem", fontSize: "1rem", color: "#15803d" }}>rechts</span>
+          <span style={{ marginLeft: "0.5rem", fontSize: "1rem", color: colors.woolyTeal }}>
+            rechts
+          </span>
         )}
       </p>
       <div style={{ display: "flex", flexWrap: "wrap", gap: "0.35rem", marginTop: "0.5rem" }}>
@@ -401,10 +404,12 @@ function TipRowBlock({
               key={row.sortIndex}
               style={{
                 padding: "0.25rem 0.5rem",
-                borderRadius: 6,
+                borderRadius: 8,
                 fontSize: "0.85em",
-                border: isCurrent ? "2px solid #2563eb" : "1px solid #ccc",
-                background: done ? "#dcfce7" : isCurrent ? "#eff6ff" : "#fff",
+                border: isCurrent
+                  ? `2px solid ${colors.berryRed}`
+                  : `1px solid ${colors.cozyPeach}`,
+                background: done ? colors.cozyPeach : isCurrent ? colors.softCream : "#fff",
               }}
             >
               {done ? "✓ " : ""}
@@ -448,9 +453,13 @@ function SockProgress({
       style={{
         flex: 1,
         padding: "0.5rem",
-        borderRadius: 8,
-        border: active ? "2px solid #2563eb" : complete ? "2px solid #16a34a" : "1px solid #ccc",
-        background: active ? "#eff6ff" : complete ? "#dcfce7" : "#fff",
+        borderRadius: 12,
+        border: active
+          ? `2px solid ${colors.woolyTeal}`
+          : complete
+            ? `2px solid ${colors.warmMustard}`
+            : `1px solid ${colors.cozyPeach}`,
+        background: active ? colors.softCream : complete ? "#F7E8B8" : "#fff",
       }}
     >
       <div style={{ fontWeight: active ? 700 : 400 }}>
@@ -459,7 +468,7 @@ function SockProgress({
       </div>
       <div style={{ fontSize: "1.15rem" }}>
         {complete ? (
-          <span style={{ color: "#15803d", fontWeight: 700 }} title="fertig">
+          <span style={{ color: colors.warmMustard, fontWeight: 700 }} title="fertig">
             ✓
           </span>
         ) : (
@@ -482,9 +491,9 @@ function PreviewView({ actualSizeId, onBack }: { actualSizeId: string; onBack: (
 
   return (
     <main style={shell}>
-      <button type="button" style={linkBtn} onClick={onBack}>
+      <Button variant="ghost" onClick={onBack}>
         ← Übersicht
-      </button>
+      </Button>
       <h1>
         {plan.patternName} · {plan.actualSizeLabel}{" "}
         <small style={{ fontWeight: "normal" }}>(Tabelle {plan.chartSizeLabel})</small>
@@ -552,52 +561,4 @@ const card: React.CSSProperties = {
   borderRadius: 12,
   background: "#fff",
   marginBottom: "1rem",
-};
-
-const primaryBtn: React.CSSProperties = {
-  fontSize: "1rem",
-  padding: "0.75rem 1.25rem",
-  borderRadius: 12,
-  border: "none",
-  background: colors.berryRed,
-  color: "#fff",
-  cursor: "pointer",
-};
-
-const bigBtn: React.CSSProperties = {
-  ...primaryBtn,
-  width: "100%",
-  fontSize: "1.35rem",
-  padding: "1.1rem",
-  background: colors.woolyTeal,
-};
-
-const secondaryBtn: React.CSSProperties = {
-  fontSize: "1rem",
-  padding: "0.65rem 1rem",
-  borderRadius: 12,
-  border: `1px solid ${colors.cozyPeach}`,
-  background: "#fff",
-  cursor: "pointer",
-};
-
-const listBtn: React.CSSProperties = {
-  width: "100%",
-  textAlign: "left",
-  fontSize: "1rem",
-  padding: "0.75rem 1rem",
-  borderRadius: 12,
-  border: `1px solid ${colors.cozyPeach}`,
-  background: "#fff",
-  cursor: "pointer",
-};
-
-const linkBtn: React.CSSProperties = {
-  background: "none",
-  border: "none",
-  color: colors.berryRed,
-  cursor: "pointer",
-  fontSize: "1rem",
-  padding: "0.25rem 0",
-  textAlign: "left",
 };

@@ -1,17 +1,23 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 90" fill="none" role="img" aria-label="Socky">
-  <!-- sock -->
-  <g transform="translate(18,8)">
-    <path d="M28 8c2 0 4 2 4 5v22c0 3 2 5 5 7l10 7c4 3 6 7 6 12 0 8-6 14-14 14H22c-6 0-10-4-10-10 0-3 1-6 4-8l8-6V13c0-3 2-5 4-5z" fill="#F0A088" stroke="#A61E3C" stroke-width="3"/>
-    <path d="M22 8h16v10H22z" fill="#A61E3C"/>
-    <path d="M22 22h16v8H22z" fill="#2F7F7F"/>
-    <path d="M18 58c2 4 6 6 10 6h12c4 0 7-2 8-5-2 2-5 3-8 3H26c-3 0-6-1-8-4z" fill="#D4A017" stroke="#A61E3C" stroke-width="2"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 200" fill="none" role="img" aria-label="Socky">
+  <!-- sock (peach body, berry cuff, teal band, mustard heel) -->
+  <g transform="translate(48,6)">
+    <path d="M52 18c3 0 6 3 6 8v42c0 5 3 9 8 12l16 11c7 5 11 12 11 20 0 14-11 24-25 24H42c-11 0-18-7-18-18 0-5 2-11 7-15l14-10V26c0-5 3-8 7-8z" fill="#F0A088" stroke="#A61E3C" stroke-width="4"/>
+    <path d="M46 18h24v16H46z" fill="#A61E3C"/>
+    <path d="M46 12h24v8H46z" fill="#D4A017"/>
+    <path d="M46 42h24v12H46z" fill="#2F7F7F"/>
+    <path d="M38 96c4 7 12 11 22 11h18c7 0 13-3 16-8-4 4-9 6-16 6H52c-6 0-11-3-14-9z" fill="#D4A017" stroke="#A61E3C" stroke-width="3"/>
   </g>
-  <!-- yarn ball -->
-  <g transform="translate(88,18)">
-    <circle cx="28" cy="28" r="24" fill="#D4A017" stroke="#A61E3C" stroke-width="3"/>
-    <path d="M12 18c10 6 22 8 36 4M10 30c12 8 28 10 42 2M14 42c10 6 22 8 34 2" stroke="#A61E3C" stroke-width="2" stroke-linecap="round" opacity=".7"/>
-    <path d="M48 20c8-2 14 2 16 8" stroke="#F0A088" stroke-width="3" stroke-linecap="round" fill="none"/>
+  <!-- yarn ball + needles -->
+  <g transform="translate(130,20)">
+    <line x1="38" y1="8" x2="62" y2="38" stroke="#A61E3C" stroke-width="4" stroke-linecap="round"/>
+    <line x1="52" y1="6" x2="70" y2="36" stroke="#A61E3C" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="38" cy="6" r="5" fill="#2F7F7F" stroke="#A61E3C" stroke-width="2"/>
+    <circle cx="52" cy="4" r="5" fill="#2F7F7F" stroke="#A61E3C" stroke-width="2"/>
+    <circle cx="48" cy="52" r="36" fill="#D4A017" stroke="#A61E3C" stroke-width="4"/>
+    <path d="M22 38c16 10 40 14 62 6M18 54c18 12 44 16 70 4M24 72c16 10 38 14 58 4" stroke="#A61E3C" stroke-width="3" stroke-linecap="round" opacity=".75"/>
+    <path d="M78 40c12-4 22 2 26 14" stroke="#F0A088" stroke-width="5" stroke-linecap="round" fill="none"/>
+    <path d="M104 54c6 10 4 22-6 28" stroke="#F0A088" stroke-width="5" stroke-linecap="round" fill="none"/>
   </g>
   <!-- wordmark -->
-  <text x="148" y="58" font-family="Georgia, 'Times New Roman', serif" font-size="42" font-weight="700" fill="#A61E3C" font-style="italic">Socky</text>
+  <text x="95" y="168" text-anchor="middle" font-family="Georgia, 'Palatino Linotype', serif" font-size="64" font-style="italic" font-weight="700" fill="#A61E3C">Socky</text>
 </svg>
