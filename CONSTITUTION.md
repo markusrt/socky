@@ -79,6 +79,10 @@ Principle changes amend this file **and** get an ADR.
 | Gate | Owner | Passes when |
 |---|---|---|
 | G0 Harness | Markus | Constitution + AGENTS + CI accepted |
-| G1 Domain truth | Wife | sock-01…04 fixtures match Notes |
+| G1 Domain truth | Wife | Size fixtures match Notes / REGIA chart |
 | G2 Knitting feel | Wife | Tap UX beats deleting `/` |
 | G3 Product | Both | Auth/offline/deploy approved |
+
+## 11. Specs stay true
+
+Every behavior change updates `docs/SPEC.md` (and `docs/STATUS.md` when relevant) in the same PR. Implementation without spec drift is a process defect.

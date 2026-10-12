@@ -5,12 +5,14 @@ Read `CONSTITUTION.md` first. It overrides convenience.
 ## Project shape
 
 ```
-packages/shared   domain types, size-chart seed, materialize(), fixtures
-packages/api      Hono on Cloudflare Workers + Drizzle/D1 + auth routes
-packages/web      React + Vite mobile-first PWA (admin + knitting UI)
+packages/shared   domain types, size-chart seed, materialize(), session(), JSON actual-sizes
+packages/api      Hono on Cloudflare Workers (+ D1/auth later)
+packages/web      React + Vite Socky knitting UI
+docs/SPEC.md      implemented requirements (keep updated)
+docs/STATUS.md    handoff / current state
 docs/adr/         architecture decision records
-docs/domain/      groessenmodell + sock-0N comparison notes (for domain review)
-docs/reference/   REGIA 4-fädig pattern PDF
+docs/domain/      size model + note comparisons
+docs/reference/   REGIA PDF + design concept
 ```
 
 ## Workflow
@@ -19,6 +21,18 @@ docs/reference/   REGIA 4-fädig pattern PDF
 2. Prefer editing existing files over creating new ones.
 3. Domain questions: read `docs/domain/groessenmodell.md`, `docs/reference/`, and fixtures; if still unclear, ask.
 4. Do not invent sizes, counts, or tip schedules.
+
+## Keep docs in sync (every feature)
+
+With each feature/fix that changes behavior or data model, update in the **same change**:
+
+1. **`docs/SPEC.md`** — add/adjust the requirement row (what + where implemented)
+2. **`docs/STATUS.md`** — “What works” / “Open” if session-relevant
+3. **`packages/shared/data/…` + tests** — if domain data changed
+4. **ADR** under `docs/adr/` — if architecture/schema/process changed
+5. Domain cheat-sheet below — if knitting rules changed
+
+Do not ship a feature and leave SPEC/STATUS stale.
 
 ## Before you claim done
 
@@ -57,6 +71,12 @@ Push only when the user asks. After a CI failure: `gh run view <id> --log-failed
 - `api` must not import `web`
 - `web` must not import `api` internals (HTTP only)
 - No I/O in `shared`
+
+## Agent memory (MiMoCode)
+
+- Project MEMORY: `C:\Users\Markus\.local\share\mimocode\memory\projects\global\MEMORY.md`
+- Session notes: `…/memory/sessions/<session-id>/notes.md`
+- Repo is the **source of truth** for product spec (`docs/SPEC.md`, `docs/STATUS.md`); MEMORY is a short handoff cache.
 
 ## Knitting domain cheat-sheet
 
