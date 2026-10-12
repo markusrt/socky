@@ -157,6 +157,25 @@ describe("materializePlan", () => {
     expect(byKey.heel?.stitch).toBe("mixed");
   });
 
+  it("size-15: custom construction from notes (36 M, 6-6-6, 9 pickup), tip 2 rounds", () => {
+    const plan = materializePlan(REGIA_4_FAEDIG_PATTERN, mustActualSize("size-15"));
+    expect(plan.actualSizeLabel).toBe("15");
+    expect(plan.chart.castOnTotal).toBe(36);
+    expect(plan.chart.castOnPerNeedle2).toBe(18);
+    expect(plan.chart.heelSplit).toEqual([6, 6, 6]);
+    expect(plan.chart.heelHeightRows).toBe(16);
+    expect(plan.chart.pickupStitchesBothSides).toBe(9);
+    const byKey = Object.fromEntries(plan.steps.map((s) => [s.stepKey, s]));
+    expect(byKey.cuff?.targetCount).toBe(21);
+    expect(byKey.leg?.targetCount).toBe(5);
+    expect(byKey.heel?.targetCount).toBe(16);
+    expect(byKey.postJoin?.targetCount).toBe(3);
+    expect(byKey.plainFoot?.targetCount).toBe(17);
+    expect(byKey.tip?.targetCount).toBe(2);
+    expect(byKey.tip?.tipRounds?.[0]?.unitSegments[0]).toEqual({ kind: "knit", count: 2 });
+    expect(byKey.tip?.tipRounds?.[1]?.times).toBe(3);
+  });
+
   it("throws when a step has no configured count (never invent)", () => {
     const broken = {
       ...mustActualSize("size-40-41"),
@@ -167,6 +186,7 @@ describe("materializePlan", () => {
 
   it("seeded actual sizes cover the four reference configs", () => {
     expect(ACTUAL_SIZES.map((s) => s.id).sort()).toEqual([
+      "size-15",
       "size-18",
       "size-37-38",
       "size-40-41",

@@ -15,6 +15,18 @@ export function materializePlan(pattern: Pattern, actualSize: ActualSizeConfig):
     );
   }
 
+  // Notes may override construction (e.g. child size 15: 36 M, 6-6-6, 9 aufnehmen).
+  const o = actualSize.construction ?? {};
+  const effectiveChart = {
+    ...chart,
+    castOnTotal: o.castOnTotal ?? chart.castOnTotal,
+    castOnPerNeedle2: o.castOnPerNeedle2 ?? chart.castOnPerNeedle2,
+    heelStitches: o.heelStitches ?? chart.heelStitches,
+    heelHeightRows: o.heelHeightRows ?? chart.heelHeightRows,
+    heelSplit: o.heelSplit ?? chart.heelSplit,
+    pickupStitchesBothSides: o.pickupStitchesBothSides ?? chart.pickupStitchesBothSides,
+  };
+
   const steps: PlannedStep[] = pattern.steps.map((step, sortIndex) =>
     materializeStep(step, sortIndex, actualSize)
   );
@@ -24,7 +36,7 @@ export function materializePlan(pattern: Pattern, actualSize: ActualSizeConfig):
     patternName: pattern.name,
     chartSizeLabel: actualSize.chartSizeLabel,
     actualSizeLabel: actualSize.label,
-    chart,
+    chart: effectiveChart,
     needleCount: NEEDLE_COUNT,
     steps,
   };

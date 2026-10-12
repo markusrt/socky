@@ -5,6 +5,7 @@
  *
  * German only in name/description/tags/notes — not in keys or enum values.
  */
+import size15 from "../../data/actual-sizes/size-15.json";
 import size18 from "../../data/actual-sizes/size-18.json";
 import size3738 from "../../data/actual-sizes/size-37-38.json";
 import size4041 from "../../data/actual-sizes/size-40-41.json";
@@ -72,6 +73,7 @@ type ActualSizeJson = {
   notes?: string;
   counts: ActualSizeConfig["counts"];
   tipRounds?: TipRound[];
+  construction?: ActualSizeConfig["construction"];
 };
 
 function loadActualSize(raw: ActualSizeJson): ActualSizeConfig {
@@ -80,12 +82,25 @@ function loadActualSize(raw: ActualSizeJson): ActualSizeConfig {
     throw new Error(`actual size ${raw.id}: unknown chart "${raw.chartSizeLabel}"`);
   }
   return {
-    ...raw,
+    id: raw.id,
+    patternId: raw.patternId,
+    label: raw.label,
+    chartSizeLabel: raw.chartSizeLabel,
+    counts: raw.counts,
     tipRounds: raw.tipRounds?.length ? raw.tipRounds : tipRoundsForChartSize(raw.chartSizeLabel),
+    ...(raw.construction ? { construction: raw.construction } : {}),
+    ...(raw.tags ? { tags: raw.tags } : {}),
+    ...(raw.notes !== undefined ? { notes: raw.notes } : {}),
   };
 }
 
-const JSON_SEEDS: ActualSizeJson[] = [size4041, size3738, size5051, size18] as ActualSizeJson[];
+const JSON_SEEDS: ActualSizeJson[] = [
+  size4041,
+  size3738,
+  size5051,
+  size18,
+  size15,
+] as ActualSizeJson[];
 
 export const ACTUAL_SIZES: readonly ActualSizeConfig[] = JSON_SEEDS.map(loadActualSize);
 

@@ -1,0 +1,37 @@
+{
+  "id": "size-15",
+  "patternId": "regia-4-faedig",
+  "label": "15",
+  "chartSizeLabel": "22/23",
+  "tags": ["aktuelle Socken", "child", "reference"],
+  "notes": "Ca. Gr. 15; 36 stitches (2 needles: 18); custom smaller construction from Notes",
+  "counts": {
+    "cuff": 21,
+    "leg": 5,
+    "heel": 16,
+    "postJoin": 3,
+    "plainFoot": 17
+  },
+  "construction": {
+    "castOnTotal": 36,
+    "castOnPerNeedle2": 18,
+    "heelStitches": 18,
+    "heelHeightRows": 16,
+    "heelSplit": [6, 6, 6],
+    "pickupStitchesBothSides": 9
+  },
+  "tipRounds": [
+    {
+      "index": 1,
+      "title": "1. Runde",
+      "times": 1,
+      "unitSegments": [{ "kind": "knit", "count": 2 }, { "kind": "decrease", "count": 1 }]
+    },
+    {
+      "index": 2,
+      "title": "2. Runde",
+      "times": 3,
+      "unitSegments": [{ "kind": "knit", "count": 1 }, { "kind": "decrease", "count": 1 }]
+    }
+  ]
+}

@@ -119,6 +119,19 @@ export interface ActualSizeConfig {
   chartSizeLabel: string;
   counts: Partial<Record<StepKey, number>>;
   tipRounds: TipRound[];
+  /**
+   * Construction overrides when the sock does not follow the REGIA chart
+   * exactly (e.g. child size 15 from Notes: 36 stitches, 6-6-6, 9 pickup).
+   * Unset fields fall back to `chartSizeLabel`.
+   */
+  construction?: Partial<{
+    castOnTotal: number;
+    castOnPerNeedle2: number;
+    heelStitches: number;
+    heelHeightRows: number;
+    heelSplit: [number, number, number];
+    pickupStitchesBothSides: number;
+  }>;
   tags?: string[];
   notes?: string;
 }
