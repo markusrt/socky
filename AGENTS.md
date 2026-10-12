@@ -28,6 +28,20 @@ pnpm verify
 
 Playwright is required for knitting UI changes (M2+).
 
+## GitHub (use `gh` CLI)
+
+Preferred for CI/release investigation (do not guess from the UI):
+
+```bash
+gh run list --limit 5
+gh run view <id> --log-failed
+gh run watch <id>
+gh pr checks
+gh release list
+```
+
+Push only when the user asks. After a CI failure: `gh run view <id> --log-failed` first.
+
 ## Code rules
 
 - TypeScript strict; no `any` in shared/api domain code
