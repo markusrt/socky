@@ -177,11 +177,16 @@ function HomeView({
       )}
 
       <h2>Pläne prüfen (G1)</h2>
-      <ul>
+      <ul style={{ listStyle: "none", padding: 0 }}>
         {ACTUAL_SIZES.map((s) => (
-          <li key={s.id}>
-            <Button variant="ghost" onClick={() => onPreview(s.id)}>
-              {s.id} — Größe {s.label} (Tabelle {s.chartSizeLabel})
+          <li key={s.id} style={{ marginBottom: "0.75rem" }}>
+            <Button variant="secondary" fullWidth onClick={() => onPreview(s.id)}>
+              <span style={{ textAlign: "left", display: "block" }}>
+                <strong>
+                  Größe {s.label} <small>(Tabelle {s.chartSizeLabel})</small>
+                </strong>
+                <div style={{ fontWeight: 400, opacity: 0.85 }}>Strickplan ansehen</div>
+              </span>
             </Button>
           </li>
         ))}
