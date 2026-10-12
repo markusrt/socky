@@ -1,5 +1,5 @@
 {
-  "name": "@knithelper/web",
+  "name": "@socky/web",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -12,7 +12,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@knithelper/shared": "workspace:*",
+    "@socky/shared": "workspace:*",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },

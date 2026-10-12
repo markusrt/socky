@@ -1,10 +1,10 @@
 {
-  "id": "sock-04",
+  "id": "size-37-38",
   "patternId": "regia-4-faedig",
   "label": "37/38",
   "chartSizeLabel": "44/45",
-  "tags": ["aktuelle Socken", "Referenz sock-04"],
-  "notes": "68 Maschen (2 Nadeln: 34); Bund 40; plain 45",
+  "tags": ["aktuelle Socken", "reference"],
+  "notes": "68 stitches (2 needles: 34); cuff 40; plain foot 45",
   "counts": {
     "cuff": 40,
     "leg": 15,

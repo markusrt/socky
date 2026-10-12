@@ -1,5 +1,5 @@
 /**
- * KnitHelper domain types.
+ * Socky domain types.
  *
  * Constitution §2: chart base size ≠ actual size — never collapse them.
  * Constitution §1: do not invent knitting rules; only model what sources state.

@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 90" fill="none" role="img" aria-label="Socky">
+  <!-- sock -->
+  <g transform="translate(18,8)">
+    <path d="M28 8c2 0 4 2 4 5v22c0 3 2 5 5 7l10 7c4 3 6 7 6 12 0 8-6 14-14 14H22c-6 0-10-4-10-10 0-3 1-6 4-8l8-6V13c0-3 2-5 4-5z" fill="#F0A088" stroke="#A61E3C" stroke-width="3"/>
+    <path d="M22 8h16v10H22z" fill="#A61E3C"/>
+    <path d="M22 22h16v8H22z" fill="#2F7F7F"/>
+    <path d="M18 58c2 4 6 6 10 6h12c4 0 7-2 8-5-2 2-5 3-8 3H26c-3 0-6-1-8-4z" fill="#D4A017" stroke="#A61E3C" stroke-width="2"/>
+  </g>
+  <!-- yarn ball -->
+  <g transform="translate(88,18)">
+    <circle cx="28" cy="28" r="24" fill="#D4A017" stroke="#A61E3C" stroke-width="3"/>
+    <path d="M12 18c10 6 22 8 36 4M10 30c12 8 28 10 42 2M14 42c10 6 22 8 34 2" stroke="#A61E3C" stroke-width="2" stroke-linecap="round" opacity=".7"/>
+    <path d="M48 20c8-2 14 2 16 8" stroke="#F0A088" stroke-width="3" stroke-linecap="round" fill="none"/>
+  </g>
+  <!-- wordmark -->
+  <text x="148" y="58" font-family="Georgia, 'Times New Roman', serif" font-size="42" font-weight="700" fill="#A61E3C" font-style="italic">Socky</text>
+</svg>

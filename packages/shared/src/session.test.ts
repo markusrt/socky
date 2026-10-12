@@ -17,7 +17,7 @@ function newSession() {
   return createPairSession({
     userId: "u1",
     pattern: REGIA_4_FAEDIG_PATTERN,
-    actualSize: mustActualSize("sock-02"),
+    actualSize: mustActualSize("size-18"),
   });
 }
 

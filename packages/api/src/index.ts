@@ -1,4 +1,4 @@
-import { REGIA_4_FAEDIG_PATTERN, getActualSize, materializePlan } from "@knithelper/shared";
+import { REGIA_4_FAEDIG_PATTERN, getActualSize, materializePlan } from "@socky/shared";
 import { Hono } from "hono";
 
 type Bindings = {
@@ -7,7 +7,7 @@ type Bindings = {
 
 const app = new Hono<{ Bindings: Bindings }>();
 
-app.get("/health", (c) => c.json({ ok: true, service: "knithelper-api" }));
+app.get("/health", (c) => c.json({ ok: true, service: "socky-api" }));
 
 /** Dev-only preview of a materialized plan (G1 domain review). */
 app.get("/preview/plan/:actualSizeId", (c) => {

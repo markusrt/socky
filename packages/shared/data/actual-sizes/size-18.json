@@ -1,10 +1,10 @@
 {
-  "id": "sock-02",
+  "id": "size-18",
   "patternId": "regia-4-faedig",
   "label": "18",
   "chartSizeLabel": "22/23",
-  "tags": ["aktuelle Socken", "Kind", "Referenz sock-02"],
-  "notes": "44 Maschen (2 Nadeln: 22); Kind 18 auf 22/23-Konstruktion",
+  "tags": ["aktuelle Socken", "child", "reference"],
+  "notes": "44 stitches (2 needles: 22); child 18 on 22/23 construction",
   "counts": {
     "cuff": 25,
     "leg": 5,

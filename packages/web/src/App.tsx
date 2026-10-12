@@ -19,9 +19,10 @@ import {
   tickActiveSock,
   tipProgressSummary,
   untickActiveSock,
-} from "@knithelper/shared";
+} from "@socky/shared";
 import { useMemo, useState } from "react";
 import { loadSessions, upsertSession } from "./storage";
+import { colors } from "./theme";
 
 type View =
   | { name: "home" }
@@ -119,7 +120,12 @@ function HomeView({
 }) {
   return (
     <main style={shell}>
-      <h1>KnitHelper</h1>
+      <header
+        style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "0.5rem" }}
+      >
+        <img src="./logo-socky.svg" alt="" width={140} height={45} />
+      </header>
+      <p style={{ marginTop: 0, color: colors.ink }}>Knit. Track. Cozy.</p>
       <button type="button" onClick={onNew} style={primaryBtn}>
         Neue Socke starten
       </button>
@@ -535,22 +541,25 @@ const shell: React.CSSProperties = {
   maxWidth: "28rem",
   margin: "0 auto",
   padding: "1rem",
+  background: colors.softCream,
+  minHeight: "100vh",
+  color: colors.ink,
 };
 
 const card: React.CSSProperties = {
   padding: "0.75rem 1rem",
-  border: "1px solid #ccc",
-  borderRadius: 8,
-  background: "#f8f8f8",
+  border: `1px solid ${colors.cozyPeach}`,
+  borderRadius: 12,
+  background: "#fff",
   marginBottom: "1rem",
 };
 
 const primaryBtn: React.CSSProperties = {
   fontSize: "1rem",
   padding: "0.75rem 1.25rem",
-  borderRadius: 10,
+  borderRadius: 12,
   border: "none",
-  background: "#2563eb",
+  background: colors.berryRed,
   color: "#fff",
   cursor: "pointer",
 };
@@ -560,14 +569,14 @@ const bigBtn: React.CSSProperties = {
   width: "100%",
   fontSize: "1.35rem",
   padding: "1.1rem",
-  background: "#16a34a",
+  background: colors.woolyTeal,
 };
 
 const secondaryBtn: React.CSSProperties = {
   fontSize: "1rem",
   padding: "0.65rem 1rem",
-  borderRadius: 10,
-  border: "1px solid #ccc",
+  borderRadius: 12,
+  border: `1px solid ${colors.cozyPeach}`,
   background: "#fff",
   cursor: "pointer",
 };
@@ -577,8 +586,8 @@ const listBtn: React.CSSProperties = {
   textAlign: "left",
   fontSize: "1rem",
   padding: "0.75rem 1rem",
-  borderRadius: 10,
-  border: "1px solid #ccc",
+  borderRadius: 12,
+  border: `1px solid ${colors.cozyPeach}`,
   background: "#fff",
   cursor: "pointer",
 };
@@ -586,7 +595,7 @@ const listBtn: React.CSSProperties = {
 const linkBtn: React.CSSProperties = {
   background: "none",
   border: "none",
-  color: "#2563eb",
+  color: colors.berryRed,
   cursor: "pointer",
   fontSize: "1rem",
   padding: "0.25rem 0",

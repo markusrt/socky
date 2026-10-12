@@ -1,4 +1,4 @@
-# KnitHelper — status for future sessions
+# Socky — status for future sessions
 
 Last updated: 2026-10-11 (initial build session)
 

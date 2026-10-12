@@ -1,24 +1,26 @@
-# KnitHelper
+# Socky
 
-Mobile-first Socken-Strickhilfe (Käppchenferse, **REGIA 4-fädig**). Ersetzt den iOS-Notes-Tickmarken-Workflow.
+Mobile-first sock knitting helper (heel cap / Käppchenferse, **REGIA 4-fädig**). Replaces the iOS Notes tick-mark workflow.
+
+**Tagline:** Knit. Track. Cozy.
 
 ## Status
 
-**G0/G1** — Harness + Domain-Seed. Noch keine Auth/PWA/Deploy.
+**G2 knitting UI** live on GitHub Pages. Auth / offline PWA not started (G3).
 
-| Gate | Reviewer | Offen? |
+| Gate | Reviewer | Status |
 |---|---|---|
-| G0 Harness | Markus | |
-| G1 Domain | Frau | **bitte prüfen** |
-| G2 Knitting UX | Frau | |
-| G3 Product | beide | |
+| G0 Harness | Markus | done |
+| G1 Domain | Wife | done |
+| G2 Knitting UX | Wife | try-out URL |
+| G3 Product | Both | next |
 
 ## Quick start
 
 ```bash
 pnpm install
 pnpm verify     # lint + typecheck + dep-cruise + tests
-pnpm dev:web    # Domain-Preview (G1)
+pnpm dev:web    # knitting UI
 pnpm dev:api    # Hono health / plan preview
 ```
 
@@ -26,19 +28,21 @@ pnpm dev:api    # Hono health / plan preview
 
 ```
 CONSTITUTION.md          Non-negotiable principles
-AGENTS.md                Agent/Dev operating rules
+AGENTS.md                Agent/dev operating rules
 docs/adr/                Architecture decisions
-docs/domain/             Größenmodell + Vergleich sock-01…04 (G1)
-docs/reference/          REGIA 4-fädig PDF
-packages/shared          Domain, size-chart seed, materialize, fixtures
+docs/domain/             Size model + note comparisons
+docs/reference/          REGIA pattern PDF + design concept
+packages/shared          Domain, size chart, session logic, JSON sizes
 packages/api             Hono on Cloudflare Workers
-packages/web             React preview → later knitting UI
+packages/web             React knitting UI (Socky)
 ```
 
-## Domain in one paragraph
+## Domain (short)
 
-**Chart base size** (e.g. 44/45) drives stitch construction, heel, and Bandspitze (tip). **Actual size** (e.g. 40/41) drives plain-foot rounds. One pattern **REGIA 4-fädig**; a pair session tracks two socks with one-tap row confirmation. She knits on 2 needles.
+**Chart base size** (e.g. 44/45) drives stitch construction, heel, and tip schedule. **Actual size** (e.g. 40/41, 18) drives plain-foot row counts. One pattern **REGIA 4-fädig**. Pair session tracks two socks (sequentially). Knitting on 2 needles.
 
 ## Release
 
-GitHub Actions CI → later `wrangler deploy` to `*.workers.dev` (enable in G3).
+GitHub Actions → GitHub Pages (`deploy-pages.yml`). Optional Cloudflare Pages later.
+
+Live: https://markusrt.github.io/socky/

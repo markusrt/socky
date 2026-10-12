@@ -1,6 +1,6 @@
-import type { PairSession } from "@knithelper/shared";
+import type { PairSession } from "@socky/shared";
 
-const STORAGE_KEY = "knithelper.sessions.v1";
+const STORAGE_KEY = "Socky.sessions.v1";
 
 export function loadSessions(): PairSession[] {
   try {

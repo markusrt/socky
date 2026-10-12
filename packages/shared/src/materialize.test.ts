@@ -23,7 +23,7 @@ describe("size chart seed (REGIA 4-fädig PDF)", () => {
     expect(s?.castOnPerNeedleChart).toBe(17);
   });
 
-  it("matches chart 44/45 construction used by sock-03/04", () => {
+  it("matches chart 44/45 construction used by size-40-41/04", () => {
     expect(getChartSize("44/45")).toMatchObject({
       castOnTotal: 68,
       heelStitches: 34,
@@ -45,7 +45,7 @@ describe("size chart seed (REGIA 4-fädig PDF)", () => {
 });
 
 describe("deriveTipRounds", () => {
-  it("44/45 → 3 tip rounds matching sock-03/04 notes", () => {
+  it("44/45 → 3 tip rounds matching size-40-41/04 notes", () => {
     const tip = tipRoundsForChartSize("44/45");
     expect(tip).toHaveLength(3);
     expect(tip[0]).toMatchObject({
@@ -71,7 +71,7 @@ describe("deriveTipRounds", () => {
     });
   });
 
-  it("22/23 → 2 tip rounds (no 3-knit round) matching sock-02", () => {
+  it("22/23 → 2 tip rounds (no 3-knit round) matching size-18", () => {
     const tip = tipRoundsForChartSize("22/23");
     expect(tip).toHaveLength(2);
     expect(tip[0]?.unitSegments[0]).toEqual({ kind: "knit", count: 2 });
@@ -80,7 +80,7 @@ describe("deriveTipRounds", () => {
     expect(tip[1]?.times).toBe(3);
   });
 
-  it("50/51 tip round 3 has 5 decrease units (sock-01)", () => {
+  it("50/51 tip round 3 has 5 decrease units (size-50-51)", () => {
     const tip = tipRoundsForChartSize("50/51");
     expect(tip).toHaveLength(3);
     expect(tip[2]?.times).toBe(5);
@@ -99,8 +99,8 @@ describe("deriveTipRounds", () => {
 });
 
 describe("materializePlan", () => {
-  it("sock-03: chart 44/45 + actual 40/41 → plain 51, tip from chart", () => {
-    const plan = materializePlan(REGIA_4_FAEDIG_PATTERN, mustActualSize("sock-03"));
+  it("size-40-41: chart 44/45 + actual 40/41 → plain 51, tip from chart", () => {
+    const plan = materializePlan(REGIA_4_FAEDIG_PATTERN, mustActualSize("size-40-41"));
 
     expect(plan.patternName).toBe("REGIA 4-fädig");
     expect(plan.chartSizeLabel).toBe("44/45");
@@ -120,24 +120,24 @@ describe("materializePlan", () => {
     expect(byKey.tip?.tipRounds?.[2]?.times).toBe(4);
   });
 
-  it("sock-04: same chart base 44/45 but plain 45 (actual 37/38)", () => {
-    const plan = materializePlan(REGIA_4_FAEDIG_PATTERN, mustActualSize("sock-04"));
+  it("size-37-38: same chart base 44/45 but plain 45 (actual 37/38)", () => {
+    const plan = materializePlan(REGIA_4_FAEDIG_PATTERN, mustActualSize("size-37-38"));
     expect(plan.chartSizeLabel).toBe("44/45");
     expect(plan.actualSizeLabel).toBe("37/38");
     const plain = plan.steps.find((s) => s.stepKey === "plainFoot");
     expect(plain?.targetCount).toBe(45);
   });
 
-  it("sock-01: plain 62 and tip round 3 has 5 decrease units", () => {
-    const plan = materializePlan(REGIA_4_FAEDIG_PATTERN, mustActualSize("sock-01"));
+  it("size-50-51: plain 62 and tip round 3 has 5 decrease units", () => {
+    const plan = materializePlan(REGIA_4_FAEDIG_PATTERN, mustActualSize("size-50-51"));
     const plain = plan.steps.find((s) => s.stepKey === "plainFoot");
     const tip = plan.steps.find((s) => s.stepKey === "tip");
     expect(plain?.targetCount).toBe(62);
     expect(tip?.tipRounds?.[2]?.times).toBe(5);
   });
 
-  it("sock-02: child 18 on 22/23, plain 25, tip only 2 rounds", () => {
-    const plan = materializePlan(REGIA_4_FAEDIG_PATTERN, mustActualSize("sock-02"));
+  it("size-18: child 18 on 22/23, plain 25, tip only 2 rounds", () => {
+    const plan = materializePlan(REGIA_4_FAEDIG_PATTERN, mustActualSize("size-18"));
     expect(plan.chartSizeLabel).toBe("22/23");
     expect(plan.actualSizeLabel).toBe("18");
     const plain = plan.steps.find((s) => s.stepKey === "plainFoot");
@@ -149,7 +149,7 @@ describe("materializePlan", () => {
   });
 
   it("preserves stitch direction (knit / mixed)", () => {
-    const plan = materializePlan(REGIA_4_FAEDIG_PATTERN, mustActualSize("sock-03"));
+    const plan = materializePlan(REGIA_4_FAEDIG_PATTERN, mustActualSize("size-40-41"));
     const byKey = Object.fromEntries(plan.steps.map((s) => [s.stepKey, s]));
     expect(byKey.postJoin?.stitch).toBe("knit");
     expect(byKey.plainFoot?.stitch).toBe("knit");
@@ -159,18 +159,18 @@ describe("materializePlan", () => {
 
   it("throws when a step has no configured count (never invent)", () => {
     const broken = {
-      ...mustActualSize("sock-03"),
+      ...mustActualSize("size-40-41"),
       counts: { cuff: 40 },
     };
     expect(() => materializePlan(REGIA_4_FAEDIG_PATTERN, broken)).toThrow(/do not invent/i);
   });
 
-  it("seeded actual sizes cover the four notes", () => {
+  it("seeded actual sizes cover the four reference configs", () => {
     expect(ACTUAL_SIZES.map((s) => s.id).sort()).toEqual([
-      "sock-01",
-      "sock-02",
-      "sock-03",
-      "sock-04",
+      "size-18",
+      "size-37-38",
+      "size-40-41",
+      "size-50-51",
     ]);
   });
 });

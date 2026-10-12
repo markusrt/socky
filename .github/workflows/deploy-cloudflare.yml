@@ -21,7 +21,7 @@ jobs:
           node-version: 20
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - run: pnpm --filter @knithelper/web build
+      - run: pnpm --filter @socky/web build
       - name: Deploy static web to Cloudflare Pages
         uses: cloudflare/wrangler-action@v3
         with:

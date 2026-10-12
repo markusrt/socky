@@ -1,10 +1,10 @@
 {
-  "id": "sock-01",
+  "id": "size-50-51",
   "patternId": "regia-4-faedig",
   "label": "50/51",
   "chartSizeLabel": "50/51",
-  "tags": ["Referenz sock-01"],
-  "notes": "76 Maschen (2 Nadeln: 38); ohne verschränkt-Hinweise",
+  "tags": ["reference"],
+  "notes": "76 stitches (2 needles: 38)",
   "counts": {
     "cuff": 45,
     "leg": 15,

@@ -5,10 +5,10 @@
  *
  * German only in name/description/tags/notes — not in keys or enum values.
  */
-import sock01 from "../../data/actual-sizes/sock-01.json";
-import sock02 from "../../data/actual-sizes/sock-02.json";
-import sock03 from "../../data/actual-sizes/sock-03.json";
-import sock04 from "../../data/actual-sizes/sock-04.json";
+import size18 from "../../data/actual-sizes/size-18.json";
+import size3738 from "../../data/actual-sizes/size-37-38.json";
+import size4041 from "../../data/actual-sizes/size-40-41.json";
+import size5051 from "../../data/actual-sizes/size-50-51.json";
 import type { ActualSizeConfig, Pattern, TipRound } from "../domain";
 import { getChartSize, tipRoundsForChartSize } from "../size-chart-seed";
 
@@ -85,7 +85,7 @@ function loadActualSize(raw: ActualSizeJson): ActualSizeConfig {
   };
 }
 
-const JSON_SEEDS: ActualSizeJson[] = [sock03, sock04, sock01, sock02] as ActualSizeJson[];
+const JSON_SEEDS: ActualSizeJson[] = [size4041, size3738, size5051, size18] as ActualSizeJson[];
 
 export const ACTUAL_SIZES: readonly ActualSizeConfig[] = JSON_SEEDS.map(loadActualSize);
 

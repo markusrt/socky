@@ -34,7 +34,7 @@ jobs:
         run: pnpm verify
 
       - name: Build web
-        run: pnpm --filter @knithelper/web build
+        run: pnpm --filter @socky/web build
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

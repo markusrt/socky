@@ -23,7 +23,7 @@ importers:
 
   packages/api:
     dependencies:
-      '@knithelper/shared':
+      '@socky/shared':
         specifier: workspace:*
         version: link:../shared
       hono:
@@ -61,7 +61,7 @@ importers:
 
   packages/web:
     dependencies:
-      '@knithelper/shared':
+      '@socky/shared':
         specifier: workspace:*
         version: link:../shared
       react:

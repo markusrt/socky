@@ -1,4 +1,4 @@
-# AGENTS.md — KnitHelper operating rules
+# AGENTS.md — Socky operating rules
 
 Read `CONSTITUTION.md` first. It overrides convenience.
 

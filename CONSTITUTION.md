@@ -1,4 +1,4 @@
-# KnitHelper Constitution
+# Socky Constitution
 
 Immutable project principles. Agents and humans must not violate these to “finish a task”.
 Change requires an ADR + human approval.
