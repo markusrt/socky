@@ -122,11 +122,27 @@ function HomeView({
   return (
     <main style={shell}>
       <header
-        style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "0.5rem" }}
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          marginBottom: "0.75rem",
+          textAlign: "center",
+        }}
       >
-        <img src="./logo-socky.png" alt="Socky" width={220} height={144} />
+        <img
+          src="./logo-socky.png"
+          alt="Socky"
+          style={{
+            maxWidth: "100%",
+            width: 240,
+            height: "auto",
+            display: "block",
+            objectFit: "contain",
+          }}
+        />
+        <p style={{ margin: "0.5rem 0 0", color: colors.ink }}>Knit. Track. Cozy.</p>
       </header>
-      <p style={{ marginTop: 0, color: colors.ink }}>Knit. Track. Cozy.</p>
       <Button onClick={onNew} fullWidth>
         Neue Socke starten
       </Button>
