@@ -17,17 +17,20 @@ docs/reference/   REGIA PDF + design concept
 
 ## Workflow
 
-1. Prefer the smallest slice that answers the current **review gate** (see Constitution). This is about **feature scope**, not about carving up completed work at commit time.
+1. Prefer the smallest slice that answers the current **review gate** (see Constitution).
 2. Prefer editing existing files over creating new ones.
 3. Domain questions: read `docs/domain/groessenmodell.md`, `docs/reference/`, and fixtures; if still unclear, ask.
 4. Do not invent sizes, counts, or tip schedules.
 
 ## Commits & ADRs
 
-- When the user asks to commit “the X work” / “X changes”, include **everything that work produced** (code, deps, lockfile, docs, ADRs) unless they name files to exclude. “Only” means “don’t mix in unrelated pending work”, not “strip the task down to one file”.
-- Do not split one completed task into multiple commits or ADRs just to make each piece smaller. Split only when the user asks, or when pieces are independently revertible *and* unrelated.
+**During feature development (on a branch):** prefer **small commits in sensible slices** (Constitution §5). A slice is a coherent step: one behavior fix, one migration step, one docs sync — not one file, and not the whole feature.
+
+**When wrapping up a named task** (“commit the X work / X changes”): that means the **full outcome of X** (code, deps, lockfile, docs, ADRs) in the commits you create for it — unless the user names files to exclude. “Only X” = don’t mix in unrelated pending work, not strip X down.
+
+- Do not invent extra commits/ADRs just to make pieces smaller; do not merge independent slices into one dump either.
 - **One ADR per decision theme.** A single toolchain/process move (e.g. Node bump + the majors that go with it) is one ADR, not one per package.
-- Commit scoping is ambiguous → ask. Do not guess from “smallest slice”.
+- Commit scoping is ambiguous → ask.
 
 ## Keep docs in sync (every feature)
 
