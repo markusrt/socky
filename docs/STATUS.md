@@ -1,6 +1,6 @@
 # Socky — status for future sessions
 
-Last updated: 2026-10-12 (branding + size 15 + GitHub Pages)
+Last updated: 2026-10-27 (Node 24 toolchain + dependency refresh)
 
 ## Product
 
@@ -11,7 +11,8 @@ Last updated: 2026-10-12 (branding + size 15 + GitHub Pages)
 
 ## What works
 
-- Harness: CONSTITUTION, AGENTS, CI (`pnpm verify`), `gh` for CI
+- Harness: CONSTITUTION, AGENTS, CI (`pnpm verify`), `gh` for CI, Node 24 toolchain
+- Toolchain: TypeScript 6, Biome 2, Vitest 5, Vite 8, wrangler 4, zod 4 (ADR 0003)
 - Domain: chart vs actual size, 2 needles, tip per rechts/Abnahme row, sequential pair socks
 - Actual sizes (JSON): `size-15`, `size-18`, `size-37-38`, `size-40-41`, `size-50-51`
 - Knitting UI: castOn → cuff → leg → heel (alternating) → split → pickup → postJoin → reduceToCastOn → plainFoot → tip rows → close
@@ -34,6 +35,7 @@ Update SPEC.md on every feature (rule in AGENTS.md).
 | M3 | Google login, D1, roles, admin size editor |
 | M4 | Offline PWA, Cloudflare |
 | Export/import JSON | Optional backup before M3 |
+| TypeScript 7 | Blocked on dependency-cruiser support (see ADR 0003) |
 
 ## Domain gotchas (do not regress)
 
@@ -45,6 +47,8 @@ Update SPEC.md on every feature (rule in AGENTS.md).
 - Sequential socks: no sock 2 before sock 1 is complete
 
 ## Commands
+
+Requires **Node.js 24+** (see `.nvmrc`, ADR 0003).
 
 ```bash
 pnpm install

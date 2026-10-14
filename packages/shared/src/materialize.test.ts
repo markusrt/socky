@@ -1,11 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { ACTUAL_SIZES, REGIA_4_FAEDIG_PATTERN, mustActualSize } from "./fixtures/pattern-seed";
+import { ACTUAL_SIZES, mustActualSize, REGIA_4_FAEDIG_PATTERN } from "./fixtures/pattern-seed";
 import { formatCountLine, formatTipCount } from "./labels";
 import { isPairStepComplete, materializePlan, tickRow, untickRow } from "./materialize";
 import {
-  SIZE_CHART,
   deriveTipRounds,
   getChartSize,
+  SIZE_CHART,
   tipRoundsForChartSize,
 } from "./size-chart-seed";
 

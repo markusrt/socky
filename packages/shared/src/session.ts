@@ -5,7 +5,6 @@ import type {
   SessionStepProgress,
   SteppedPlan,
   TipRound,
-  TipRowDirection,
 } from "./domain";
 import { materializePlan } from "./materialize";
 
@@ -212,7 +211,7 @@ export function finishActiveSock(session: PairSession): PairSession {
   if (index < 0) return session;
 
   const step = session.steps[index];
-  if (!step || step.stepKey !== "close") return session;
+  if (step?.stepKey !== "close") return session;
 
   const steps = session.steps.map((s, i) =>
     i === index ? withSockDone(s, sock, s.targetCount) : s
@@ -260,8 +259,7 @@ export function tipProgressSummary(
   const totalRounds = new Set(tipSteps.map((s) => s.tipRoundIndex ?? 0)).size || 1;
   const roundIndex = step.tipRoundIndex ?? 1;
   const rowsInRound = tipSteps.filter((s) => s.tipRoundIndex === roundIndex).length;
-  const rowInRound =
-    tipSteps.filter((s) => s.tipRoundIndex === roundIndex).findIndex((s) => s === step) + 1;
+  const rowInRound = tipSteps.filter((s) => s.tipRoundIndex === roundIndex).indexOf(step) + 1;
   return {
     roundIndex,
     totalRounds,

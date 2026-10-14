@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { REGIA_4_FAEDIG_PATTERN, mustActualSize } from "./fixtures/pattern-seed";
+import { mustActualSize, REGIA_4_FAEDIG_PATTERN } from "./fixtures/pattern-seed";
 import {
   canSwitchToSock2,
   createPairSession,

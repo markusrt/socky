@@ -1,5 +1,5 @@
 import type { ActualSizeConfig, Pattern, PatternStep, PlannedStep, SteppedPlan } from "./domain";
-import { NEEDLE_COUNT, getChartSize } from "./size-chart-seed";
+import { getChartSize, NEEDLE_COUNT } from "./size-chart-seed";
 
 /**
  * Materialize a stepped plan for one chart base + actual size.

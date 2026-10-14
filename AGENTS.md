@@ -17,10 +17,17 @@ docs/reference/   REGIA PDF + design concept
 
 ## Workflow
 
-1. Prefer the smallest slice that answers the current **review gate** (see Constitution).
+1. Prefer the smallest slice that answers the current **review gate** (see Constitution). This is about **feature scope**, not about carving up completed work at commit time.
 2. Prefer editing existing files over creating new ones.
 3. Domain questions: read `docs/domain/groessenmodell.md`, `docs/reference/`, and fixtures; if still unclear, ask.
 4. Do not invent sizes, counts, or tip schedules.
+
+## Commits & ADRs
+
+- When the user asks to commit “the X work” / “X changes”, include **everything that work produced** (code, deps, lockfile, docs, ADRs) unless they name files to exclude. “Only” means “don’t mix in unrelated pending work”, not “strip the task down to one file”.
+- Do not split one completed task into multiple commits or ADRs just to make each piece smaller. Split only when the user asks, or when pieces are independently revertible *and* unrelated.
+- **One ADR per decision theme.** A single toolchain/process move (e.g. Node bump + the majors that go with it) is one ADR, not one per package.
+- Commit scoping is ambiguous → ask. Do not guess from “smallest slice”.
 
 ## Keep docs in sync (every feature)
 
@@ -29,7 +36,7 @@ With each feature/fix that changes behavior or data model, update in the **same 
 1. **`docs/SPEC.md`** — add/adjust the requirement row (what + where implemented)
 2. **`docs/STATUS.md`** — “What works” / “Open” if session-relevant
 3. **`packages/shared/data/…` + tests** — if domain data changed
-4. **ADR** under `docs/adr/` — if architecture/schema/process changed
+4. **ADR** under `docs/adr/` — if architecture/schema/process changed (one ADR per decision theme; see “Commits & ADRs”)
 5. Domain cheat-sheet below — if knitting rules changed
 
 Do not ship a feature and leave SPEC/STATUS stale.

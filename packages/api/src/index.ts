@@ -1,4 +1,4 @@
-import { REGIA_4_FAEDIG_PATTERN, getActualSize, materializePlan } from "@socky/shared";
+import { getActualSize, materializePlan, REGIA_4_FAEDIG_PATTERN } from "@socky/shared";
 import { Hono } from "hono";
 
 type Bindings = {

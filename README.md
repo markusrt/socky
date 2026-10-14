@@ -17,6 +17,8 @@ Mobile-first sock knitting helper (heel cap / Käppchenferse, **REGIA 4-fädig**
 
 ## Quick start
 
+Requires **Node.js 24+** (see `engines` / `.nvmrc`) and [pnpm](https://pnpm.io) (via Corepack: `corepack enable`).
+
 ```bash
 pnpm install
 pnpm verify     # lint + typecheck + dep-cruise + tests
