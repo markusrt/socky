@@ -2,8 +2,8 @@ name = "socky-api"
 main = "src/index.ts"
 compatibility_date = "2024-12-01"
 
-# D1 binding enabled in M3 (persistence). Local dev can omit until then.
-# [[d1_databases]]
-# binding = "DB"
-# database_name = "knithelper"
-# database_id = "placeholder"
+# D1 (M3). database_id is filled by `wrangler d1 create socky` / CI.
+[[d1_databases]]
+binding = "DB"
+database_name = "socky"
+database_id = "local-dev-placeholder"

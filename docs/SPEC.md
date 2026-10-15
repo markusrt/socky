@@ -40,10 +40,23 @@ New features: add/adjust a section here in the same PR (AGENTS.md rule).
 | R3.4 | G1 plan preview (same card list as sessions) | preview view |
 | R3.5 | GitHub Actions CI + Pages deploy | `ci.yml`, `deploy-pages.yml` |
 
+## R4 Auth & cloud persistence (M3, in progress)
+
+| ID | Requirement | Implementation |
+|---|---|---|
+| R4.1 | Google login (Better Auth) | `packages/api/src/auth.ts`, `/api/auth/*` |
+| R4.2 | Roles `ADMIN` / `KNITTER` (server-owned) | `user.additionalFields.role`, `ADMIN_EMAILS` |
+| R4.3 | Mutating routes require auth + role (Constitution §8) | `guards.ts` (`requireUser`, `requireRole`) |
+| R4.4 | Own pair sessions only | `GET/POST /api/sessions`, `user_id` filter |
+| R4.5 | Tick / undo / finish / start sock 2 over API | `POST /api/sessions/:id/actions` |
+| R4.6 | D1 tables: auth + `actual_sizes`, `pair_sessions`, `session_steps` | `migrations/0001_app_tables.sql` + Better Auth migrate |
+| R4.7 | Admin can list actual sizes in D1 | `GET /api/admin/actual-sizes` (ADMIN) |
+| R4.8 | Web UI login + D1-backed sessions | *not yet* (localStorage still live) |
+| R4.9 | Admin size editor UI | *not yet* |
+
 ## Not implemented (roadmap)
 
-- Google login, ADMIN/KNITTER, multi-user (M3)
-- D1 / server persistence (M3)
+- Web login UI + D1-backed knitting sessions (R4.8)
+- Admin size editor UI (R4.9)
 - Offline PWA (M4)
-- Export/import session backup
 - EN i18n
