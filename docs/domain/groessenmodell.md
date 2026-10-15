@@ -1,6 +1,6 @@
 # Größenmodell (Domain)
 
-> Status: **G1** — after wife review of PDF + Notes. Base pattern: **REGIA 4-fädig**.
+> Status: **G1 + G2** — wife reviewed PDF + Notes (G1) and knitted real socks including **size 15** (6-6-6, 9 pickup, tip 2 rounds) on the live UI (G2). Base pattern: **REGIA 4-fädig**.
 
 ## Two size concepts
 

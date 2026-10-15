@@ -1,6 +1,6 @@
 # Socky — status for future sessions
 
-Last updated: 2026-10-27 (Node 24 toolchain + dependency refresh)
+Last updated: 2026-10-15 (G2 pass recorded; M3 next)
 
 ## Product
 
@@ -19,6 +19,8 @@ Last updated: 2026-10-27 (Node 24 toolchain + dependency refresh)
 - Buttons: Reihe fertig / Fertig / Socke fertig (primary `Button`)
 - Progress: **localStorage** (same browser/origin only — not cloud-safe)
 - Design: Socky palette + logo from `docs/reference/design-concept-1.jpg`
+- Knitting a real sock on a real phone via GitHub Pages deployment
+- Knitting a size 15 sock as specified
 
 ## Requirements / specs
 
@@ -29,12 +31,10 @@ Update SPEC.md on every feature (rule in AGENTS.md).
 
 | Item | Notes |
 |---|---|
-| G2 try-out | Wife on real phone / multi-day |
-| Size 15 confirm | 6-6-6, 9 pickup, tip 2 rounds from notes |
-| localStorage risk | Clearing site data loses sessions |
-| M3 | Google login, D1, roles, admin size editor |
-| M4 | Offline PWA, Cloudflare |
-| Export/import JSON | Optional backup before M3 |
+| G3 / M3 | Google login, D1, roles, admin size editor |
+| M4 | Offline PWA |
+| Cloudflare deploy | Workflow exists but **never configured** (no account/secrets yet); GitHub Pages is the live deploy |
+| localStorage risk | Clearing site data loses sessions — history is disposable (wife confirmed); no export/import needed |
 | TypeScript 7 | Blocked on dependency-cruiser support (see ADR 0003) |
 
 ## Domain gotchas (do not regress)

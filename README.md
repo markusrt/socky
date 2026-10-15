@@ -6,14 +6,14 @@ Mobile-first sock knitting helper (heel cap / Käppchenferse, **REGIA 4-fädig**
 
 ## Status
 
-**G2 knitting UI** live on GitHub Pages. Auth / offline PWA not started (G3).
+**G2 knitting UX passed** (real sock + size 15 on GitHub Pages). Auth / offline PWA next (G3).
 
 | Gate | Reviewer | Status |
 |---|---|---|
 | G0 Harness | Markus | done |
 | G1 Domain | Wife | done |
-| G2 Knitting UX | Wife | try-out URL |
-| G3 Product | Both | next |
+| G2 Knitting UX | Wife | done (real phone, size 15) |
+| G3 Product | Both | next (M3 auth + D1) |
 
 ## Quick start
 
