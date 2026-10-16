@@ -8,7 +8,10 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "dev": "wrangler dev",
-    "deploy": "wrangler deploy"
+    "deploy": "wrangler deploy",
+    "db:app:local": "wrangler d1 execute socky --local --file=migrations/0001_app_tables.sql",
+    "db:app:remote": "wrangler d1 execute socky --remote --file=migrations/0001_app_tables.sql",
+    "db:auth:local": "curl -sS -X POST http://localhost:8787/migrate"
   },
   "dependencies": {
     "@socky/shared": "workspace:*",

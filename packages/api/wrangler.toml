@@ -1,6 +1,8 @@
 name = "socky-api"
 main = "src/index.ts"
 compatibility_date = "2024-12-01"
+# Better Auth uses node:crypto
+compatibility_flags = ["nodejs_compat"]
 
 # D1 (M3). database_id is filled by `wrangler d1 create socky` / CI.
 [[d1_databases]]

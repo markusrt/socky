@@ -39,43 +39,13 @@ Update SPEC.md on every feature (rule in AGENTS.md).
 
 ## M3 secrets / setup (Markus)
 
-Cloudflare deploy failed earlier because **secrets were never configured** (expected). To finish G3:
+**See `README.md`** — “M3 local development” + “GitHub Secrets”. Short version:
 
-### 1. Cloudflare
+1. **Local test without any accounts:** `pnpm dev:web` + `pnpm verify` (knitting UI + tests). No Cloudflare/Google needed.
+2. **Local M3 (login + D1):** Google OAuth client (README §A) → `packages/api/.dev.vars` from `.dev.vars.example` (README §B) → `pnpm dev:api` + `db:app:local` + `db:auth:local` (README §C).
+3. **Cloudflare / GitHub secrets:** `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID` (README “GitHub Secrets”). Until those exist, `Deploy Cloudflare (optional)` fails on every push; CI + Pages stay green.
 
-1. Create a free Cloudflare account → note **Account ID** (dashboard URL or Workers overview).
-2. Create API token (`My Profile → API Tokens`) with:
-   - Account · Workers Scripts · Edit
-   - Account · D1 · Edit
-   - Account · Workers R2 · Edit *(optional, M4)*
-   - Account · Pages · Edit *(if using Cloudflare Pages for web)*
-3. GitHub repo **Settings → Secrets and variables → Actions**:
-   - `CLOUDFLARE_API_TOKEN`
-   - `CLOUDFLARE_ACCOUNT_ID`
-4. Create D1: `pnpm --filter @socky/api exec wrangler d1 create socky` → put the returned `database_id` into `packages/api/wrangler.toml`.
-5. Apply app tables: `wrangler d1 execute socky --file=packages/api/migrations/0001_app_tables.sql`
-6. Deploy API: `pnpm --filter @socky/api deploy` (or add to CI). Auth tables: `POST /migrate` once after deploy.
-
-Worker secrets (wrangler secret put / GitHub):
-- `BETTER_AUTH_SECRET` (long random string)
-- `BETTER_AUTH_URL` (e.g. `https://socky-api.<account>.workers.dev`)
-- `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET`
-- `WEB_ORIGIN` (e.g. `https://markusrt.github.io`)
-- `ADMIN_EMAILS` (comma-separated; e.g. your Gmail)
-
-### 2. Google OAuth
-
-1. [Google Cloud Console](https://console.cloud.google.com/apis/dashboard) → new project (or existing).
-2. **APIs & Services → OAuth consent screen** → External (or Internal if Workspace) → add scopes `email`, `profile` → add test users (you + wife) while in Testing.
-3. **Credentials → Create Credentials → OAuth client ID → Web application**.
-4. Authorized redirect URIs:
-   - `http://localhost:8787/api/auth/callback/google` (local wrangler)
-   - `https://socky-api.<account>.workers.dev/api/auth/callback/google` (production)
-5. Copy **Client ID** + **Client Secret** into the Worker secrets above.
-
-### 3. GitHub Actions note
-
-`Deploy Cloudflare (optional)` is currently failing on every main push (`deploy-cloudflare.yml`). Either add the two secrets above and rename the job to required, or leave it optional/ignore until G3 is ready. CI and GitHub Pages are green and unaffected.
+Cloudflare deploy failed earlier because **secrets were never configured** (expected). Full click-paths for Google Cloud Console and Cloudflare dashboard are in the README.
 
 ## Domain gotchas (do not regress)
 

@@ -1,0 +1,18 @@
+# Copy to .dev.vars (gitignored) and fill in real values.
+# Local only — never commit .dev.vars.
+
+# --- Google OAuth (https://console.cloud.google.com/apis/credentials) ---
+GOOGLE_CLIENT_ID=your-client-id.apps.googleusercontent.com
+GOOGLE_CLIENT_SECRET=your-client-secret
+
+# --- Better Auth ---
+# Any long random string, e.g. from: openssl rand -base64 32
+BETTER_AUTH_SECRET=change-me-to-a-long-random-string
+# Must match the URL you open in the browser (wrangler default port 8787)
+BETTER_AUTH_URL=http://localhost:8787
+
+# --- App ---
+# Origin of the Vite web app (CORS)
+WEB_ORIGIN=http://localhost:5173
+# Comma-separated Google logins that get the ADMIN role
+ADMIN_EMAILS=you@gmail.com
