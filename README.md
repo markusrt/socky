@@ -96,9 +96,10 @@ Web UI (`pnpm dev:web`) still uses **localStorage** until the next M3 slice wire
 
 ---
 
-## GitHub Secrets (Cloudflare deploy / CI)
+## GitHub Secrets (Cloudflare, for M3)
 
-Needed for `Deploy Cloudflare (optional)` and for deploying the API to Workers.
+Needed later for deploying the API to Workers (M3). The web app stays on GitHub Pages until the
+move described in [ADR 0005](docs/adr/0005-web-origin-and-cloudflare-move.md).
 
 ### 1. Cloudflare account
 
@@ -117,8 +118,6 @@ Repo `markusrt/socky` → **Settings → Secrets and variables → Actions → N
 |---|---|
 | `CLOUDFLARE_API_TOKEN` | token from step 1.3 |
 | `CLOUDFLARE_ACCOUNT_ID` | Account ID from step 1.2 |
-
-Then **Workflows → Deploy Cloudflare (optional) → … → Enable workflow** if it is disabled.
 
 ### 3. Production D1 + Worker secrets (after account exists)
 
@@ -173,6 +172,6 @@ packages/web             React knitting UI (Socky)
 
 ## Release
 
-GitHub Actions → GitHub Pages (`deploy-pages.yml`). Cloudflare optional (`deploy-cloudflare.yml`) once secrets exist.
+GitHub Actions → GitHub Pages (`deploy-pages.yml`) on every merge to `main`. A move to Cloudflare happens only between sock projects ([ADR 0005](docs/adr/0005-web-origin-and-cloudflare-move.md)).
 
 Live: https://markusrt.github.io/socky/
