@@ -1,0 +1,3 @@
+# Spec Kit bash scripts must keep LF line endings, including for clones made
+# with core.autocrlf=true (the Git for Windows default); bash fails on CRLF.
+*.sh text eol=lf
