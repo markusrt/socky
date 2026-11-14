@@ -6,14 +6,13 @@ Mobile-first sock knitting helper (heel cap / Käppchenferse, **REGIA 4-fädig**
 
 ## Status
 
-**G2 knitting UX passed** (real sock + size 15 on GitHub Pages). Auth / offline PWA next (G3).
+Live and in daily use: https://markusrt.github.io/socky/ (knitting UI, progress in the browser).
+What is built: [`specs/000-baseline/spec.md`](specs/000-baseline/spec.md). Current state and next step:
+[`docs/STATUS.md`](docs/STATUS.md).
 
-| Gate | Reviewer | Status |
-|---|---|---|
-| G0 Harness | Markus | done |
-| G1 Domain | Wife | done |
-| G2 Knitting UX | Wife | done (real phone, size 15) |
-| G3 Product | Both | next (M3 auth + D1) |
+Development follows the [mvp-starter](https://github.com/markusrt/mvp-starter) owner's loop
+(Spec Kit specs per feature, review rounds, PRs); see [ADR 0004](docs/adr/0004-adopt-mvp-starter-process.md).
+Talk to Claude Code in plain language ("where are we?", "next round") and the `team` skill takes over.
 
 ## Quick start (knitting UI only)
 
@@ -21,7 +20,7 @@ Requires **Node.js 24+** (see `engines` / `.nvmrc`) and [pnpm](https://pnpm.io) 
 
 ```bash
 pnpm install
-pnpm verify     # lint + typecheck + dep-cruise + tests
+pnpm verify     # lint + typecheck + dep-cruise + unit tests + Playwright
 pnpm dev:web    # knitting UI → http://localhost:5173
 pnpm dev:api    # Hono API (health / plan preview) → http://localhost:8787/health
 ```
@@ -156,8 +155,10 @@ https://socky-api.<your-subdomain>.workers.dev/api/auth/callback/google
 ## Layout
 
 ```
-CONSTITUTION.md          Non-negotiable principles
-AGENTS.md                Agent/dev operating rules
+.specify/memory/constitution.md   Non-negotiable principles (+ Socky amendments)
+AGENTS.md                Team operating guide (CLAUDE.md points here)
+specs/                   One spec per feature; 000-baseline = what existed before
+docs/STATUS.md           Current handoff; docs/journal/ = evidence
 docs/adr/                Architecture decisions
 docs/domain/             Size model + note comparisons
 docs/reference/          REGIA pattern PDF + design concept
