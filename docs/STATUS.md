@@ -27,8 +27,8 @@ commands, outcomes, review findings and screenshots go to
 
 ## Where we are
 
-- Process: mvp-starter adopted on branch `chore/adopt-mvp-starter`
-  (ADR 0004); not merged yet
+- Process: mvp-starter adopted (ADR 0004), merged via the baseline PR
+  from `chore/adopt-mvp-starter`
 - Built before adoption: `specs/000-baseline/spec.md` (R1–R4; knitting UI
   live, M3 API foundation in `packages/api` not deployed)
 - Active feature: none
@@ -46,7 +46,7 @@ commands, outcomes, review findings and screenshots go to
 
 ## Worktree
 
-- Branch `chore/adopt-mvp-starter`; see `git status`
+- `main` after the baseline merge; see `git status`
 
 ## Roadmap (owner-approved order, 2026-11-14)
 
@@ -72,6 +72,8 @@ commands, outcomes, review findings and screenshots go to
 
 ## Exact next action
 
-Open the baseline PR (`pnpm ship --mode expert-review`), owner reviews and
-merges; then branch protection, then start `001-storage-safety` and
-`002-sizing-research`.
+1. Knitter opens https://markusrt.github.io/socky/ and confirms her current
+   pair is intact (record the result in the journal).
+2. Protect `main` (roadmap step 1 settings) with the owner's go-ahead.
+3. Branch `001-storage-safety` and `002-sizing-research`; start each with
+   the `grilling` interview, then `/speckit-specify`.
