@@ -72,7 +72,7 @@ Push only when the user asks. After a CI failure: `gh run view <id> --log-failed
 - German only in user-facing strings; technical identifiers English (Constitution §7)
 - New API route: zod input schema + role guard + unit test
 - New domain field: update fixtures + `materialize` tests in the same change
-- UI strings: i18n keys only (`packages/web/src/i18n/`)
+- UI strings: German display text lives in `packages/shared/src/labels.ts` (domain labels) and the web components; no i18n library yet. Technical keys stay English.
 - Conventional commits
 
 ## Architecture boundaries (dependency-cruiser)
@@ -82,11 +82,9 @@ Push only when the user asks. After a CI failure: `gh run view <id> --log-failed
 - `web` must not import `api` internals (HTTP only)
 - No I/O in `shared`
 
-## Agent memory (MiMoCode)
+## Agent memory
 
-- Project MEMORY: `C:\Users\Markus\.local\share\mimocode\memory\projects\global\MEMORY.md`
-- Session notes: `…/memory/sessions/<session-id>/notes.md`
-- Repo is the **source of truth** for product spec (`docs/SPEC.md`, `docs/STATUS.md`); MEMORY is a short handoff cache.
+The repo is the only source of truth (`docs/STATUS.md` for handoff). MiMo Code is retired for this project; do not read or write its memory.
 
 ## Knitting domain cheat-sheet
 
