@@ -96,3 +96,21 @@ Push only when the user asks. After a CI failure: `gh run view <id> --log-failed
 - Tip: chart Bandspitze first three rows only; “In jeder Runde” close is not counted
 - A **pair session** tracks two socks (Socke 1 / Socke 2); UI knits one sock at a time
 - “Reihe fertig” increments the active sock’s counter for the current step
+- Wording: **Reihen** everywhere, tip uses **Runden** (“N Runden”, never “N rechte Runden”); buttons `rows` → Reihe fertig, `once` → Fertig, close → Socke fertig
+- Knit UI shows only her configured counts — no chart hints next to them
+- Aufteilung always from the chart base size; chart Fußlänge cm is reference only
+- Trap: chart 40/41 = 10-12-10, but actual 40/41 on chart 44/45 = 11-12-11
+- Details: `docs/domain/groessenmodell.md` → “Display and wording rules”
+
+## Toolchain & Windows notes
+
+- pnpm missing from PATH → `corepack enable` then `corepack prepare pnpm@9.15.9 --activate`
+- pnpm version lives only in `package.json#packageManager`; never also set `version:` on `pnpm/action-setup` (Actions fails with “multiple pnpm versions”)
+- `Start-Process pnpm` fails on Windows; use `pnpm.cmd`
+- Node 24 prints `DEP0169` (`url.parse()`) during pnpm runs — harmless
+- PowerShell `-replace` is case-insensitive — never bulk-replace package scopes with it
+- After large renames: `pnpm exec biome check --write .`, then `pnpm verify`
+- `exactOptionalPropertyTypes` is on: never assign `undefined` to an optional field; conditional spread still fails when the value is `T | undefined` — narrow first
+- `gh run view <id> --log-failed` can return empty → read the job summary instead
+- Keep TypeScript on 6.x until dependency-cruiser supports TS 7 (it silently crawls almost nothing under 7) — ADR 0003
+- Better Auth on Workers: needs `nodejs_compat`; uses native D1 (no Drizzle); `advanced.database.validateSchema: false` plus try/catch in `resolveUser` so a schema mismatch fails closed (401), not 500
