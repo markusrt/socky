@@ -7,8 +7,18 @@ import {
   tickActiveSock,
 } from "@socky/shared";
 import { beforeEach, describe, expect, it } from "vitest";
-import { loadSessions, upsertSession } from "./storage";
+import {
+  dismissUnreadable,
+  loadSessions,
+  loadStorage,
+  requestPersistentStorage,
+  UNREADABLE_PREFIX,
+  type UnreadableCopy,
+  upsertSession,
+} from "./storage";
 import fixture from "./storage-fixtures/sessions-v1.json";
+import damagedFixture from "./storage-fixtures/sessions-v1-damaged.json";
+import copyFixture from "./storage-fixtures/unreadable-copy-v1.json";
 
 /**
  * Data-safety regression (ADR 0004): the live app stores the knitter's
@@ -86,5 +96,181 @@ describe("stored sessions v1 (live format)", () => {
     const [savedFoot, ...savedOthers] = loadSessions() as [PairSession, ...PairSession[]];
     expect(currentStep(savedFoot)?.sock1Done).toBe(21);
     expect(savedOthers).toEqual(others);
+  });
+});
+
+/* ------------------------------------------------------------------------
+ * 001-storage-safety (ADR 0006): unreadable data is preserved, never
+ * overwritten; damaged pairs never hide readable ones; failed saves report.
+ * ---------------------------------------------------------------------- */
+
+/** Storage whose writes fail for keys matching `failWrites`. */
+class FlakyStorage extends MemoryStorage {
+  constructor(public failWrites: (key: string) => boolean = () => true) {
+    super();
+  }
+  override setItem(key: string, value: string) {
+    if (this.failWrites(key)) throw new DOMException("full", "QuotaExceededError");
+    super.setItem(key, value);
+  }
+}
+
+function useStorage(storage: Storage, live?: string) {
+  if (live !== undefined) storage.setItem(LIVE_KEY, live);
+  Object.defineProperty(globalThis, "localStorage", { value: storage, configurable: true });
+  return storage;
+}
+
+function copies(storage: Storage): UnreadableCopy[] {
+  const result: UnreadableCopy[] = [];
+  for (let i = 0; i < storage.length; i++) {
+    const key = storage.key(i);
+    if (key?.startsWith(UNREADABLE_PREFIX)) result.push(JSON.parse(storage.getItem(key) ?? ""));
+  }
+  return result;
+}
+
+const [firstStored] = fixture as unknown as [PairSession];
+
+describe("today's stored format stays quiet", () => {
+  it("loads the frozen fixture with no notice and no preserved copy", () => {
+    const result = loadStorage();
+    expect(result.sessions).toEqual(fixture);
+    expect(result.notices).toEqual([]);
+    expect(result.writeBlocked).toBe(false);
+    expect(copies(localStorage)).toEqual([]);
+  });
+
+  it("an empty store starts empty with no notice", () => {
+    useStorage(new MemoryStorage());
+    expect(loadStorage()).toEqual({ sessions: [], notices: [], writeBlocked: false });
+  });
+});
+
+describe("unreadable stored data (US1)", () => {
+  it.each([
+    ["cut-off text", RAW.slice(0, 200)],
+    ["not a list", JSON.stringify({ sessions: fixture })],
+    ["unknown shape", JSON.stringify("hello")],
+  ])("%s: preserved byte for byte, notice shown, never overwritten", (_name, raw) => {
+    const storage = useStorage(new MemoryStorage(), raw);
+
+    const loaded = loadStorage();
+    expect(loaded.sessions).toEqual([]);
+    expect(loaded.writeBlocked).toBe(false);
+    expect(loaded.notices).toHaveLength(1);
+    expect(loaded.notices[0]).toMatchObject({ raw, damagedCount: null, dismissed: false });
+
+    // She starts a new pair and counts: the original text survives.
+    const { save } = upsertSession(tickActiveSock(firstStored));
+    expect(save).toEqual({ ok: true });
+    expect(copies(storage).map((c) => c.raw)).toEqual([raw]);
+    expect(loadSessions().map((s) => s.id)).toEqual([firstStored.id]);
+  });
+
+  it("loading twice keeps one copy; a new damage keeps both", () => {
+    const storage = useStorage(new MemoryStorage(), "{broken");
+    loadStorage();
+    loadStorage();
+    expect(copies(storage)).toHaveLength(1);
+
+    storage.setItem(LIVE_KEY, "{broken again");
+    loadStorage();
+    expect(
+      copies(storage)
+        .map((c) => c.raw)
+        .sort()
+    ).toEqual(["{broken", "{broken again"]);
+  });
+
+  it("blocks every save when the copy cannot be preserved", () => {
+    const storage = useStorage(
+      new FlakyStorage((key) => key.startsWith(UNREADABLE_PREFIX)),
+      "{broken"
+    );
+    expect(loadStorage().writeBlocked).toBe(true);
+
+    const { sessions, save } = upsertSession(firstStored);
+    expect(save).toEqual({ ok: false });
+    expect(sessions.map((s) => s.id)).toEqual([firstStored.id]);
+    expect(storage.getItem(LIVE_KEY)).toBe("{broken");
+  });
+
+  it("dismissing hides the notice and deletes nothing", () => {
+    const storage = useStorage(new MemoryStorage(), "{broken");
+    const [notice] = loadStorage().notices;
+    if (!notice) throw new Error("expected a notice");
+
+    dismissUnreadable(notice.key);
+
+    expect(loadStorage().notices).toEqual([]);
+    expect(copies(storage)).toEqual([{ ...copyOf(notice), dismissed: true }]);
+  });
+
+  it("reads the frozen preserved-copy format", () => {
+    const storage = useStorage(new MemoryStorage());
+    storage.setItem(`${UNREADABLE_PREFIX}${copyFixture.foundAt}`, JSON.stringify(copyFixture));
+    expect(loadStorage().notices).toEqual([
+      { ...copyFixture, key: `${UNREADABLE_PREFIX}${copyFixture.foundAt}` },
+    ]);
+  });
+});
+
+function copyOf({ key: _key, ...copy }: UnreadableCopy & { key: string }): UnreadableCopy {
+  return copy;
+}
+
+describe("damaged pairs among readable ones (US2)", () => {
+  it("shows readable pairs unchanged and counts the damaged one", () => {
+    const raw = JSON.stringify(damagedFixture);
+    const storage = useStorage(new MemoryStorage(), raw);
+
+    const loaded = loadStorage();
+    expect(loaded.sessions).toEqual([damagedFixture[0], damagedFixture[2]]);
+    expect(loaded.notices[0]).toMatchObject({ raw, damagedCount: 1, totalCount: 3 });
+
+    upsertSession(tickActiveSock(loaded.sessions[0] as PairSession));
+    expect(copies(storage).map((c) => c.raw)).toEqual([raw]);
+    expect(currentStep(loadSessions()[0] as PairSession)?.sock1Done).toBe(21);
+  });
+});
+
+describe("failed saves (US3)", () => {
+  it("reports a failed save and keeps the change in the returned list", () => {
+    const storage = useStorage(new FlakyStorage(() => false), RAW);
+    (storage as FlakyStorage).failWrites = () => true;
+
+    const ticked = tickActiveSock(firstStored);
+    const { sessions, save } = upsertSession(ticked);
+    expect(save).toEqual({ ok: false });
+    expect(sessions[0]).toEqual(ticked);
+    expect(storage.getItem(LIVE_KEY)).toBe(RAW);
+
+    (storage as FlakyStorage).failWrites = () => false;
+    expect(upsertSession(ticked).save).toEqual({ ok: true });
+  });
+
+  it("blocks saves when storage cannot be read at all", () => {
+    const storage = useStorage(new MemoryStorage());
+    storage.getItem = () => {
+      throw new DOMException("blocked", "SecurityError");
+    };
+    expect(loadStorage()).toEqual({ sessions: [], notices: [], writeBlocked: true });
+    expect(upsertSession(firstStored).save).toEqual({ ok: false });
+  });
+});
+
+describe("persistent storage request (US4)", () => {
+  it("asks once and tolerates refusal or absence", async () => {
+    let asked = 0;
+    requestPersistentStorage({
+      persist: () => {
+        asked++;
+        return Promise.reject(new Error("refused"));
+      },
+    });
+    expect(asked).toBe(1);
+    expect(() => requestPersistentStorage(undefined)).not.toThrow();
+    await Promise.resolve();
   });
 });

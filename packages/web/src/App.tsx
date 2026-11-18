@@ -20,8 +20,9 @@ import {
   tipProgressSummary,
   untickActiveSock,
 } from "@socky/shared";
-import { useMemo, useState } from "react";
-import { loadSessions, upsertSession } from "./storage";
+import { type ReactNode, useMemo, useState } from "react";
+import { SaveFailedNotice, UnreadableDataNotice } from "./StorageNotice";
+import { dismissUnreadable, loadStorage, type UnreadableNotice, upsertSession } from "./storage";
 import { colors } from "./theme";
 import { Button } from "./ui/Button";
 
@@ -56,7 +57,10 @@ function countLineForStep(
 
 export function App() {
   const [view, setView] = useState<View>({ name: "home" });
-  const [sessions, setSessions] = useState<PairSession[]>(() => loadSessions());
+  const [initial] = useState(() => loadStorage());
+  const [sessions, setSessions] = useState<PairSession[]>(initial.sessions);
+  const [notices, setNotices] = useState<UnreadableNotice[]>(initial.notices);
+  const [saveFailed, setSaveFailed] = useState(false);
 
   const session = useMemo(
     () => (view.name === "knit" ? sessions.find((s) => s.id === view.sessionId) : undefined),
@@ -64,11 +68,19 @@ export function App() {
   );
 
   function commit(session: PairSession) {
-    setSessions(upsertSession(session));
+    const result = upsertSession(session);
+    setSessions(result.sessions);
+    setSaveFailed(!result.save.ok);
   }
 
+  function dismiss(key: string) {
+    dismissUnreadable(key);
+    setNotices((current) => current.filter((n) => n.key !== key));
+  }
+
+  let screen: ReactNode;
   if (view.name === "new") {
-    return (
+    screen = (
       <NewSessionView
         onCancel={() => setView({ name: "home" })}
         onCreate={(s) => {
@@ -77,10 +89,8 @@ export function App() {
         }}
       />
     );
-  }
-
-  if (view.name === "knit" && session) {
-    return (
+  } else if (view.name === "knit" && session) {
+    screen = (
       <KnitSessionView
         session={session}
         onBack={() => setView({ name: "home" })}
@@ -90,31 +100,42 @@ export function App() {
         onStartSock2={() => commit(switchToSock2(session))}
       />
     );
-  }
-
-  if (view.name === "preview") {
-    return (
+  } else if (view.name === "preview") {
+    screen = (
       <PreviewView actualSizeId={view.actualSizeId} onBack={() => setView({ name: "home" })} />
+    );
+  } else {
+    screen = (
+      <HomeView
+        sessions={sessions}
+        notices={notices}
+        onDismissNotice={dismiss}
+        onNew={() => setView({ name: "new" })}
+        onOpen={(id) => setView({ name: "knit", sessionId: id })}
+        onPreview={(id) => setView({ name: "preview", actualSizeId: id })}
+      />
     );
   }
 
   return (
-    <HomeView
-      sessions={sessions}
-      onNew={() => setView({ name: "new" })}
-      onOpen={(id) => setView({ name: "knit", sessionId: id })}
-      onPreview={(id) => setView({ name: "preview", actualSizeId: id })}
-    />
+    <>
+      {saveFailed && <SaveFailedNotice />}
+      {screen}
+    </>
   );
 }
 
 function HomeView({
   sessions,
+  notices,
+  onDismissNotice,
   onNew,
   onOpen,
   onPreview,
 }: {
   sessions: PairSession[];
+  notices: UnreadableNotice[];
+  onDismissNotice: (key: string) => void;
   onNew: () => void;
   onOpen: (id: string) => void;
   onPreview: (id: string) => void;
@@ -143,6 +164,13 @@ function HomeView({
         />
         <p style={{ margin: "0.5rem 0 0", color: colors.ink }}>Knit. Track. Cozy.</p>
       </header>
+      {notices.map((notice) => (
+        <UnreadableDataNotice
+          key={notice.key}
+          notice={notice}
+          onDismiss={() => onDismissNotice(notice.key)}
+        />
+      ))}
       <Button onClick={onNew} fullWidth>
         Neue Socke starten
       </Button>

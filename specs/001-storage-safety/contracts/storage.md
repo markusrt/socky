@@ -6,13 +6,15 @@ type LoadResult = {
   notices: UnreadableCopy[];        // undismissed preserved copies
   writeBlocked: boolean;            // copy could not be preserved
 };
-loadSessions(): LoadResult          // never writes Socky.sessions.v1
+loadStorage(): LoadResult           // never writes Socky.sessions.v1
+loadSessions(): PairSession[]       // = loadStorage().sessions (kept for callers/tests)
 
 type SaveResult = { ok: true } | { ok: false };
-saveSessions(sessions): SaveResult  // no-op + { ok: false } when write-blocked
+saveSessions(sessions): SaveResult  // catches every write error
 upsertSession(session): { sessions: PairSession[]; save: SaveResult }
+                                    // skips the save and returns { ok: false } when write-blocked
 
-dismissUnreadable(foundAt): void    // sets dismissed; never deletes
+dismissUnreadable(key): void        // sets dismissed; never deletes
 requestPersistentStorage(): void    // fire-and-forget
 ```
 
