@@ -31,13 +31,14 @@ commands, outcomes, review findings and screenshots go to
   2026-11-18 (`d2cc134`); knitter confirmed her live pair is intact
 - Built before adoption: `specs/000-baseline/spec.md` (R1–R4; knitting UI
   live, M3 API foundation in `packages/api` not deployed)
-- Active (parallel, own branch each): `001-storage-safety` (Light) and
-  `002-sizing-research` (Spike); interview round 1 asked for both
-- Pending owner decisions: interview round 1 and protecting `main`
+- Active (parallel, own branch each): `001-storage-safety` (Light) at its
+  C3 GATE (round 1); `002-sizing-research` (Spike) at its C1 GATE (round 2,
+  `specs/002-sizing-research/review/round-2.md`, worktree `../KnitHelper-002`)
+- Pending owner decisions: accept 001 (round 1); 002 go/no-go (round 2)
 
 ## Counters
 
-- Rounds held: 0
+- Rounds held: 2 (round 1 = 001 C3, round 2 = 002 C1)
 - Last feedback id: none (next is r01)
 
 ## Machine
@@ -52,8 +53,8 @@ commands, outcomes, review findings and screenshots go to
 
 ## Roadmap (owner-approved order, 2026-11-14)
 
-1. Done 2026-11-18: baseline PR merged, knitter confirmed. Pending: protect
-   `main` (PR + passing checks, no force-push) on the owner's go-ahead
+1. Done 2026-11-18: baseline PR merged, knitter confirmed; `main` ruleset
+   active (PR + check, no force-push/deletion, admin bypass)
 2. In parallel: `001-storage-safety` (Light) and `002-sizing-research`
    (Spike, research only: her new notes, REGIA structure, foot data,
    proposed sizing model with test cases)
@@ -70,10 +71,10 @@ commands, outcomes, review findings and screenshots go to
   (ADR 0005)
 - `POST /migrate` in `packages/api` is unauthenticated; guard before deploying
 - TypeScript 7 blocked on dependency-cruiser (ADR 0003)
-- Delivery modes Light and Spike are untried in this repository
 
 ## Exact next action
 
-1. Wait for the owner's answers to interview round 1 (001 + 002 + protect
-   `main`); record them in each feature's journal.
-2. Then per branch: `/speckit-specify` → clarify → plan → tasks → analyze.
+1. 001: wait for the owner's round-1 decision; on acceptance tick T014 and
+   `pnpm ship --mode expert-review`; after merge she checks her pair once.
+2. 002: wait for the owner's go/no-go and the knitter's table verdicts;
+   record them (feedback file), then publish per the decision.

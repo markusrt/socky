@@ -69,3 +69,26 @@ size-27 foot now.
   foot rows within ±2 for 8/9 in sample (SC-002 met), leave-one-out 5/8;
   50/51 off by 11 (open question Q1). Recommendation: go for 003 with
   conditions (proposals only, constants as data, Q1/Q2 first).
+
+## 2026-11-18 — C1 handoff (round 2)
+
+- Reviewer (fresh context): no blockers. Refit all lines independently
+  (baby, adult, Bündchen, leave-one-out 5/8 reproduced), hand-checked R1–R10
+  for 27, 42, 40/41, confirmed `vergleich-de.md` table = `--de`, data set =
+  notes + size files, privacy clean (no name, no tallies, no private paths).
+- Should-fix, all fixed: line B wording (all five adult socks, not "43-45
+  left out"); 50/51 used for R1 bands but excluded from R9c → Q1 now decides
+  46–51 stitch bands too (§6, §10 condition 4, Q9); §10 qualified (R2–R8
+  9/9, R1 interpolated; 8/9 in sample vs 5/8 leave-one-out); this branch's
+  STATUS carried over from 001 with round 2.
+- Nits fixed: German table "Reihen/Maschen" sentence, softened "Babysocken
+  reichlich lang" to a computed statement, "ca. 15/17" note, 117–129% for her
+  knitted baby sizes, "By the counts, babies grow …". Left for 003: pin model
+  values in unit tests (EXPLAINED_DEVIATIONS keyed by id), `--size abc` NaN,
+  provenance string outside the contract enum; addi "20/21" chart label not
+  re-checked against the source; "Fable" model naming kept (it is the tier
+  alias used for the research agent).
+- `pnpm install --frozen-lockfile` in the worktree, `pnpm verify` exit 0
+  (shared 27, web 4, api 6 unit tests; Playwright 6 — main's suite, this
+  branch changes no app code).
+- No dev-server step: Spike changes no app code (FR-011).

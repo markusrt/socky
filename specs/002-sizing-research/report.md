@@ -166,7 +166,7 @@ stitches or rows per cm. What the data do give:
   but the first number is rounds per cm of *foot*, not of fabric: it would also result from
   a tighter fabric worn with more stretch. The model uses 4.28 as an effective value.
 - **Stitches.** At the band gauge of 3.0 stitches per cm [S7], her adult socks (37 to 45)
-  measure 91 to 103% of the estimated ball girth and her baby socks 112 to 129% (section 8).
+  measure 91 to 103% of the estimated ball girth and her knitted baby sizes 117 to 129% (section 8).
   The REGIA chart itself gives about 103% for 22/23 and 85 to 89% from 38/39 up on the same
   estimate, and the usual advice is 85 to 90% [S10]. At equal gauge her adult socks are
   6 to 13% wider than the chart's for the same foot. Either she knits tighter than the band
@@ -193,7 +193,7 @@ Sensitivity of the foot rows (`node model.mjs`, last block):
   needles and tension only. This is also the simplest explanation offered for the uncertain
   note (section 7).
 - **Which large sock is trusted.** The adult line rests on four socks, and its slope rests
-  on the 43-45 pair. Leaving that pair out and including 50/51 instead gives line B
+  on the 43-45 pair. Adding 50/51 to the four adult socks gives line B
   (T = 41.45 + 2.92 × L): it fits 37/38, 39/40, 40/41 and 50/51 within ±2 rows and misses
   43-45 by 5. Lines A and B differ by at most 3 rows up to size 42 and by 6 to 8 rows from
   46 to 49. Q1 and Q3 decide between them. Line A was chosen because all four socks with a
@@ -346,7 +346,8 @@ an explanation in `EXPLAINED_DEVIATIONS`.
 - **50/51.** The rule gives 73 foot rows for a 50.5 foot; she knitted 62. Her 62 rows are
   what the rule gives for a foot of 29.6 cm, about size 46. The earlier note names only the
   chart size. Her value is kept and shown as knitted; the point is excluded from the adult
-  line; Q1 asks her. If the socks were knitted for a 50/51 foot and fit, line B of section
+  line; Q1 asks her. The cast-on band R1 still uses it for 47 to 51 (section 10,
+  condition 4). If the socks were knitted for a 50/51 foot and fit, line B of section
   4 is the better adult rule and sizes 46 to 49 need 6 to 8 fewer rows than proposed.
 
 Monotonic check: cast-on, Bündchen, Rechte Reihen, heel, pick-up, rows after joining, tip
@@ -437,7 +438,7 @@ Differences larger than one shoe size:
 
 - **15 to 20 (+2 to +5 sizes): her baby socks.** They are as long as an adult-rule sock for
   a foot 1.4 to 3.6 cm longer. This is her knitting, not a model error: 18 is knitted on
-  chart 22/23 and comes out as a 22/23 sock, 19-20 on 24/25 as a 24/25 sock. Babies grow
+  chart 22/23 and comes out as a 22/23 sock, 19-20 on 24/25 as a 24/25 sock. By the counts, babies grow
   into them. The adult rule cannot describe these socks; R9a does.
 - **21 to 33 (+1 to +5 sizes): the bridge.** R9b lets the extra length of the baby socks
   fade out by size 37. Nothing she has knitted with certainty supports the values in
@@ -498,8 +499,11 @@ interpolated bands 52 to 64 continue that trend without a jump.
 For it:
 
 - The construction of a sock follows from the stitch count by simple rules that match all
-  nine certain sizes. This part can be built and trusted now.
-- The foot rows are within ±2 rows for 8 of 9 certain sizes, and the one miss has a
+  nine certain sizes: the rules from stitch count to construction (R2 to R8) match 9/9.
+  Which stitch count a size gets (R1) is interpolated for 21 to 36 and uncertain at the
+  band edges (Q9) and from 46 up (Q1).
+- The foot rows are within ±2 rows for 8 of 9 certain sizes in sample (5 of 8
+  leave-one-out, below the 80% target), and the one miss has a
   specific, answerable cause.
 - The model is small (two tables, a few formulas), fits the contract in
   `contracts/sizing-model.md`, and `model.mjs` can be ported to `packages/shared` with its
@@ -514,7 +518,9 @@ Conditions:
    about ±2 to ±6 rows, not better.
 3. Before she knits a proposed size from 21 to 36: her answer to Q2, and ideally one pair
    in that range that fits (27 or 28 would sit in the middle).
-4. Before she knits a proposed size from 46 to 49: her answer to Q1.
+4. Before she knits a proposed size from 46 to 51: her answer to Q1. It decides the foot
+   rows and also the stitch bands: R1 takes 76 stitches for 47 to 51 from the 50/51 pair,
+   while R9c treats that pair as a smaller (about 46) foot; both cannot hold.
 5. A measured foot length should be offered next to the shoe size, since the length rules
    are the less certain half of the model.
 
@@ -547,6 +553,7 @@ in the UI, and her acceptance step. Making the model the standard needs its own 
    Bündchen 31 to 38, Rechte Reihen 9 to 14 and 3 rows after joining up to 56 stitches.
    Her 30/31-chart pair has 34, 12 and 5. Which does she prefer?
 9. **Q9 — band edges.** 36 or 40 stitches for size 16; 68 or 72 for 42; 72 or 76 for 46?
+   (The 46 to 51 bands also depend on Q1.)
 
 Questions C7 and C8 of the data set (pick-up on the 30/31 note; a note for size 15) are
 for completeness only and do not change the model.

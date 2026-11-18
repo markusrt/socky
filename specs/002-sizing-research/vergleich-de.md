@@ -15,13 +15,14 @@ App und nichts an deinen Größen.
 - **Urteil** ist für dich: bitte in jede berechnete Zeile **passt**, **passt nicht** oder
   **weiß nicht** schreiben. Gern auch die Zahl dazu, die du nehmen würdest.
 
-Alle Angaben sind Reihen. Die Spitze zählt in Runden: „2-1 ×1“ heißt 2 rechts, 1 Abnahme,
+Bündchen, Rechte Reihen, Ferse, nach Zusammenstricken und Fuß sind Reihen; Maschen, Aufteilung
+und aufnehmen sind Maschen. Die Spitze zählt in Runden: „2-1 ×1“ heißt 2 rechts, 1 Abnahme,
 einmal. „1-1 ×3“ heißt 1 rechts, 1 Abnahme, dreimal.
 
 ## Worauf du besonders schauen kannst
 
-1. **Größen 21 bis 36.** Dazwischen hast du noch nichts gestrickt. Deine Babysocken sind
-   reichlich lang (zum Reinwachsen), deine Erwachsenensocken sitzen genau. Die Rechnung
+1. **Größen 21 bis 36.** Dazwischen hast du noch nichts gestrickt. Nach der Rechnung sind deine
+   Babysocken reichlich lang (zum Reinwachsen), deine Erwachsenensocken sitzen genau. Die Rechnung
    geht dazwischen langsam von „reichlich“ auf „genau“ über. Passt das für Kindersocken?
 2. **Größen 46 bis 49.** Diese Zeilen hängen an der Frage, für welchen Fuß du die Socken
    50/51 gestrickt hast (Frage 1 unten). Die Rechnung hätte für einen Fuß 50/51 nicht 62,
@@ -69,7 +70,7 @@ einmal. „1-1 ×3“ heißt 1 rechts, 1 Abnahme, dreimal.
 | 49 | 76 | 45 | 15 | 36 | 13-12-13 | 19 | 5 | 69 | 3-1 ×1, 2-1 ×2, 1-1 ×5 | berechnet | unsicher, hängt an der Frage zu 50/51 |  |
 | **50/51** | 76 | 45 | 15 | 36 | 13-12-13 | 19 | 5 | 62 | 3-1 ×1, 2-1 ×2, 1-1 ×5 | gestrickt | Fuß berechnet 73 (+11) |  |
 
-Größe 40 steht in zwei deiner Zeilen (39/40 und 40/41), siehe Frage 4.
+„15“ und „17“ sind deine Notizen „ca. 15“ und „ca. 17“. Größe 40 steht in zwei deiner Zeilen (39/40 und 40/41), siehe Frage 4.
 
 Die Tabelle kommt aus `node specs/002-sizing-research/model.mjs --de`.
 
