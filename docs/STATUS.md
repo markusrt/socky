@@ -39,7 +39,7 @@ commands, outcomes, review findings and screenshots go to
 ## Counters
 
 - Rounds held: 2 (round 1 = 001 C3, round 2 = 002 C1)
-- Last feedback id: none (next is r01)
+- Last feedback id: r14 (round 2 feedback, 002)
 
 ## Machine
 
