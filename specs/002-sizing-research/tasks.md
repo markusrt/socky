@@ -8,7 +8,7 @@
 
 ## Phase 1: Setup
 
-- [ ] T001 Data-safety check: does this feature change the stored-session key, its shape, stored step/note keys, or the deploy origin? If yes, add a frozen fixture for the new format and a test that every older fixture still loads (packages/web/src/storage.test.ts); if no, record "no stored-data impact" in the journal (FR-011)
+- [x] T001 Data-safety check: does this feature change the stored-session key, its shape, stored step/note keys, or the deploy origin? If yes, add a frozen fixture for the new format and a test that every older fixture still loads (packages/web/src/storage.test.ts); if no, record "no stored-data impact" in the journal (FR-011)
 
 ## Phase 2: User Story 1 - Her knitted sizes as data (P1)
 

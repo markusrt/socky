@@ -44,3 +44,8 @@ size-27 foot now.
   FR-003/004/005→T005, FR-006→T006, FR-007→T004, FR-008→T005/T008,
   FR-009→T009, FR-010→T008, FR-011→T001, FR-012→T003/T004; SC-001–SC-006
   covered by T002/T006/T004/T009/T010. No gaps.
+
+## 2026-11-18 — implementation
+
+- T001: no stored-data impact (no change to `packages/`, storage key, shape,
+  step/note keys or deploy origin).
