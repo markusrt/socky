@@ -22,3 +22,15 @@ next `upsertSession` overwrites `Socky.sessions.v1`.
 FR-001–FR-012, SC-001–SC-005); quality checklist passed in one pass.
 
 Context at start of this session part: continued session (after compaction).
+
+## 2026-11-18 — planning
+
+- Clarify: skipped; interview Q2–Q6 settled every open point.
+- `/speckit-plan` → plan.md (Light), research.md (R1–R7), data-model.md,
+  contracts/storage.md, quickstart.md. Constitution check: all pass; storage
+  addition gets ADR 0006.
+- Tasks: T001–T014 (one C3 GATE).
+- Analyze (manual coverage pass): FR-001→T004/T006, FR-002/003→T006,
+  FR-004→T007/T009, FR-005/006→T007, FR-007→T009, FR-008→T006/T008,
+  FR-009→T010, FR-010→T011, FR-011→T001/T004/T005/T013, FR-012→T002/T012;
+  SC-001→T006/T008, SC-002/005→T013, SC-003→T007/T008, SC-004→T010. No gaps.
