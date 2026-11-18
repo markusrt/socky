@@ -32,3 +32,15 @@ FR-001–FR-012, SC-001–SC-006); quality checklist passed in one pass.
 
 Open for the knitter: how the foot part of the 30/31-chart socks fits the
 size-27 foot now.
+
+## 2026-11-18 — planning
+
+- Clarify: skipped; the interview (Q7–Q12 plus 2026-11-14 Q21/Q24) settled
+  every open point, no `[NEEDS CLARIFICATION]` left.
+- `/speckit-plan` → plan.md, research.md (D1–D6), data-model.md,
+  contracts/sizing-model.md, quickstart.md. Constitution check: all pass.
+- Tasks: T001–T010 (Spike, one C1 GATE).
+- Analyze (manual coverage pass): FR-001→T002/T003, FR-002→T002,
+  FR-003/004/005→T005, FR-006→T006, FR-007→T004, FR-008→T005/T008,
+  FR-009→T009, FR-010→T008, FR-011→T001, FR-012→T003/T004; SC-001–SC-006
+  covered by T002/T006/T004/T009/T010. No gaps.
