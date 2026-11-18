@@ -11,7 +11,9 @@
     "test": "pnpm -r --if-present test",
     "typecheck": "pnpm -r --if-present typecheck",
     "dep:cruise": "depcruise packages --config .dependency-cruiser.cjs",
-    "verify": "pnpm lint && pnpm typecheck && pnpm dep:cruise && pnpm test",
+    "test:e2e": "pnpm --filter @socky/web test:e2e",
+    "verify": "pnpm lint && pnpm typecheck && pnpm dep:cruise && pnpm test && pnpm test:e2e",
+    "ship": "node scripts/ship.mjs",
     "dev:api": "pnpm --filter @socky/api dev",
     "dev:web": "pnpm --filter @socky/web dev"
   },

@@ -1,7 +1,16 @@
-# Socky — implemented requirements (spec)
+# Feature Specification: Socky baseline (as built before mvp-starter)
 
-Living summary of **what the product does** as of the last implementation.  
-New features: add/adjust a section here in the same PR (AGENTS.md rule).
+**Feature Branch**: none (record only)
+**Created**: 2026-11-14 (from the former `docs/SPEC.md`)
+**Status**: Frozen — implemented, owner-accepted (the knitter's old gates G1 domain truth and G2 knitting feel passed on 2026-10-15)
+**Spec Language**: en
+
+This file records **what Socky already did** when the project adopted the
+mvp-starter process (ADR 0004). It is not a Spec Kit feature and is never
+extended. New work gets its own `specs/NNN-<name>/spec.md`; requirement IDs
+`R1.1`–`R4.9` stay stable so commits, docs and later specs can cite them.
+The open items (R4.8, R4.9, roadmap) move into the spec of the feature that
+builds them.
 
 ## R1 Pattern & sizes
 

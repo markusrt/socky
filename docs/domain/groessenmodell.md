@@ -64,6 +64,20 @@ Tip is **derived from the chart base size** (`deriveTipRounds`). Actual size may
 
 One sock at a time in the UI; session tracks a **pair** (Socke 1 / Socke 2).
 
+## Display and wording rules (confirmed with her)
+
+- **Reihen** everywhere, except the tip, which uses **Runden**. The tip reads "N Runden", never "N rechte Runden".
+- Confirmation button by step unit: `rows` → **Reihe fertig**, `once` → **Fertig**, `finish` (close) → **Socke fertig**.
+- Her **configured counts** are the only numbers the knitting UI shows. Static template hints (e.g. chart defaults next to her counts) confused her and were removed.
+- **Aufteilung (X-Y-Z) always comes from the chart base size**, never from the actual size.
+- Chart **Fußlänge (cm)** is reference only, never authoritative for row counts.
+- Mix-up trap: chart **40/41** splits **10-12-10**, but an *actual* 40/41 knitted on chart base 44/45 splits **11-12-11** (sock-03).
+
+## Source material
+
+- REGIA chart: `docs/reference/kappchenferse_regia_4_faedig_0.pdf`. Its text layer (layout-preserving text extract) is authoritative over OCR of images.
+- Her original Notes (sock-01…04 plus a phone screenshot of the chart) are kept **privately by the owner, outside this public repo**. Only key points are reproduced here and in `vergleich-sock-*.md`. Never commit the raw notes.
+
 ## Mapping of sample socks
 
 See `vergleich-sock-03.md`, `vergleich-sock-04.md`, `vergleich-sock-01-02.md`.

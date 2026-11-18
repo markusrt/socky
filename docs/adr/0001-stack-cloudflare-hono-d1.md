@@ -2,7 +2,7 @@
 
 ## Status
 
-Accepted (2026-10-11)
+Accepted (2026-10-11). Amended 2026-11-14 — see “Implementation notes”.
 
 ## Context
 
@@ -34,6 +34,13 @@ Monorepo: pnpm workspaces (`packages/shared`, `packages/api`, `packages/web`).
 - No JVM: team applies C#/Java design instincts (clear layers, tests) in TS.
 - CPU time on free Workers is 10 ms/invocation — keep API handlers thin.
 - Auth and PWA deferred to M3/M4 after domain/knitting gates (G1/G2).
+
+## Implementation notes (2026-11-14)
+
+- **DB:** no Drizzle. Better Auth uses D1 natively (Kysely); app tables use raw SQL migrations (`packages/api/migrations/`).
+- **i18n:** no i18next yet. German display strings live in `packages/shared/src/labels.ts` and web components.
+- **Deploy:** the web app is served by GitHub Pages; moving it to Cloudflare follows ADR 0005.
+- **Tests:** Testing Library is not installed; Playwright arrives with the baseline cleanup (ADR 0004).
 
 ## Alternatives considered
 

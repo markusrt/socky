@@ -30,6 +30,9 @@ jobs:
       - name: Install
         run: pnpm install --frozen-lockfile
 
+      - name: Install Playwright browser
+        run: pnpm --filter @socky/web exec playwright install --with-deps chromium
+
       - name: Quality gates
         run: pnpm verify
 

@@ -39,7 +39,9 @@
       "!**/build",
       "!**/coverage",
       "!**/.wrangler",
-      "!**/*.md"
+      "!**/*.md",
+      "!.specify",
+      "!.claude"
     ]
   }
 }
