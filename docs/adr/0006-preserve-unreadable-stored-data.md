@@ -26,9 +26,10 @@ Accepted (2026-11-18) — feature `001-storage-safety`, owner interview Q3–Q5
    copy exists. Only after that may the next save write the readable pairs back
    to `Socky.sessions.v1`.
 3. **Write-block.** If the copy cannot be stored, or storage cannot be read at
-   all, the app does not write `Socky.sessions.v1` for the rest of the page
-   life; counting continues on screen and "Fortschritt wurde nicht
-   gespeichert" shows.
+   all, the app does not write `Socky.sessions.v1`; every later save first
+   retries the copy and writes only once it is stored. Meanwhile counting
+   continues on screen, "Fortschritt wurde nicht gespeichert" shows, and the
+   notice with "Daten kopieren" is built from the text in memory.
 4. **Never delete copies.** The app only sets `dismissed: true`; removing a
    copy is an owner task (browser developer tools).
 5. Saves return `{ ok }`, which drives the not-saved notice. On start the app

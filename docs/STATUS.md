@@ -31,14 +31,14 @@ commands, outcomes, review findings and screenshots go to
   2026-11-18 (`d2cc134`); knitter confirmed her live pair is intact
 - Built before adoption: `specs/000-baseline/spec.md` (R1–R4; knitting UI
   live, M3 API foundation in `packages/api` not deployed)
-- Active (parallel, own branch each): `001-storage-safety` (Light) and
-  `002-sizing-research` (Spike); both specified and planned 2026-11-18;
-  002 research running in worktree `../KnitHelper-002`
-- Pending owner decisions: 001 plan override; fix disabled `main` ruleset
+- Active (parallel, own branch each): `001-storage-safety` (Light) at its
+  C3 GATE (round 1, `specs/001-storage-safety/review/round-1.md`);
+  `002-sizing-research` (Spike) research running in `../KnitHelper-002`
+- Pending owner decisions: accept 001 (round 1 Q1)
 
 ## Counters
 
-- Rounds held: 0
+- Rounds held: 1 (round 1 = 001 C3)
 - Last feedback id: none (next is r01)
 
 ## Machine
@@ -53,8 +53,8 @@ commands, outcomes, review findings and screenshots go to
 
 ## Roadmap (owner-approved order, 2026-11-14)
 
-1. Done 2026-11-18: baseline PR merged, knitter confirmed. Pending: protect
-   `main` (PR + passing checks, no force-push) on the owner's go-ahead
+1. Done 2026-11-18: baseline PR merged, knitter confirmed; `main` ruleset
+   active (PR + check, no force-push/deletion, admin bypass)
 2. In parallel: `001-storage-safety` (Light) and `002-sizing-research`
    (Spike, research only: her new notes, REGIA structure, foot data,
    proposed sizing model with test cases)
@@ -71,10 +71,10 @@ commands, outcomes, review findings and screenshots go to
   (ADR 0005)
 - `POST /migrate` in `packages/api` is unauthenticated; guard before deploying
 - TypeScript 7 blocked on dependency-cruiser (ADR 0003)
-- Delivery modes Light and Spike are untried in this repository
 
 ## Exact next action
 
-1. 001: `/speckit-implement` from T001 (stop at GATE T014).
+1. 001: wait for the owner's round-1 decision; on acceptance tick T014 and
+   `pnpm ship --mode expert-review`; after merge she checks her pair once.
 2. 002: lead review of the research agent's output (T003, T007), then
-   T008–T010 (C1 GATE with go/no-go).
+   T008–T010 (C1 GATE, round 2, with go/no-go).

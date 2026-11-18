@@ -190,6 +190,9 @@ describe("unreadable stored data (US1)", () => {
     );
     expect(loadStorage().writeBlocked).toBe(true);
 
+    const [notice] = loadStorage().notices;
+    expect(notice).toMatchObject({ raw: "{broken", damagedCount: null, dismissed: false });
+
     const { sessions, save } = upsertSession(firstStored);
     expect(save).toEqual({ ok: false });
     expect(sessions.map((s) => s.id)).toEqual([firstStored.id]);
@@ -248,6 +251,22 @@ describe("failed saves (US3)", () => {
 
     (storage as FlakyStorage).failWrites = () => false;
     expect(upsertSession(ticked).save).toEqual({ ok: true });
+  });
+
+  it("keeps every on-screen pair when saves fail and another pair is counted", () => {
+    const storage = useStorage(new FlakyStorage(() => false), RAW) as FlakyStorage;
+    storage.failWrites = () => true;
+    let screen = loadSessions();
+    const [foot, tip] = screen as [PairSession, PairSession];
+
+    const footTicked = tickActiveSock(tickActiveSock(foot));
+    screen = upsertSession(footTicked, screen).sessions;
+    screen = upsertSession(tickActiveSock(tip), screen).sessions;
+    expect(screen.find((s) => s.id === foot.id)).toEqual(footTicked);
+
+    storage.failWrites = () => false;
+    upsertSession(tickActiveSock(tip), screen);
+    expect(currentStep(loadSessions()[0] as PairSession)?.sock1Done).toBe(22);
   });
 
   it("blocks saves when storage cannot be read at all", () => {

@@ -118,3 +118,51 @@ test("a failed save is visible and clears after the next good save", async ({ pa
   await page.reload();
   await expect(page.getByRole("button", { name: /40\/41.*22\/51/ })).toBeVisible();
 });
+
+test("during a save failure, counting another pair keeps the first pair's rows", async ({
+  page,
+}) => {
+  await seed(page, STORED);
+  await page.evaluate(() => {
+    const original = Storage.prototype.setItem;
+    (window as unknown as { restoreSetItem: () => void }).restoreSetItem = () => {
+      Storage.prototype.setItem = original;
+    };
+    Storage.prototype.setItem = () => {
+      throw new DOMException("full", "QuotaExceededError");
+    };
+  });
+  await page.getByRole("button", { name: /40\/41.*20\/51/ }).click();
+  await page.getByRole("button", { name: "Reihe fertig" }).click();
+  await page.getByRole("button", { name: "Reihe fertig" }).click();
+  await expect(page.getByText("22 / 51", { exact: true })).toBeVisible();
+  await page.getByRole("button", { name: "← Übersicht" }).click();
+
+  await page.evaluate(() => (window as unknown as { restoreSetItem: () => void }).restoreSetItem());
+  await page.getByRole("button", { name: /^15 .*Socke 2/ }).click();
+  await page.getByRole("button", { name: "Reihe fertig" }).click();
+  await expect(page.getByText("Fortschritt wurde nicht gespeichert")).toHaveCount(0);
+
+  await page.reload();
+  await expect(page.getByRole("button", { name: /40\/41.*22\/51/ })).toBeVisible();
+});
+
+test("if the copy cannot be stored, the notice still offers the data", async ({
+  page,
+  context,
+}) => {
+  await context.grantPermissions(["clipboard-read", "clipboard-write"]);
+  await page.addInitScript((prefix) => {
+    const original = Storage.prototype.setItem;
+    Storage.prototype.setItem = function (key: string, value: string) {
+      if (key.startsWith(prefix)) throw new DOMException("full", "QuotaExceededError");
+      original.call(this, key, value);
+    };
+  }, PREFIX);
+  await seed(page, CUT_OFF);
+
+  await expect(page.getByText(WHOLE_MESSAGE)).toBeVisible();
+  await page.getByRole("button", { name: "Daten kopieren" }).click();
+  expect(await page.evaluate(() => navigator.clipboard.readText())).toBe(CUT_OFF);
+  expect(await page.evaluate((key) => localStorage.getItem(key), LIVE_KEY)).toBe(CUT_OFF);
+});

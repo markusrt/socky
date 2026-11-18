@@ -68,7 +68,7 @@ export function App() {
   );
 
   function commit(session: PairSession) {
-    const result = upsertSession(session);
+    const result = upsertSession(session, sessions);
     setSessions(result.sessions);
     setSaveFailed(!result.save.ok);
   }

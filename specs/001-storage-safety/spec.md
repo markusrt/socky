@@ -4,7 +4,7 @@
 
 **Created**: 2026-11-18
 
-**Status**: Draft
+**Status**: In review (C3, round 1)
 
 **Spec Language**: en
 

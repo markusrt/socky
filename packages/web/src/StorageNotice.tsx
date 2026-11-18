@@ -47,10 +47,13 @@ export function UnreadableDataNotice({
       <p style={{ margin: "0 0 0.75rem" }}>Bitte die Daten kopieren und an Markus schicken.</p>
       <div style={{ display: "flex", gap: "0.75rem", flexWrap: "wrap", alignItems: "center" }}>
         <Button onClick={copy}>{copyState === "copied" ? "Kopiert ✓" : "Daten kopieren"}</Button>
-        <Button variant="ghost" onClick={onDismiss}>
+        <Button variant="secondary" onClick={onDismiss}>
           Ausblenden
         </Button>
       </div>
+      <p aria-live="polite" style={{ margin: copyState === "copied" ? "0.5rem 0 0" : 0 }}>
+        {copyState === "copied" ? "Daten wurden kopiert." : ""}
+      </p>
       {copyState === "manual" && (
         <label style={{ display: "block", marginTop: "0.75rem" }}>
           Kopieren hat nicht geklappt. Bitte den Text markieren und kopieren:
@@ -58,6 +61,8 @@ export function UnreadableDataNotice({
             readOnly
             value={notice.raw}
             rows={4}
+            // biome-ignore lint/a11y/noAutofocus: shown right after her tap; selects the text to copy
+            autoFocus
             onFocus={(e) => e.currentTarget.select()}
             style={{ display: "block", width: "100%", marginTop: "0.25rem", fontSize: "0.85rem" }}
           />
@@ -80,6 +85,7 @@ export function SaveFailedNotice() {
         color: colors.softCream,
         padding: "0.6rem 1rem",
         fontWeight: 600,
+        fontFamily: "system-ui, sans-serif",
         textAlign: "center",
       }}
     >

@@ -64,3 +64,32 @@ Context at start of this session part: continued session (after compaction).
 - `pnpm verify`: exit 0 (shared 37, web 17, api 6 unit tests; Playwright 16).
 - ADR 0006 written. Notice text names Markus as the person to send data to
   (owner name is already public in the repo).
+
+## 2026-11-18 — C3 handoff (round 1)
+
+- Dev server `pnpm --filter @socky/web dev --host 127.0.0.1 --port 5173
+  --strictPort`: HTTP 200, title "Socky" (this computer only).
+- Reviewer (fresh context, opus): no blockers. Should-fix, all fixed:
+  - S1 `upsertSession` rebuilt the list from storage, so after a failed save
+    counting another pair dropped unsaved rows and the red bar later cleared
+    (FR-009). Fix: `upsertSession(session, current)` uses the on-screen list;
+    unit test (two pairs, failing save) + e2e (switch pairs during failure).
+    Mutation (ignore `current`) → the new unit test fails.
+  - S2 copy not storable → empty app, no notice (FR-004/005). Fix: in-memory
+    notice built from the raw text; unit test + e2e (clipboard gets the raw
+    text, live key unchanged).
+  - S3 schema enums not linked to domain types. Fix: `expectTypeOf` equality
+    for StepKey/StepUnit/status/activeSock/tipDirection + every ACTUAL_SIZES
+    pair walked to DONE stays readable. Mutation (add a StepKey) → typecheck
+    fails in `stored-session.test.ts`.
+  - S4 draft report asked the owner to run a console command → removed;
+    screenshots cover those cases.
+  - Nits fixed: ADR 0006 write-block wording, banner font, "Ausblenden" as
+    secondary button (larger tap target), aria-live copy status, autofocus on
+    the fallback textarea. Not changed: zod in the web bundle (acceptable).
+- `pnpm verify` after fixes: exit 0 (shared 43, web 18, api 6 unit tests;
+  Playwright 20 = 7 storage-safety + 3 knitting, × desktop/Pixel 7).
+- Screenshots retaken after the fixes with the reviewer's walk script
+  (scratchpad `walk.mjs`), 20 PNGs in `specs/001-storage-safety/review/round-1/`;
+  the reviewer's two bug-evidence shots replaced by `fix-s1-*`/`fix-s2-*`.
+- Not verified: real iPhone Safari (persist grant, clipboard).

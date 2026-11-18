@@ -10,6 +10,8 @@ import { isReadablePairSession, type PairSession } from "@socky/shared";
  */
 const STORAGE_KEY = "Socky.sessions.v1";
 export const UNREADABLE_PREFIX = "Socky.unreadable.v1.";
+/** Key of a notice whose copy could not be stored (exists in memory only). */
+const UNSTORED_NOTICE_PREFIX = "unstored:";
 
 /** A preserved copy of stored text the app could not fully read. */
 export interface UnreadableCopy {
@@ -116,6 +118,18 @@ export function loadStorage(): LoadResult {
   } catch {
     notices = [];
   }
+  if (writeBlocked && damage !== null && raw !== null) {
+    // The copy could not be stored: still tell her and offer the text (it is
+    // safe in STORAGE_KEY, which is never written while blocked).
+    const foundAt = new Date().toISOString();
+    notices.push({
+      key: `${UNSTORED_NOTICE_PREFIX}${foundAt}`,
+      foundAt,
+      raw,
+      ...damage,
+      dismissed: false,
+    });
+  }
   return { sessions, notices, writeBlocked };
 }
 
@@ -134,14 +148,22 @@ export function saveSessions(sessions: PairSession[]): SaveResult {
 }
 
 /**
- * Insert or replace one pair and save. The returned list always contains
- * the change, also when saving failed, so counting continues on screen.
+ * Insert or replace one pair and save. `current` is the list on screen (the
+ * truth after a failed save); without it the stored list is used. The
+ * returned list always contains the change, also when saving failed, so
+ * counting continues on screen. Loading first also preserves unreadable
+ * stored text before this write (ADR 0006).
  */
-export function upsertSession(session: PairSession): {
+export function upsertSession(
+  session: PairSession,
+  current?: readonly PairSession[]
+): {
   sessions: PairSession[];
   save: SaveResult;
 } {
-  const { sessions, writeBlocked } = loadStorage();
+  const stored = loadStorage();
+  const { writeBlocked } = stored;
+  const sessions = current ? [...current] : stored.sessions;
   const index = sessions.findIndex((s) => s.id === session.id);
   if (index >= 0) {
     sessions[index] = session;
