@@ -49,3 +49,23 @@ size-27 foot now.
 
 - T001: no stored-data impact (no change to `packages/`, storage key, shape,
   step/note keys or deploy origin).
+- T002/T004–T006/T008/T009 by the research agent (Fable, separate worktree
+  `../KnitHelper-002`, about 28 min): `docs/domain/gestrickte-groessen.md`
+  (10 sizes, conflicts C1–C8), `model.mjs`, `vergleich-de.md`. The harness
+  refused the agent's write of `report.md` (subagents return reports as
+  text); the lead saved the returned draft verbatim apart from the status
+  line and the last limits bullet (now pointing to this journal).
+- T003 lead check: every count of the data set traced to its source: size
+  files 15/18/37-38/40-41/50-51 (counts and size-15 construction) and the five
+  private notes (read by the lead earlier today) — all match. Privacy grep for
+  names and tally marks in `docs/domain/gestrickte-groessen.md` and
+  `specs/002-sizing-research/`: no hits.
+- T007 lead review: `node specs/002-sizing-research/model.mjs` exit 0 ("every
+  deviation and every decrease has a recorded explanation"); `--size 27`
+  matches the report's worked example (56 M, 26 heel rows, 9-10-9, foot 37);
+  `--de` output equals `vergleich-de.md`; Biome (main checkout binary, run in
+  the worktree) clean.
+- Result: construction rules match 9/9 certain sizes (Bündchen 7/9, ±1);
+  foot rows within ±2 for 8/9 in sample (SC-002 met), leave-one-out 5/8;
+  50/51 off by 11 (open question Q1). Recommendation: go for 003 with
+  conditions (proposals only, constants as data, Q1/Q2 first).

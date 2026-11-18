@@ -12,20 +12,20 @@
 
 ## Phase 2: User Story 1 - Her knitted sizes as data (P1)
 
-- [ ] T002 [US1] Transcribe the five new notes from the owner's private folder and merge them with `docs/domain/vergleich-sock-*.md` and `packages/shared/data/actual-sizes/*.json` into `docs/domain/gestrickte-groessen.md` per data-model.md (counts and key points only, no names; 30/31-chart note marked uncertain; conflicts listed as questions for her) (FR-001, FR-002, SC-001)
-- [ ] T003 [US1] Lead check of T002: every number traced to its source; privacy grep for names and raw note text (FR-001, FR-012)
+- [x] T002 [US1] Transcribe the five new notes from the owner's private folder and merge them with `docs/domain/vergleich-sock-*.md` and `packages/shared/data/actual-sizes/*.json` into `docs/domain/gestrickte-groessen.md` per data-model.md (counts and key points only, no names; 30/31-chart note marked uncertain; conflicts listed as questions for her) (FR-001, FR-002, SC-001)
+- [x] T003 [US1] Lead check of T002: every number traced to its source; privacy grep for names and raw note text (FR-001, FR-012)
 
 ## Phase 3: User Stories 2 + 3 - Model and foot data (P1/P2)
 
-- [ ] T004 [US3] Research agent (Fable): public foot-length-per-EU-size data and baby/child/adult differences (length, girth), cited; generic queries only (FR-007, FR-012, SC-004)
-- [ ] T005 [US2] Research agent: derive rows/cm and stitch assumptions from her data (FR-008) and written rules for every count (FR-003, FR-004, FR-005); size-15 overrides and tip schedule handled (spec Edge Cases)
-- [ ] T006 [US2] Research agent: `specs/002-sizing-research/model.mjs` (Node, no deps) printing the EU 15–51 table and the test-case check with match/deviation per count, exit 1 on an unexplained deviation (FR-006, SC-001, SC-002, SC-003)
-- [ ] T007 [US2] Lead review of T004–T006: run `node specs/002-sizing-research/model.mjs`, re-check test cases against `docs/domain/gestrickte-groessen.md`, check monotonic/validation rules from data-model.md; `pnpm exec biome check specs/002-sizing-research`
+- [x] T004 [US3] Research agent (Fable): public foot-length-per-EU-size data and baby/child/adult differences (length, girth), cited; generic queries only (FR-007, FR-012, SC-004)
+- [x] T005 [US2] Research agent: derive rows/cm and stitch assumptions from her data (FR-008) and written rules for every count (FR-003, FR-004, FR-005); size-15 overrides and tip schedule handled (spec Edge Cases)
+- [x] T006 [US2] Research agent: `specs/002-sizing-research/model.mjs` (Node, no deps) printing the EU 15–51 table and the test-case check with match/deviation per count, exit 1 on an unexplained deviation (FR-006, SC-001, SC-002, SC-003)
+- [x] T007 [US2] Lead review of T004–T006: run `node specs/002-sizing-research/model.mjs`, re-check test cases against `docs/domain/gestrickte-groessen.md`, check monotonic/validation rules from data-model.md; `pnpm exec biome check specs/002-sizing-research`
 
 ## Phase 4: User Story 4 - Report and German table (P1)
 
-- [ ] T008 [US4] `specs/002-sizing-research/report.md`: method, sources, rules, density assumptions and sensitivity, test-case results, foot-data comparison, go/no-go recommendation for 003, open questions for her (FR-008, FR-010, SC-004)
-- [ ] T009 [US4] `specs/002-sizing-research/vergleich-de.md`: German table Größe | ihre Werte | berechnet | Abweichung, every proposal marked "berechnet", a column for "passt / passt nicht / weiß nicht" (FR-009, SC-005)
+- [x] T008 [US4] `specs/002-sizing-research/report.md`: method, sources, rules, density assumptions and sensitivity, test-case results, foot-data comparison, go/no-go recommendation for 003, open questions for her (FR-008, FR-010, SC-004)
+- [x] T009 [US4] `specs/002-sizing-research/vergleich-de.md`: German table Größe | ihre Werte | berechnet | Abweichung, every proposal marked "berechnet", a column for "passt / passt nicht / weiß nicht" (FR-009, SC-005)
 
 ### C1 GATE
 
