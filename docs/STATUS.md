@@ -32,8 +32,9 @@ commands, outcomes, review findings and screenshots go to
 - Built before adoption: `specs/000-baseline/spec.md` (R1–R4; knitting UI
   live, M3 API foundation in `packages/api` not deployed)
 - Active (parallel, own branch each): `001-storage-safety` (Light) and
-  `002-sizing-research` (Spike); interview round 1 asked for both
-- Pending owner decisions: interview round 1 and protecting `main`
+  `002-sizing-research` (Spike); both specified and planned 2026-11-18;
+  002 research running in worktree `../KnitHelper-002`
+- Pending owner decisions: 001 plan override; fix disabled `main` ruleset
 
 ## Counters
 
@@ -74,6 +75,6 @@ commands, outcomes, review findings and screenshots go to
 
 ## Exact next action
 
-1. Wait for the owner's answers to interview round 1 (001 + 002 + protect
-   `main`); record them in each feature's journal.
-2. Then per branch: `/speckit-specify` → clarify → plan → tasks → analyze.
+1. 001: `/speckit-implement` from T001 (stop at GATE T014).
+2. 002: lead review of the research agent's output (T003, T007), then
+   T008–T010 (C1 GATE with go/no-go).
