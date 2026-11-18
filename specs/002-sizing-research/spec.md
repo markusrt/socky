@@ -20,6 +20,17 @@ Socky knows a handful of sizes the knitter has actually knitted. Her rules alrea
 
 The result is a go/no-go for `003-size-generator`, which would put the model into the app. Every value the model proposes is a proposal marked "berechnet" until she accepts it; promoting the model to a standard needs a later ADR (P1).
 
+## Clarifications
+
+### Session 2026-11-18 (round 2 feedback, r01–r14)
+
+- Q: Which unit should proposals use? → A: Commonly sold size pairs for babies, children and adults; a pair fits its larger size (r01, r04). The scheme (odd/even 15/16 … 49/50 proposed) is pending the owner's decision in round 3. FR-013.
+- Q: Is her gauge consistent with foot data? → A: Check her gauge (36 stitches, 52 rows per 10 cm, 2.25 mm; r11) against the cited foot length and girth data. FR-014.
+- Q: For which foot was the 50/51 pair knitted? → A: 45/46, with 76 stitches (r06); 72 in r14 is asked again.
+- Q: Growing room for children's socks? → A: Some growing room is good (r07).
+- Q: Children's preference counts (Bündchen, Rechte Reihen, rows after joining)? → A: The computed ones fit; the uncertain 30/31 note is discarded (r13).
+- Q: Gusset decrease? → A: 4 stitches per round, 2 per needle (r12); every round vs every second round asked again.
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Her knitted sizes are documented as data (Priority: P1)
@@ -107,6 +118,9 @@ Markus reads a research report with the method, sources, rules, test cases and a
 - **FR-010**: The research MUST end with a go/no-go recommendation for 003 and the open questions for the knitter.
 - **FR-011**: The spike MUST NOT change the app, its stored data or the existing size files.
 - **FR-012**: Web searches and any external requests MUST NOT contain personal data about the owner, the knitter or the people the socks were knitted for.
+- **FR-013**: The model MUST propose one sock per commonly sold size pair (proposed: odd/even, 15/16 to 49/50, pending the owner's decision), made for the pair's larger size, and MUST show her knitted pairs with her own values (r01, r04).
+- **FR-014**: The research MUST check her measured gauge against the cited foot length and girth data, per pair and per knitted sock (r02, r11).
+- **FR-015**: The research MUST deliver a second German table by size pair, every proposed value marked "berechnet", with a verdict column and the open questions (r03).
 
 ### Key Entities
 
@@ -121,7 +135,7 @@ Markus reads a research report with the method, sources, rules, test cases and a
 
 - **SC-001**: 100% of the certain knitted sizes are test cases; for each, every count either matches her value or has a written explanation.
 - **SC-002**: Foot rows: the model is within ±2 rows of her value for at least 80% of certain knitted sizes, or the report explains why that is not reachable.
-- **SC-003**: Proposals exist for every EU size from 15 to 50/51 (at least 36 sizes), with every count filled.
+- **SC-003**: Proposals exist for every EU size from 15 to 50/51 (at least 36 sizes), with every count filled. From round 3: one proposal per size pair, 15/16 to 49/50 (18 pairs).
 - **SC-004**: Every external number in the report has a cited public source.
 - **SC-005**: The knitter can read the German table and give a judgment per proposed size ("passt" / "passt nicht" / "weiß nicht") in one sitting.
 - **SC-006**: The C1 round ends with a recorded go/no-go decision by the owner.

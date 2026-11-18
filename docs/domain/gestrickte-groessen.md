@@ -106,3 +106,24 @@ Not resolved here. Each is a question for the knitter.
 
 No count differs between a new note and a size file already in the app: the five new
 notes cover sizes that had no file (ca. 17, 19-20, 24, 39/40, 43-45).
+
+## Answers from round 2 (2026-11-18, feedback r04–r14)
+
+Her answers to C1–C8 and Q1–Q9, as key points (`specs/002-sizing-research/feedback/round-2.md`):
+
+- **C1 resolved for the foot:** the pair labelled 50/51 was knitted for a **45/46** foot on
+  the chart column 50/51; she wrote that 76 stitches are needed for it, but answered "72"
+  for 45/46 in Q9 (asked again; fit in length not stated). The app label `size-50-51.json` is unchanged
+  (FR-011); a later feature may relabel it with her consent.
+- **Gauge:** 36 stitches and 52 rows = 10 cm on 2.25 mm needles, the same for baby and
+  adult socks.
+- **Decrease after joining:** 2 stitches on each of her two needles, 4 per round, until the
+  cast-on count is back (every round or every second round: open).
+- **37/38:** 43 foot rows were a bit short at size 38; her 45 stays.
+- **Size 15** fitted with room for about three months; the next pair is size 17.
+- **Children:** some growing room is good; the computed children's Bündchen, Rechte Reihen
+  and rows after joining fit. Her counts from the 30/31-for-24 note (uncertain) are
+  discarded as a template; how that pair fits today is still asked.
+- **43-45 and size 40:** replaced by paired sizes; the 43-45 foot stays unknown.
+- **Size pairs:** the owner wants commonly sold pairs; odd/even 15/16 … 49/50 is proposed
+  (owner decision pending), see `specs/002-sizing-research/report.md` section 13.

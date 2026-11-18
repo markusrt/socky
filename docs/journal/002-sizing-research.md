@@ -92,3 +92,38 @@ size-27 foot now.
   (shared 27, web 4, api 6 unit tests; Playwright 6 — main's suite, this
   branch changes no app code).
 - No dev-server step: Spike changes no app code (FR-011).
+
+## 2026-11-18 — Round 2 feedback and round 3 (C1 repeat)
+
+- Feedback: owner chat plus the knitter's answers in a Word copy of
+  `vergleich-de.md` (extracted with a local script in the session scratchpad;
+  the file stays outside the repo). Recorded as r01–r14 in
+  `feedback/round-2.md`, committed before triage (`7bebac3`); one sentence
+  with a baby's birth month and wear dates omitted (public repo).
+- Triage: r01–r03 extension → FR-013–FR-015, T011–T015; r04 → pairs fit
+  their larger size; r06 → 50/51 pair relabelled 45/46 in the data set;
+  r11 gauge, r12 gusset (4 per round) → `pairs.mjs`; r13 → 30/31 note out;
+  r05/r08/r09 → recorded; open: r06 vs r14 (76/72), r12 rhythm, r07 fit at 27,
+  r10 details, 45/46 length fit; round-2 Q1/Q2 owner decisions not stated.
+- Sources (lead via web-fetch agents, generic queries only): Falke and
+  Sterntaler size tables on bergfreunde.de → [S11], [S12]; odd/even pairs.
+- `node specs/002-sizing-research/pairs.mjs` exit 0: length share adult
+  0.806, baby 1.032; test pairs 17/18 −1, 19/20 −1, 37/38 0, 39/40 +2,
+  45/46 −2 (in sample); width adult 77–83% of girth estimate.
+- Reviewer (fresh context): B1 blocker — "gauge confirms the length" was
+  circular (the share is rounds per cm of foot; the gauge cancels; 4.19 vs
+  4.28 compares different quantities). Fixed: claim removed in report 13.3,
+  round report and German summary; width named as the only gauge-dependent
+  check and it is tighter than advice. Should-fix fixed: S1 leave-one-out
+  3/5 within ±2 added; S2 72/76 conflict kept open (report, domain doc);
+  S3 45/46 length fit added to Not stated and question 2; S4 pair scheme
+  marked pending the owner (spec, FR-013, domain doc), 44/45 → 43/44 + 45/46
+  explained, Sterntaler EU-number note; S5 ca. 17 named in the 17/18 hint.
+  Nits fixed: "etwas knapp", gusset column note in bold rows, last-round 2
+  stitches, T010 duplicate, FR order, SC-003, How-to-answer and fresh-start
+  lines, 30/31 wording. Reviewer re-fetched both pages: [S11], [S12] accurate.
+- Word copy for the knitter: `vergleich-paare-de.md` → HTML → Word (COM),
+  landscape, 4 pages, PDF render checked; saved to the owner's Downloads
+  folder (not in the repo).
+- `pnpm verify` exit 0 (after fixes); Biome clean on the research folder;
+  `pairs.mjs --de` equals both tables in `vergleich-paare-de.md`.

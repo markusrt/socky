@@ -32,13 +32,16 @@ commands, outcomes, review findings and screenshots go to
 - Built before adoption: `specs/000-baseline/spec.md` (R1–R4; knitting UI
   live, M3 API foundation in `packages/api` not deployed)
 - Active (parallel, own branch each): `001-storage-safety` (Light) at its
-  C3 GATE (round 1); `002-sizing-research` (Spike) at its C1 GATE (round 2,
-  `specs/002-sizing-research/review/round-2.md`, worktree `../KnitHelper-002`)
-- Pending owner decisions: accept 001 (round 1); 002 go/no-go (round 2)
+  C3 GATE (round 1); `002-sizing-research` (Spike) at its C1 GATE again
+  (round 3 after round-2 feedback: paired sizes, her gauge;
+  `specs/002-sizing-research/review/round-3.md`, worktree `../KnitHelper-002`)
+- Pending owner decisions: accept 001 (round 1); 002 round 3 Q1 pair
+  scheme, Q2 go for 003, Q3 docs-only PR; knitter's answers to the six
+  questions in `vergleich-paare-de.md`
 
 ## Counters
 
-- Rounds held: 2 (round 1 = 001 C3, round 2 = 002 C1)
+- Rounds held: 3 (round 1 = 001 C3, round 2 = 002 C1, round 3 = 002 C1 repeat)
 - Last feedback id: r14 (round 2 feedback, 002)
 
 ## Machine
@@ -76,5 +79,7 @@ commands, outcomes, review findings and screenshots go to
 
 1. 001: wait for the owner's round-1 decision; on acceptance tick T014 and
    `pnpm ship --mode expert-review`; after merge she checks her pair once.
-2. 002: wait for the owner's go/no-go and the knitter's table verdicts;
-   record them (feedback file), then publish per the decision.
+2. 002: wait for the owner's round-3 decisions and the knitter's answers
+   (Word copy of `vergleich-paare-de.md` given to the owner); record them in
+   `specs/002-sizing-research/feedback/round-3.md` (next id r15), then
+   publish per the decision.

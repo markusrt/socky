@@ -133,6 +133,7 @@ contradicts r06 ("die 76 Maschen sind dafür notwendig"); asked again.
 
 - Round 2 Q1 (go for `003-size-generator` with conditions) and Q2 (merge the
   research as its own PR now): not answered; asked again after this research round.
+- r06: round-2 Q1 also asked "Passen sie in der Länge?" for the 45/46 pair; not answered.
 - r07: how the 30/31-chart pair fits the size-27 foot now.
 - r10: were 15 and 17 measured or estimated; was 17 finished with 21 foot rows.
 - r12: decrease every round or every second round; rounds at 68 stitches.

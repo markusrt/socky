@@ -8,6 +8,8 @@ from the shoe size or an optional measured foot length?
 
 ## 1. Result in brief
 
+> Round 3 (paired sizes, her gauge, feedback r01–r14): see section 13.
+
 - **Construction: yes.** The cast-on follows size bands, and six further count families
   follow from the stitch count alone (heel rows, Aufteilung, pick-up, rows after joining,
   Rechte Reihen, tip). All seven match all nine certain knitted sizes. Bündchen matches
@@ -573,3 +575,129 @@ for completeness only and do not change the model.
   standard.
 - The research agent ran `node model.mjs` (exit 0) and Biome with the main checkout's
   binary; the lead's checks are recorded in `docs/journal/002-sizing-research.md`.
+
+## 13. Round 3: paired sizes and her gauge
+
+Feedback r01–r14 (`feedback/round-2.md`) answered the questions of section 11 and asked
+for paired sizes, a gauge check and a new table. Script: `pairs.mjs` (exit 0); German
+table: `vergleich-paare-de.md`. Sections 1 to 12 stay as the round-2 record.
+
+### 13.1 What changed in the data
+
+- The "50/51" pair was knitted for a **45/46** foot on the chart column 50/51 and needs
+  76 stitches (r06). The 11-row outlier of section 6 is gone.
+- Her gauge is **36 stitches and 52 rows per 10 cm** on 2.25 mm needles, the same for baby
+  and adult socks (r11), not the band gauge of 30 × 42.
+- After joining she decreases **4 stitches per round** (2 per needle) until the cast-on
+  count is back (r12). The gusset is now `ceil(middle / 4)` rounds (3 at 68 stitches)
+  instead of the middle number (12). Every-round vs every-second-round is still open.
+- 43 foot rows were a bit short at size 38 (r04): a pair must fit its larger size.
+- The 30/31 note leaves the data set (r13); R6–R8 stand for 52 to 64 stitches.
+- 43-45 and size 40 are replaced by pairs (r08, r09); the 43-45 foot size stays unknown.
+
+### 13.2 Common size pairs
+
+- Falke sells women's socks as EU 35-36, 37-38, 39-40, 41-42, men's in a 6-size system
+  39-40 to 49-50, and a coarser 4-size system 35-38, 39-42, 43-46, 47-50 [S11].
+- Sterntaler sells children's socks as 17/18 (6–9 months), 19/20, 21/22 … 33/34 (7+ years),
+  identical to its shoe sizes [S12].
+- Sterntaler gives each pair the EU number of its larger size (EU 18 = 17/18) [S12], which
+  supports making a pair for its larger size.
+- The owner's example 44/45 does not exist in these tables; in Falke's 6-size system it is
+  split into 43/44 and 45/46.
+- **P1 (pairs, proposed; owner decision pending):** odd/even pairs 15/16, 17/18 … 49/50 (18 pairs). 15/16 extends the
+  children's series downwards; her size range ends at 50 instead of 51.
+- Her knitted 19-20, 37/38, 39/40 and 45/46 already are such pairs; her 18 is the 17/18
+  pair at its larger size. 40/41 and 43-45 straddle two pairs.
+
+### 13.3 Gauge check against the foot data
+
+At 3.6 stitches and 5.2 rounds per cm (foot length [S1], ball girth estimate of section 3.2;
+"sole" = heel cap + after joining + gusset + plain foot + tip; "fit" = the larger size):
+
+```text
+sock | fit | M | sock circ | foot girth | width | sole rounds | sole cm | foot cm | length | length (round-2 gusset)
+15 | 15 | 36 | 10.0 | 10.2 | 98% | 46 | 8.8 | 8.7 | 102% | 111%
+ca. 17 | 17 | 40 | 11.1 | 11.3 | 98% | 53 | 10.2 | 10.0 | 102% | 110%
+18 | 18 | 44 | 12.2 | 11.8 | 103% | 58 | 11.2 | 10.7 | 105% | 115%
+19-20 | 20 | 48 | 13.3 | 12.9 | 103% | 65 | 12.5 | 12.0 | 104% | 114%
+37/38 | 38 | 68 | 18.9 | 22.6 | 83% | 101 | 19.4 | 24.0 | 81% | 88%
+39/40 | 40 | 68 | 18.9 | 23.7 | 80% | 104 | 20.0 | 25.3 | 79% | 86%
+40/41 | 41 | 68 | 18.9 | 24.3 | 78% | 107 | 20.6 | 26.0 | 79% | 86%
+43-45 | 44 | 72 | 20.0 | 25.9 | 77% | 119 | 22.9 | 28.0 | 82% | 88%
+45/46 (Tabelle 50/51) | 46 | 76 | 21.1 | 27.0 | 78% | 125 | 24.0 | 29.3 | 82% | 88%
+```
+
+- **Length.** Every adult sock has a sole of 79–82% of the foot length (mean 0.806); the
+  rest is the heel wall behind the heel cap and lengthwise stretch. That the share is the
+  same at every size does not depend on the gauge (it is her rounds per cm of foot, 4.19 on
+  average); the gauge only turns it into cm. No published norm for this share was found, so
+  79–82% is plausible, not confirmed. With the round-2 gusset assumption the share is 86–88%;
+  the spread across sizes stays the same.
+- **Width.** Her adult socks are 77–83% of the estimated ball girth (17–23% negative ease);
+  the usual advice is 10–15% [S10]. This is the one check that depends on her stitch gauge,
+  and it does not match the advice: her socks are snug by design, or the girth estimate runs
+  high for her wearers. Either way her stitch counts, not girth, set R1.
+- **Summary.** Length is consistent across sizes; width is tighter than the usual advice.
+  The gauge does not contradict her counts, but the foot data cannot confirm it either. Her baby socks are
+  98–103% (no negative ease).
+- **Babies.** Sole 102–105% of the foot, about 3 cm of growing room measured against the
+  adult share; the size-15 pair fitted "gut mit Luft" for about three months (r10).
+- The gauge cancels out of the foot-row proposals: the length shares are fitted with the
+  same 5.2, so a gauge error changes the cm columns, not the rows.
+
+### 13.4 Rules for pairs
+
+- **P2 (stitches):** R1 at the pair's larger size, with 45/46 = 76 (r06). 47/48 and 49/50
+  stay at 76 because no construction above 76 exists; they come out at 75% and 72% of the
+  girth estimate, tighter than her socks (open question).
+- **P3 (gusset):** `ceil(middle / 4)` rounds (r12).
+- **P4 (length share):** sole = share × foot length of the larger size. Adult share 0.806
+  (mean of her pairs 37/38, 39/40, 45/46); baby share 1.032 (mean of 15, ca. 17, 18, 19-20
+  at their own sizes); a straight line in foot length between 12.0 cm (size 20) and
+  24.0 cm (size 38) gives children growing room that shrinks from about 3.4 cm at 21/22
+  to 0.7 cm at 35/36 (r07).
+- **P5 (foot rows):** plainFoot = round(5.2 × share × L − fixed sole rounds).
+- **P6 (other counts):** R2–R8 unchanged at the pair's stitch count.
+- Her knitted pairs outrank P5 in the table (amendment P1): 17/18 shows her 18 (Bündchen 25,
+  foot 25), 19/20 her 29, 39/40 her 48, 45/46 her 62.
+
+### 13.5 Results
+
+- Test pairs (in sample: the same pairs set the length shares): 17/18 −1, 19/20 −1,
+  37/38 0, 39/40 +2, 45/46 −2 foot rows; stitch counts 5/5; all within ±2 (round 2: 8/9 in
+  sample, with the 50/51 miss of 11). Leave-one-out (reviewer's refit): 18 −1, 19-20 −1,
+  37/38 −1, 39/40 +3, 45/46 −3, so 3 of 5 within ±2.
+- The sole length grows with every pair; the foot rows still dip where the stitch count
+  steps up (29/30), as in section 5.
+- Against the round-2 table the children's foot rows are 0 to 3 rows longer at the pair's
+  larger size; she had accepted the round-2 rows (r05).
+- 15/16 proposes 21 foot rows against her 17 for a size-15 foot: on a 16 foot it has the
+  same share as her other baby socks.
+
+### 13.6 Sources added
+
+- **[S11]** Bergfreunde, "Falke Größentabellen" (Socken - Damen; Socken - Herren, 4er and
+  6er System), <https://www.bergfreunde.de/falke-groessentabelle/>, read 2026-11-18.
+- **[S12]** Bergfreunde, "Sterntaler Größentabellen" (Socken - Kinder: EU, Hersteller-Größe,
+  Alter), <https://www.bergfreunde.de/sterntaler-groessentabelle/>, read 2026-11-18.
+
+Searches used generic terms only (sock size tables, children's sock sizes); no personal
+data left the machine (FR-012).
+
+### 13.7 Open after round 3
+
+1. 39/40: her 48 or the computed 50 foot rows?
+2. 45/46: 76 (r06) or 72 (r14) stitches?
+3. Gusset: 4 stitches in every round, or every second round?
+4. Is the children's growing room right (about 3 cm at 21/22 down to 1 cm at 33/34)?
+5. 47/48 and 49/50: needed? Above 76 stitches a new Aufteilung and tip are required.
+6. The 30/31-chart pair on the size-27 foot: too short or too tight?
+
+7. 45/46: do they fit in length? (Round-2 Q1 asked it; not answered. This pair anchors
+   the adult share.)
+
+Go / no-go: the recommendation of section 10 stands, with pairs as the unit of 003 and
+P1–P6 instead of R1/R9/R10. Condition 4 is resolved for the foot (45/46, r06); the stitch
+count waits for question 2 and 47/48–49/50 for question 5. Condition 3 now waits for
+question 4.
