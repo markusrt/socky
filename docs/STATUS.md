@@ -26,21 +26,19 @@ commands, outcomes, review findings and screenshots go to
 - Process: mvp-starter (ADR 0004); baseline PR #1 merged 2026-11-18
 - Built before adoption: `specs/000-baseline/spec.md` (R1–R4; knitting UI
   live, M3 API foundation in `packages/api` not deployed)
-- `001-storage-safety` (Light): C3 accepted 2026-11-19 (round 1, r15);
-  PR open for the owner's review; live once merged
-- `002-sizing-research` (Spike): at its C1 GATE, round 3 (paired sizes,
-  her gauge). It lives on its own branch in the second folder
-  `D:\Development\KnitHelper-002`; that branch's `docs/STATUS.md` and
-  `specs/002-sizing-research/review/round-3.md` hold its details
-- Pending owner decisions: merge the 001 PR; 002 round 3 (Q1 pair scheme,
-  Q2 go for 003, Q3 docs-only PR) and the knitter's six answers
+- `001-storage-safety` (Light): merged 2026-11-19 (PR #2, `83287c1`), live
+  and checked by the owner (r27)
+- `002-sizing-research` (Spike): C1 accepted 2026-11-19 (round 3, r18–r26),
+  docs-only PR. Result: size pairs 15/16 … 49/50, model and constants in
+  `specs/002-sizing-research/report.md`, script `pairs.mjs`; go for 003
+- Knitter: knits 27/28 next as computed (first children's pair, r26)
+- Pending owner decisions: none (merge PR #3, 002)
 
 ## Counters
 
 - Rounds held: 3 (round 1 = 001 C3, round 2 = 002 C1, round 3 = 002 C1
   repeat); counters are global across both branches
-- Last feedback id: r17 (r01–r14 and r16–r17 recorded on the 002 branch,
-  r15 = 001 acceptance)
+- Last feedback id: r27 (r15, r27 on 001; r01–r14, r16–r26 on 002)
 
 ## Machine
 
@@ -72,9 +70,9 @@ commands, outcomes, review findings and screenshots go to
 
 ## Exact next action
 
-1. 001 is merged and live (this file is `main` after the merge): the
-   knitter opens Socky once and checks that her pair is still there.
-2. Then bring 002 back into this folder: merge `main` into
-   `002-sizing-research` (take the more complete STATUS), check it out here,
-   remove the `../KnitHelper-002` worktree. Wait for the owner's round-3
-   decisions and her answers; record them as round-3 feedback (next id r18).
+1. PR #3 merged (this file is `main` after it); work continues in the one
+   folder `D:\Development\KnitHelper` (second worktree removed 2026-11-19).
+2. Start `003-size-generator` on a new branch from `main`: interview, then
+   `/speckit-specify`. Inputs: report.md (rules P1–P4, open points),
+   r23 (count the "Maschen reduzieren" rounds), r25 (sizes above 45/46
+   computable later), r06 (app label 50/51 = 45/46 foot). Next id r27.

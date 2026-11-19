@@ -11,6 +11,7 @@ Anything the owner did not say is marked **not stated**.
 | ID | Timing | Type | Reference | Summary |
 | --- | --- | --- | --- | --- |
 | r15 | next round | decision | T014, SC-001–SC-005 | Accept 001; open the PR for the owner's review |
+| r27 | done | decision | FR (notice text) | Merged and tested; the first name in the notice is fine |
 
 ## r15 Accept and open the PR
 
@@ -20,8 +21,13 @@ C3 accepted. The team ticks T014 and runs `pnpm ship --mode expert-review`; the
 owner reviews and merges. After the merge, the knitter checks once that her pair
 is still there.
 
+## r27 After the merge (2026-11-19)
+
+> 001 merged and tested, name is fine
+
+PR #2 merged and tested by the owner after deploy; the first name in the notice
+stays.
+
 ## Not stated
 
-- Whether the owner's first name in the notice ("Bitte die Daten kopieren und an
-  Markus schicken.") is fine. Asked again in chat; it can be changed in the PR
-  before merging.
+- None.

@@ -108,3 +108,5 @@ Context at start of this session part: continued session (after compaction).
 - `node scripts/ship.mjs --mode expert-review` exit 0: branch pushed, PR #2
   <https://github.com/markusrt/socky/pull/2>; waiting for the owner's review
   and merge.
+- 2026-11-19: PR #2 squash-merged (`83287c1`); owner: "001 merged and
+  tested, name is fine" (r27). The notice text stays.
