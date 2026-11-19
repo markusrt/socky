@@ -156,3 +156,6 @@ size-27 foot now.
 - r23 and r25 go to 003; r26 (30/31 fit) later.
 - T010 ticked. STATUS written as the state after both PRs merge (built from
   the 001 branch STATUS; only STATUS conflicts when the second PR merges).
+- 2026-11-19: merged `origin/main` (001, `83287c1`) into the branch; only
+  `docs/STATUS.md` conflicted, resolved to this branch's version updated for
+  001 being live (r27). Worktree `../KnitHelper-002` removed afterwards.
