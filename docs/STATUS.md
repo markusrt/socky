@@ -30,8 +30,11 @@ commands, outcomes, review findings and screenshots go to
 - `002-sizing-research` (Spike): C1 accepted 2026-11-19 (round 3, r18–r26),
   docs-only PR. Result: size pairs 15/16 … 49/50, model and constants in
   `specs/002-sizing-research/report.md`, script `pairs.mjs`; go for 003
-- Knitter: knits 27/28 next as computed (first children's pair, r26)
-- Pending owner decisions: none (merge PR #3, 002)
+- `003-size-generator` (Light): interview Q1–Q8 done 2026-11-19; pairs
+  15/16 … 45/46 become the standard (ADR 0007, constitution 2.0.0: P1, P3);
+  spec/plan/tasks T001–T013 committed; implementation not started
+- Knitter: knits 27/28 next, from the app once 003 is tried (not started, Q7)
+- Pending owner decisions: none until the 003 C3 round report
 
 ## Counters
 
@@ -45,8 +48,8 @@ commands, outcomes, review findings and screenshots go to
 
 ## Worktree
 
-- Branches `001-storage-safety`, `002-sizing-research` from `main`; Spec
-  Kit: set `SPECIFY_FEATURE_DIRECTORY=specs/<feature of current branch>`
+- Active branch `003-size-generator` (from `main` after PR #3); Spec Kit:
+  `SPECIFY_FEATURE_DIRECTORY=specs/003-size-generator`
 
 ## Roadmap (owner-approved order, 2026-11-14)
 
@@ -68,13 +71,8 @@ commands, outcomes, review findings and screenshots go to
 
 ## Exact next action
 
-1. PRs #2 and #3 merged; work continues in the one folder
-   `D:\Development\KnitHelper` (an empty locked `../KnitHelper-002` folder
-   may remain; delete it when nothing holds it).
-2. Branch `003-size-generator` exists (from `main` after PR #3): run the
-   interview (`grilling`), then `/speckit-specify`. Inputs: report.md
-   (rules, open points), r23 (count "Maschen reduzieren" rounds), r25
-   (sizes above 45/46 computable later), r06 (app label 50/51 = 45/46
-   foot), owner 2026-11-19: add the computed pairs and a way to choose a
-   size that includes her existing sizes (15, 18, 37/38, 40/41, 50/51) and
-   keeps her in-progress pair readable (P4). Next feedback id r28.
+1. `/speckit-implement` 003 from T001 (order in tasks.md: T002 → T003 → T004
+   first; T001's fixture is written once the new shape exists), story by
+   story, then GATE T013 (round 4, with German steps for the knitter).
+   Owner experience technical: plan summary and ADR 0007 were offered in
+   chat before building. Next feedback id r28.
