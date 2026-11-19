@@ -105,3 +105,6 @@ Context at start of this session part: continued session (after compaction).
 - Retro entry added (`docs/retro.md`, not sent).
 - Publish: `pnpm ship --mode expert-review` with a PR body from the `pr`
   skill; result below.
+- `node scripts/ship.mjs --mode expert-review` exit 0: branch pushed, PR #2
+  <https://github.com/markusrt/socky/pull/2>; waiting for the owner's review
+  and merge.
