@@ -14,3 +14,19 @@ issue on `markusrt/mvp-starter` (AGENTS.md, handoff step 9) and links it here.
   would have saved most of the adaptation work.
 - The template has no rule protecting a live user's stored data across
   deploys; Socky needed amendment P4 and a frozen-fixture test for that.
+
+## 2026-11-19 — 001-storage-safety accepted (C3, Light; not sent)
+
+- Two features in parallel on two branches each carried their own
+  `docs/STATUS.md`. A fresh session reads only the checked-out one, so the
+  owner could not tell how `/clear` would find the other feature. The
+  template has no rule for parallel features; "one STATUS on the main
+  folder's branch, pointing to every active feature" would have helped.
+- The global round and feedback counters drifted between the two branches
+  (one said "next is r01" while the other had reached r14). Counters that
+  are global need one home, or the template should keep features serial.
+- Light mode with a single C3 gate fit a data-safety change well: the
+  reviewer's screenshots of states that tapping cannot produce replaced an
+  owner try-out, and the owner accepted from them.
+- The round report asked two questions in chat but the saved report held
+  only one; the owner answered the saved one. Report and chat must match.

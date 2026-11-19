@@ -44,3 +44,13 @@ Pages"). `ship --dry-run` refused a dirty worktree as designed; Spec Kit
 `check-prerequisites.sh --help` runs under Git Bash with LF endings.
 
 **Context**: one long session (interview + execution).
+
+## 2026-11-18 — merged and accepted
+
+- PR #1 merged by the owner (`d2cc134`, 05:53 UTC). `main` runs: CI success
+  (53 s), Deploy GitHub Pages success (5 m 53 s, includes Playwright).
+- Owner: "PR is merged and tested. Everything still works as before." The
+  knitter's live pair session on https://markusrt.github.io/socky/ is intact
+  after the deploy.
+- Baseline adoption closed. Next: `001-storage-safety` and
+  `002-sizing-research` in parallel, each starting with an interview.

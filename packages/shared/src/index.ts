@@ -63,3 +63,4 @@ export {
   SIZE_CHART_NEEDLE_MM,
   tipRoundsForChartSize,
 } from "./size-chart-seed";
+export { isReadablePairSession, storedPairSessionSchema } from "./stored-session";
