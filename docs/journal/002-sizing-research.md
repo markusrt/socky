@@ -137,3 +137,22 @@ size-27 foot now.
   one possible reason, proposals unchanged. Word copy rebuilt (4 pages) and
   replaced in the owner's Downloads folder. Recorded in
   `feedback/round-3.md` (partial). r15 (001 acceptance) is on the 001 branch.
+
+## 2026-11-19 — C1 accepted (round 3) and publish
+
+- Owner: Q1 pairs yes, Q2 go for 003, Q3 docs-only PR "focused on the
+  essential information required to reproduce or extend the calculation".
+  Knitter: 39/40 → 50, 45/46 = 76 and fits, gusset rule confirmed (every
+  round, 4), growing room right, 47/48–49/50 later, 27/28 next. Recorded as
+  r18–r26 (`8dc1aae`) before triage; no row verdicts → all rows accepted.
+- Triage → T016: `pairs.mjs` rewritten as the single reproducible model
+  (data, Bündchen least-squares fit and length shares computed at run time,
+  rules, `CHOSEN` 39/40 = 50, `--pair`, leave-one-out reproducing the
+  reviewer's 3/5); `report.md` condensed from ~690 to ~110 lines;
+  `vergleich-paare-de.md` is the agreed table; round-2 `model.mjs` and
+  `vergleich-de.md` removed (in git at `0013eac`); planning files marked
+  superseded; domain data set updated. All pair values equal round 3 except
+  39/40 (50, her choice). Shares not refitted with 50 (would be 0.811).
+- r23 and r25 go to 003; r26 (30/31 fit) later.
+- T010 ticked. STATUS written as the state after both PRs merge (built from
+  the 001 branch STATUS; only STATUS conflicts when the second PR merges).

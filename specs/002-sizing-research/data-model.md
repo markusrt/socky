@@ -1,5 +1,8 @@
 # Data model: Sizing research
 
+> Superseded for the model by `report.md` and `pairs.mjs` (size pairs, round 3). The
+> round-2 files named below are in git at `0013eac`.
+
 English field names (P9); German knitting terms in labels.
 
 ## KnittedSize (data set row, `docs/domain/gestrickte-groessen.md`)

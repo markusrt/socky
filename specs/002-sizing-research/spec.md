@@ -4,7 +4,7 @@
 
 **Created**: 2026-11-18
 
-**Status**: Draft
+**Status**: Accepted (C1, round 3, 2026-11-19)
 
 **Spec Language**: en
 
@@ -24,12 +24,15 @@ The result is a go/no-go for `003-size-generator`, which would put the model int
 
 ### Session 2026-11-18 (round 2 feedback, r01–r14)
 
-- Q: Which unit should proposals use? → A: Commonly sold size pairs for babies, children and adults; a pair fits its larger size (r01, r04). The scheme (odd/even 15/16 … 49/50 proposed) is pending the owner's decision in round 3. FR-013.
+- Q: Which unit should proposals use? → A: Commonly sold size pairs for babies, children and adults; a pair fits its larger size (r01, r04). Odd/even 15/16 … 49/50 accepted 2026-11-19 (r18). FR-013.
 - Q: Is her gauge consistent with foot data? → A: Check her gauge (36 stitches, 52 rows per 10 cm, 2.25 mm; r11) against the cited foot length and girth data. FR-014.
 - Q: For which foot was the 50/51 pair knitted? → A: 45/46, with 76 stitches (r06); 72 in r14 is asked again.
 - Q: Growing room for children's socks? → A: Some growing room is good (r07).
 - Q: Children's preference counts (Bündchen, Rechte Reihen, rows after joining)? → A: The computed ones fit; the uncertain 30/31 note is discarded (r13).
-- Q: Gusset decrease? → A: 4 stitches per round, 2 per needle (r12); every round vs every second round asked again.
+- Q: Gusset decrease? → A: Every round, one stitch at each edge of each needle, 4 per round, until the cast-on count is back (r12, r23).
+- Q: 45/46 stitches? → A: 76; the length fits (r22). 39/40 foot rows? → A: 50 (r21).
+- Q: Sizes above 45/46? → A: Not needed now; must stay computable (r25).
+- Q: Publish? → A: Docs-only PR, focused on what is needed to reproduce or extend the calculation (r20).
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -118,7 +121,7 @@ Markus reads a research report with the method, sources, rules, test cases and a
 - **FR-010**: The research MUST end with a go/no-go recommendation for 003 and the open questions for the knitter.
 - **FR-011**: The spike MUST NOT change the app, its stored data or the existing size files.
 - **FR-012**: Web searches and any external requests MUST NOT contain personal data about the owner, the knitter or the people the socks were knitted for.
-- **FR-013**: The model MUST propose one sock per commonly sold size pair (proposed: odd/even, 15/16 to 49/50, pending the owner's decision), made for the pair's larger size, and MUST show her knitted pairs with her own values (r01, r04).
+- **FR-013**: The model MUST propose one sock per commonly sold size pair (odd/even, 15/16 to 49/50), made for the pair's larger size, and MUST show her knitted pairs with her own values (r01, r04).
 - **FR-014**: The research MUST check her measured gauge against the cited foot length and girth data, per pair and per knitted sock (r02, r11).
 - **FR-015**: The research MUST deliver a second German table by size pair, every proposed value marked "berechnet", with a verdict column and the open questions (r03).
 

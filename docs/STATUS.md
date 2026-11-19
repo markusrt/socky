@@ -8,46 +8,40 @@ commands, outcomes, review findings and screenshots go to
 
 - Product: **Socky**, mobile-first sock-knitting helper (Käppchenferse,
   REGIA 4-fädig); replaces deleting `/` tick marks in iOS Notes
-- Owner: Markus. Live user and acceptance tester: his wife, the knitter
-  (constitution amendment P2)
+- Owner: Markus. Live user and acceptance tester: the knitter (amendment P2)
 - Repository/branch: `markusrt/socky` (public), default branch `main`
-- Live: <https://markusrt.github.io/socky/> (GitHub Pages; every merge to
-  `main` deploys)
-- Spec language: en (German UI, knitting terms and knitter steps)
-- Publish choice: expert-review (PR, owner merges)
-- Owner experience: technical
+- Live: <https://markusrt.github.io/socky/> (every merge to `main` deploys)
+- Spec language: en (German UI); publish choice: expert-review (PR, owner
+  merges); owner experience: technical
 
 ## Data safety (amendment P4)
 
 - Her progress: localStorage `Socky.sessions.v1` on `markusrt.github.io` only
-- Guarded by `packages/web/src/storage.test.ts` + Playwright resume smoke on
-  the frozen fixture `packages/web/src/storage-fixtures/sessions-v1.json`
-- Known gap: unreadable stored data loads as an empty list and the next tap
-  overwrites it; fixed by feature 001-storage-safety
+- Guarded by `storage.test.ts` + Playwright on the frozen fixtures in
+  `packages/web/src/storage-fixtures/`
+- Unreadable stored data is copied, never overwritten (001, ADR 0006)
 
 ## Where we are
 
-- Process: mvp-starter adopted (ADR 0004), baseline PR #1 merged
-  2026-11-18 (`d2cc134`); knitter confirmed her live pair is intact
+- Process: mvp-starter (ADR 0004); baseline PR #1 merged 2026-11-18
 - Built before adoption: `specs/000-baseline/spec.md` (R1–R4; knitting UI
   live, M3 API foundation in `packages/api` not deployed)
-- Active (parallel, own branch each): `001-storage-safety` (Light) at its
-  C3 GATE (round 1); `002-sizing-research` (Spike) at its C1 GATE again
-  (round 3 after round-2 feedback: paired sizes, her gauge;
-  `specs/002-sizing-research/review/round-3.md`, worktree `../KnitHelper-002`)
-- Pending owner decisions: accept 001 (round 1); 002 round 3 Q1 pair
-  scheme, Q2 go for 003, Q3 docs-only PR; knitter's answers to the six
-  questions in `vergleich-paare-de.md`
+- `001-storage-safety` (Light): C3 accepted 2026-11-19 (r15), PR #2
+- `002-sizing-research` (Spike): C1 accepted 2026-11-19 (round 3, r18–r26),
+  docs-only PR. Result: size pairs 15/16 … 49/50, model and constants in
+  `specs/002-sizing-research/report.md`, script `pairs.mjs`; go for 003
+- Knitter: knits 27/28 next as computed (first children's pair, r26)
+- Pending owner decisions: none (merge PRs #2 and the 002 PR)
 
 ## Counters
 
-- Rounds held: 3 (round 1 = 001 C3, round 2 = 002 C1, round 3 = 002 C1 repeat)
-- Last feedback id: r26 (r15 = 001 acceptance on the 001 branch)
+- Rounds held: 3 (round 1 = 001 C3, round 2 = 002 C1, round 3 = 002 C1
+  repeat); counters are global across both branches
+- Last feedback id: r26 (r15 on 001; r01–r14, r16–r26 on 002)
 
 ## Machine
 
-- Last tool check: 2026-11-14 (Windows; Node 24.21.0, pnpm 9.15.9,
-  Playwright Chromium installed)
+- Tool check 2026-11-14: Windows, Node 24.21.0, pnpm 9.15.9, Chromium
 
 ## Worktree
 
@@ -58,9 +52,7 @@ commands, outcomes, review findings and screenshots go to
 
 1. Done 2026-11-18: baseline PR merged, knitter confirmed; `main` ruleset
    active (PR + check, no force-push/deletion, admin bypass)
-2. In parallel: `001-storage-safety` (Light) and `002-sizing-research`
-   (Spike, research only: her new notes, REGIA structure, foot data,
-   proposed sizing model with test cases)
+2. In parallel: `001-storage-safety` (Light) and `002-sizing-research` (Spike)
 3. `003-size-generator` (from the research result)
 4. M3: web login + D1 sessions, admin size editor (open items R4.8, R4.9;
    input: `docs/history/original-plan.md`)
@@ -77,9 +69,9 @@ commands, outcomes, review findings and screenshots go to
 
 ## Exact next action
 
-1. 001: wait for the owner's round-1 decision; on acceptance tick T014 and
-   `pnpm ship --mode expert-review`; after merge she checks her pair once.
-2. 002: wait for the owner's round-3 decisions and the knitter's answers
-   (Word copy of `vergleich-paare-de.md` given to the owner); record them in
-   `specs/002-sizing-research/feedback/round-3.md` (next id r15), then
-   publish per the decision.
+1. Both PRs merged (this file is `main` after them): the knitter checked her
+   pair once after 001; remove the `../KnitHelper-002` worktree; one folder.
+2. Start `003-size-generator` on a new branch from `main`: interview, then
+   `/speckit-specify`. Inputs: report.md (rules P1–P4, open points),
+   r23 (count the "Maschen reduzieren" rounds), r25 (sizes above 45/46
+   computable later), r06 (app label 50/51 = 45/46 foot). Next id r27.

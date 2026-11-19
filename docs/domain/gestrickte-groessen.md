@@ -111,19 +111,24 @@ notes cover sizes that had no file (ca. 17, 19-20, 24, 39/40, 43-45).
 
 Her answers to C1–C8 and Q1–Q9, as key points (`specs/002-sizing-research/feedback/round-2.md`):
 
-- **C1 resolved for the foot:** the pair labelled 50/51 was knitted for a **45/46** foot on
-  the chart column 50/51; she wrote that 76 stitches are needed for it, but answered "72"
-  for 45/46 in Q9 (asked again; fit in length not stated). The app label `size-50-51.json` is unchanged
+- **C1 resolved:** the pair labelled 50/51 was knitted for a **45/46** foot on the chart
+  column 50/51, needs 76 stitches and fits in length (r06, r22). The app label `size-50-51.json` is unchanged
   (FR-011); a later feature may relabel it with her consent.
 - **Gauge:** 36 stitches and 52 rows = 10 cm on 2.25 mm needles, the same for baby and
   adult socks.
-- **Decrease after joining:** 2 stitches on each of her two needles, 4 per round, until the
-  cast-on count is back (every round or every second round: open).
+- **Decrease after joining ("Maschen reduzieren"):** every round one stitch at the right
+  and one at the left edge of each of her two needles, 4 per round, until the stitches
+  gained by picking up are gone and the cast-on count is back (r12, r23). Picked-up
+  stitches are always an even number (e.g. 9 per side/needle = 18).
 - **37/38:** 43 foot rows were a bit short at size 38; her 45 stays.
 - **Size 15** fitted with room for about three months; the next pair is size 17.
 - **Children:** some growing room is good; the computed children's Bündchen, Rechte Reihen
   and rows after joining fit. Her counts from the 30/31-for-24 note (uncertain) are
   discarded as a template; how that pair fits today is still asked.
 - **43-45 and size 40:** replaced by paired sizes; the 43-45 foot stays unknown.
-- **Size pairs:** the owner wants commonly sold pairs; odd/even 15/16 … 49/50 is proposed
-  (owner decision pending), see `specs/002-sizing-research/report.md` section 13.
+- **Size pairs (accepted, r18):** odd/even 15/16 … 49/50, each made for its larger size;
+  model and constants in `specs/002-sizing-research/report.md`.
+- **Round 3 answers (r21–r26):** 39/40 gets 50 foot rows (her knitted 48 was a bit short);
+  children's growing room as proposed is right; 47/48 and 49/50 are not needed now but
+  must stay computable; she knits **27/28** next as computed; how the old 30/31 pair fits
+  the size-27 foot may follow.

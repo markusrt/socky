@@ -1,5 +1,8 @@
 # Contract: sizing model output (input for 003)
 
+> Superseded for the model by `report.md` and `pairs.mjs` (size pairs, round 3). The
+> round-2 files named below are in git at `0013eac`.
+
 The model's output for one size has the shape 003 needs to create an actual
 size in the app. It mirrors today's `ChartSize` construction fields and
 `ActualSizeConfig.counts` in `packages/shared/src/domain.ts`, plus provenance.

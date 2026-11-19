@@ -1,5 +1,8 @@
 # Implementation Plan: Sizing research
 
+> Superseded for the model by `report.md` and `pairs.mjs` (size pairs, round 3). The
+> round-2 files named below are in git at `0013eac`.
+
 **Branch**: `002-sizing-research` | **Date**: 2026-11-18 | **Spec**: [spec.md](spec.md)
 
 **Input**: Feature specification from `specs/002-sizing-research/spec.md`

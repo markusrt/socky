@@ -1,5 +1,8 @@
 # Research decisions: Sizing research (plan level)
 
+> Superseded for the model by `report.md` and `pairs.mjs` (size pairs, round 3). The
+> round-2 files named below are in git at `0013eac`.
+
 How the spike is run. The spike's findings go to `report.md`.
 
 ## D1 — Who does the research

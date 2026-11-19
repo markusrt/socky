@@ -36,10 +36,11 @@
 - [x] T015 `docs/domain/gestrickte-groessen.md`: her round-2 answers as key points (FR-001)
 
 GATE T010 below is repeated for round 3 (same procedure, report `review/round-3.md`).
+- [x] T016 Round 3 feedback (r18–r26): `pairs.mjs` as the single reproducible model (data, fits, rules, `--pair`, leave-one-out), `report.md` condensed, `vergleich-paare-de.md` as the agreed table, round-2 `model.mjs`/`vergleich-de.md` removed (git `0013eac`) (FR-013–FR-015, r20)
 
 ### C1 GATE
 
-- [ ] T010 [GATE] C1 checkpoint (owner-facing: "First working slice", Spike): run `pnpm verify`; start `pnpm --filter @socky/web dev --host 127.0.0.1 --port 5173 --strictPort` and confirm the URL responds; if knitting rules or tap feel changed, include a step for the knitter (constitution amendment P2); draft the round report from docs/templates/round-report.md (≤3 owner steps); run the `reviewer` subagent (code review plus walk-through of the owner steps with screenshots) and fix blockers; save the report as specs/002-sizing-research/review/round-<k>.md; update docs/STATUS.md (checkpoint, round counter, next action) and the spec in the same commit, and append evidence to docs/journal/002-sizing-research.md; record the go/no-go result and its evidence; commit; post the report in chat; then **STOP** and wait for an explicit owner decision. Do not start later phases until docs/STATUS.md records approval. (SC-006)
+- [x] T010 [GATE] C1 checkpoint (owner-facing: "First working slice", Spike): run `pnpm verify`; start `pnpm --filter @socky/web dev --host 127.0.0.1 --port 5173 --strictPort` and confirm the URL responds; if knitting rules or tap feel changed, include a step for the knitter (constitution amendment P2); draft the round report from docs/templates/round-report.md (≤3 owner steps); run the `reviewer` subagent (code review plus walk-through of the owner steps with screenshots) and fix blockers; save the report as specs/002-sizing-research/review/round-<k>.md; update docs/STATUS.md (checkpoint, round counter, next action) and the spec in the same commit, and append evidence to docs/journal/002-sizing-research.md; record the go/no-go result and its evidence; commit; post the report in chat; then **STOP** and wait for an explicit owner decision. Do not start later phases until docs/STATUS.md records approval. (SC-006)
 
 ## Dependencies & Execution Order
 
