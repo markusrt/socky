@@ -70,9 +70,13 @@ commands, outcomes, review findings and screenshots go to
 
 ## Exact next action
 
-1. PR #3 merged (this file is `main` after it); work continues in the one
-   folder `D:\Development\KnitHelper` (second worktree removed 2026-11-19).
-2. Start `003-size-generator` on a new branch from `main`: interview, then
-   `/speckit-specify`. Inputs: report.md (rules P1–P4, open points),
-   r23 (count the "Maschen reduzieren" rounds), r25 (sizes above 45/46
-   computable later), r06 (app label 50/51 = 45/46 foot). Next id r27.
+1. PRs #2 and #3 merged; work continues in the one folder
+   `D:\Development\KnitHelper` (an empty locked `../KnitHelper-002` folder
+   may remain; delete it when nothing holds it).
+2. Branch `003-size-generator` exists (from `main` after PR #3): run the
+   interview (`grilling`), then `/speckit-specify`. Inputs: report.md
+   (rules, open points), r23 (count "Maschen reduzieren" rounds), r25
+   (sizes above 45/46 computable later), r06 (app label 50/51 = 45/46
+   foot), owner 2026-11-19: add the computed pairs and a way to choose a
+   size that includes her existing sizes (15, 18, 37/38, 40/41, 50/51) and
+   keeps her in-progress pair readable (P4). Next feedback id r28.
