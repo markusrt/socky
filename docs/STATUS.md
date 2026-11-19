@@ -24,8 +24,7 @@ commands, outcomes, review findings and screenshots go to
 ## Where we are
 
 - Process: mvp-starter (ADR 0004); baseline PR #1 merged 2026-11-18
-- Built before adoption: `specs/000-baseline/spec.md` (R1–R4; knitting UI
-  live, M3 API foundation in `packages/api` not deployed)
+- Before adoption: `specs/000-baseline/spec.md` (UI live, API not deployed)
 - `001-storage-safety` (Light): merged 2026-11-19 (PR #2, `83287c1`), live
   and checked by the owner (r27)
 - `002-sizing-research` (Spike): C1 accepted 2026-11-19 (round 3, r18–r26),
@@ -62,9 +61,8 @@ commands, outcomes, review findings and screenshots go to
 ## Limits
 
 - Progress is per browser; clearing site data loses it (accepted, no export)
-- Cloudflare (Worker, D1, Google login) not configured; setup steps in
-  `README.md`. Moving the web app there happens only between sock projects
-  (ADR 0005)
+- Cloudflare not configured (setup in `README.md`); moving the web app
+  there only between sock projects (ADR 0005)
 - `POST /migrate` in `packages/api` is unauthenticated; guard before deploying
 - TypeScript 7 blocked on dependency-cruiser (ADR 0003)
 
