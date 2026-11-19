@@ -42,7 +42,7 @@ commands, outcomes, review findings and screenshots go to
 ## Counters
 
 - Rounds held: 3 (round 1 = 001 C3, round 2 = 002 C1, round 3 = 002 C1 repeat)
-- Last feedback id: r17 (r15 = 001 acceptance on the 001 branch; r16–r17 round-3 partial)
+- Last feedback id: r26 (r15 = 001 acceptance on the 001 branch)
 
 ## Machine
 
