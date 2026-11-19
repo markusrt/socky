@@ -4,7 +4,7 @@
 
 **Created**: 2026-11-18
 
-**Status**: In review (C3, round 1)
+**Status**: Accepted (C3, round 1, 2026-11-19, r15)
 
 **Spec Language**: en
 

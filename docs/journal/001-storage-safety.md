@@ -93,3 +93,15 @@ Context at start of this session part: continued session (after compaction).
   (scratchpad `walk.mjs`), 20 PNGs in `specs/001-storage-safety/review/round-1/`;
   the reviewer's two bug-evidence shots replaced by `fix-s1-*`/`fix-s2-*`.
 - Not verified: real iPhone Safari (persist grant, clipboard).
+
+## 2026-11-19 — C3 accepted (round 1)
+
+- Owner: "001 can be raised as PR and I take a look" → recorded as r15 in
+  `specs/001-storage-safety/feedback/round-1.md`; the name-in-notice question
+  not stated (asked again; changeable in the PR).
+- T014 ticked; spec status Accepted; STATUS written as the state after the
+  merge, now also describing 002 (round 3, second folder) because the owner
+  was unsure how a fresh session would find the other branch.
+- Retro entry added (`docs/retro.md`, not sent).
+- Publish: `pnpm ship --mode expert-review` with a PR body from the `pr`
+  skill; result below.
