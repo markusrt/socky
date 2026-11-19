@@ -8,7 +8,8 @@
   size (sole 79–82% of the foot). That consistency comes from her row counts, not from the
   gauge, and there is no published norm to compare the 80% with. In width the gauge does
   matter: her adult socks are 17–23% narrower than an average foot, against the usual
-  10–15%. So they sit snug, or the average girth is too high for her wearers. Baby socks are
+  10–15%. Her socks fit anyway: dense wool relaxing in wear, slimmer feet than average, or
+  a snug preference could each explain it. Baby socks are
   as wide as the foot, with about 3 cm of growing room.
 - The 50/51 outlier is gone: that pair is 45/46.
 - Her five knitted pairs are reproduced within ±2 foot rows (round 2 missed one by 11). That

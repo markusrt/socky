@@ -94,8 +94,9 @@ deine Socken fester als üblich.
 - Bei allen deinen Erwachsenensocken ist das Stück von der Fersenkappe bis zur Spitze 79 bis
   82 % so lang wie der Fuß, also bei jeder Größe gleich.
 - Rund um den Fuß sind deine Erwachsenensocken 17 bis 23 % enger als ein durchschnittlicher
-  Fuß. Üblich sind 10 bis 15 %. Entweder magst du sie fest, oder die Füße, für die du
-  strickst, sind schlanker als der Durchschnitt.
+  Fuß. Üblich sind 10 bis 15 %. Sie passen trotzdem. Mögliche Gründe: Deine dicht gestrickte Wolle gibt beim
+  Tragen nach, die Füße sind schlanker als der Durchschnitt, oder du magst sie fest. An den
+  Maschenzahlen ändert das nichts, sie kommen aus deinen Socken.
 - Deine Babysocken sind etwa so weit wie der Fuß und haben 3 cm Platz zum Reinwachsen.
 - Bei den Kindergrößen wird der Platz zum Reinwachsen von Paar zu Paar weniger, von 3 cm bei
   21/22 bis 1 cm bei 33/34.

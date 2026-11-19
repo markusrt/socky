@@ -636,8 +636,11 @@ ca. 17 | 17 | 40 | 11.1 | 11.3 | 98% | 53 | 10.2 | 10.0 | 102% | 110%
   the spread across sizes stays the same.
 - **Width.** Her adult socks are 77–83% of the estimated ball girth (17–23% negative ease);
   the usual advice is 10–15% [S10]. This is the one check that depends on her stitch gauge,
-  and it does not match the advice: her socks are snug by design, or the girth estimate runs
-  high for her wearers. Either way her stitch counts, not girth, set R1.
+  and it is tighter than the advice. Possible reasons, not separable from the data: her
+  dense wool fabric relaxes in wear more than the advice assumes (the owner's point, r17;
+  the advice is already meant for wool socks that stretch), the girth estimate runs high
+  for her wearers, or she prefers them snug. Her socks fit, and her stitch counts, not
+  girth, set R1.
 - **Summary.** Length is consistent across sizes; width is tighter than the usual advice.
   The gauge does not contradict her counts, but the foot data cannot confirm it either. Her baby socks are
   98–103% (no negative ease).

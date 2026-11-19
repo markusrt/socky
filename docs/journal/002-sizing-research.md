@@ -127,3 +127,13 @@ size-27 foot now.
   folder (not in the repo).
 - `pnpm verify` exit 0 (after fixes); Biome clean on the research folder;
   `pairs.mjs --de` equals both tables in `vergleich-paare-de.md`.
+
+## 2026-11-19 — Round 3 partial feedback
+
+- r16 (two branches, fresh session) answered in chat; the 001 branch STATUS
+  now describes both features; plan: after the 001 merge, 002 moves back
+  into the main folder. r17 (wool relaxes in wear): not considered before;
+  wording in report 13.3, round-3 report and German table now names it as
+  one possible reason, proposals unchanged. Word copy rebuilt (4 pages) and
+  replaced in the owner's Downloads folder. Recorded in
+  `feedback/round-3.md` (partial). r15 (001 acceptance) is on the 001 branch.
