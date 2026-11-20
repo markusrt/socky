@@ -109,3 +109,10 @@ Owner answers (round 1 Q1–Q7, round 2 Q8):
   without her say; select defaults to 15/16 as planned.
 - Screenshots: `specs/003-size-generator/review/round-4/{1,2,3}-{desktop,mobile}.png`.
 - Context at end of this session part: about 200k tokens.
+
+## 2026-11-20 — acceptance and publish
+
+- Round 4 feedback (r28 accept, r29 first check on the deployed version)
+  recorded in `feedback/round-4.md` (commit 5f2d241). T013 ticked; spec status
+  Accepted with SC-005 (her P2 check) open until she starts 27/28 live.
+- Retro entry written (`docs/retro.md`), not sent.

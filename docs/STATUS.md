@@ -30,13 +30,12 @@ commands, outcomes, review findings and screenshots go to
 - `002-sizing-research` (Spike): C1 accepted 2026-11-19 (round 3, r18–r26),
   docs-only PR. Result: size pairs 15/16 … 49/50, model and constants in
   `specs/002-sizing-research/report.md`, script `pairs.mjs`; go for 003
-- `003-size-generator` (Light): interview Q1–Q8 done 2026-11-19; pairs
-  15/16 … 45/46 become the standard (ADR 0007, constitution 2.0.0: P1, P3);
-  T001–T012 done, `pnpm verify` green; C3 round 4 report posted
-  2026-11-20 (`specs/003-size-generator/review/round-4.md`)
-- Knitter: knits 27/28 next, from the app once 003 is tried (not started, Q7)
-- Pending owner decisions: round 4 Q1 (accept after her try-out) and Q2
-  (phone try before merge)
+- `003-size-generator` (Light): C3 accepted 2026-11-20 (round 4, r28);
+  pairs 15/16 … 45/46 are the standard (ADR 0007, constitution 2.0.0);
+  merged via its PR (expert-review) and live once the owner merges
+- Knitter: starts 27/28 on the live app; that is her first check of 003
+  (r29, P2, SC-005 open)
+- Pending owner decisions: none
 
 ## Counters
 
@@ -72,8 +71,8 @@ commands, outcomes, review findings and screenshots go to
 
 ## Exact next action
 
-1. Wait for the owner's answer to round 4 (003 C3). Then handoff step 8:
-   record `specs/003-size-generator/feedback/round-4.md` (next id r28), read
-   it back; on approval tick T013 and `pnpm ship --mode expert-review` (PR;
-   the owner merges; she then knits 27/28 live). Dev server for the try-out:
-   `pnpm --filter @socky/web dev --host 127.0.0.1 --port 5173 --strictPort`.
+1. After the owner merged the 003 PR: create branch `003-size-generator-c2`
+   from the updated `main`, first commit = STATUS "live" + PR number.
+2. When the owner reports her 27/28 check (r30+): record it in
+   `specs/003-size-generator/feedback/round-5.md`; a wrong count is a fix
+   on a new branch. Next roadmap item: M3 (web login + D1, size editor).

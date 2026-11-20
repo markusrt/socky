@@ -4,7 +4,7 @@
 
 **Created**: 2026-11-19
 
-**Status**: C3 round 4 pending owner decision (2026-11-20)
+**Status**: Accepted (C3, round 4, 2026-11-20, r28; her P2 check on the live app pending, r29)
 
 **Spec Language**: en
 
