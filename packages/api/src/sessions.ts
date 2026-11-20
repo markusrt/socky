@@ -1,10 +1,11 @@
 import {
   createPairSession,
   finishActiveSock,
-  getActualSize,
+  isOfferedPair,
   type PairSession,
   REGIA_4_FAEDIG_PATTERN,
   type SessionStepProgress,
+  sizePair,
   switchToSock2,
   tickActiveSock,
   untickActiveSock,
@@ -16,8 +17,9 @@ import type { Bindings } from "./env";
 import type { AuthedEnv } from "./guards";
 import { requireRole, requireUser } from "./guards";
 
+/** A size pair as offered in the app (ADR 0007), e.g. "27/28". */
 const createBody = z.object({
-  actualSizeId: z.string().min(1),
+  pair: z.string().regex(/^\d{2}\/\d{2}$/),
 });
 
 const patchBody = z.object({
@@ -254,14 +256,13 @@ export function sessionRoutes(getAuth: (env: Bindings) => Auth) {
     if (!parsed.success) {
       return c.json({ error: "invalid_body", issues: parsed.error.issues }, 400);
     }
-    const actual = getActualSize(parsed.data.actualSizeId);
-    if (!actual) {
-      return c.json({ error: "unknown_actual_size" }, 404);
+    if (!isOfferedPair(parsed.data.pair)) {
+      return c.json({ error: "unknown_size_pair" }, 404);
     }
     const session = createPairSession({
       userId: user.id,
       pattern: REGIA_4_FAEDIG_PATTERN,
-      actualSize: actual,
+      pair: sizePair(parsed.data.pair),
     });
     await insertSession(c.env.DB, session);
     return c.json({ session }, 201);

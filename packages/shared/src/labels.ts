@@ -22,6 +22,7 @@ export const STEP_LABELS: Record<StepKey, string> = {
 export const TECHNIQUE_NOTES: Record<string, string> = {
   "note.pickup_together_then_twisted": "Erst zusammen dann verschränkt",
   "note.decrease_twisted_then_together": "Maschenreduzieren erst verschränkt dann zusammen",
+  "note.reduce_last_row_two": "Letzte Reihe: nur 2 Maschen abnehmen",
 };
 
 /** Notes-text snippets for G1 side-by-side review (user-facing). */

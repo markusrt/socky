@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { mustActualSize, REGIA_4_FAEDIG_PATTERN } from "./fixtures/pattern-seed";
+import { REGIA_4_FAEDIG_PATTERN } from "./fixtures/pattern-seed";
 import {
   canSwitchToSock2,
   createPairSession,
@@ -12,12 +12,13 @@ import {
   tickActiveSock,
   untickActiveSock,
 } from "./session";
+import { SIZE_MODEL_VERSION, sizePair } from "./size-pairs";
 
 function newSession() {
   return createPairSession({
     userId: "u1",
     pattern: REGIA_4_FAEDIG_PATTERN,
-    actualSize: mustActualSize("size-18"),
+    pair: sizePair("17/18"),
   });
 }
 
@@ -54,7 +55,21 @@ describe("sequential pair session (one sock at a time)", () => {
     expect(tipRows[2]?.tipDirection).toBe("decrease");
   });
 
-  it("castOn, split, pickup and reduceToCastOn carry chart values", () => {
+  it("records the size pair, its stitch count and no chart size (ADR 0007, P3)", () => {
+    const s = newSession();
+    expect(s.actualSizeLabel).toBe("17/18");
+    expect(s.chartSizeLabel).toBe("");
+    expect(s.sizeModel).toBe(SIZE_MODEL_VERSION);
+    expect(s.castOnTotal).toBe(44);
+  });
+
+  it("Maschen reduzieren is counted in rows (r23)", () => {
+    const reduce = newSession().steps.find((x) => x.stepKey === "reduceToCastOn");
+    expect(reduce?.unit).toBe("rounds");
+    expect(reduce?.targetCount).toBe(2);
+  });
+
+  it("castOn, split, pickup and reduceToCastOn carry construction values", () => {
     const s = newSession();
     const castOn = s.steps.find((x) => x.stepKey === "castOn");
     const split = s.steps.find((x) => x.stepKey === "split");

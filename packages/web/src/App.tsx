@@ -1,5 +1,4 @@
 import {
-  ACTUAL_SIZES,
   canSwitchToSock2,
   createPairSession,
   currentStep,
@@ -9,10 +8,12 @@ import {
   heelRowPolarity,
   isCloseStep,
   materializePlan,
+  OFFERED_PAIRS,
   type PairSession,
   REGIA_4_FAEDIG_PATTERN,
   STEP_LABELS,
   type SteppedPlan,
+  sizePair,
   switchToSock2,
   TECHNIQUE_NOTES,
   type TipRound,
@@ -26,11 +27,7 @@ import { dismissUnreadable, loadStorage, type UnreadableNotice, upsertSession } 
 import { colors } from "./theme";
 import { Button } from "./ui/Button";
 
-type View =
-  | { name: "home" }
-  | { name: "new" }
-  | { name: "knit"; sessionId: string }
-  | { name: "preview"; actualSizeId: string };
+type View = { name: "home" } | { name: "new" } | { name: "knit"; sessionId: string };
 
 const DEMO_USER = "local";
 
@@ -42,6 +39,22 @@ function formatTipRound(round: TipRound): string {
 
 function fmtHeelSplit(t: readonly [number, number, number]): string {
   return `${t[0]}-${t[1]}-${t[2]}`;
+}
+
+/**
+ * Size heading: pairs from the size-pair model show their stitch count
+ * ("27/28", "· 56 Maschen"); pairs saved before keep their chart label (P4).
+ */
+function sizeTitle(session: PairSession): { size: string; detail: string } {
+  if (session.sizeModel !== undefined && session.castOnTotal !== undefined) {
+    return { size: session.actualSizeLabel, detail: `· ${session.castOnTotal} Maschen` };
+  }
+  return { size: session.actualSizeLabel, detail: `(Tabelle ${session.chartSizeLabel})` };
+}
+
+/** "3 Reihen · bis 56 Maschen (wie Anschlag)" for the counted reduce step. */
+function reduceLine(rows: number, castOnTotal: number | string): string {
+  return `${formatCountLine(rows, "rounds", "none")} · bis ${castOnTotal} Maschen (wie Anschlag)`;
 }
 
 function countLineForStep(
@@ -100,10 +113,6 @@ export function App() {
         onStartSock2={() => commit(switchToSock2(session))}
       />
     );
-  } else if (view.name === "preview") {
-    screen = (
-      <PreviewView actualSizeId={view.actualSizeId} onBack={() => setView({ name: "home" })} />
-    );
   } else {
     screen = (
       <HomeView
@@ -112,7 +121,6 @@ export function App() {
         onDismissNotice={dismiss}
         onNew={() => setView({ name: "new" })}
         onOpen={(id) => setView({ name: "knit", sessionId: id })}
-        onPreview={(id) => setView({ name: "preview", actualSizeId: id })}
       />
     );
   }
@@ -131,14 +139,12 @@ function HomeView({
   onDismissNotice,
   onNew,
   onOpen,
-  onPreview,
 }: {
   sessions: PairSession[];
   notices: UnreadableNotice[];
   onDismissNotice: (key: string) => void;
   onNew: () => void;
   onOpen: (id: string) => void;
-  onPreview: (id: string) => void;
 }) {
   return (
     <main style={shell}>
@@ -182,12 +188,13 @@ function HomeView({
         <ul style={{ listStyle: "none", padding: 0 }}>
           {sessions.map((s) => {
             const step = currentStep(s);
+            const title = sizeTitle(s);
             return (
               <li key={s.id} style={{ marginBottom: "0.75rem" }}>
                 <Button variant="secondary" fullWidth onClick={() => onOpen(s.id)}>
                   <span style={{ textAlign: "left", display: "block" }}>
                     <strong>
-                      {s.actualSizeLabel} <small>(Tabelle {s.chartSizeLabel})</small>
+                      {title.size} <small>{title.detail}</small>
                     </strong>
                     <div>
                       {s.status === "DONE"
@@ -203,22 +210,6 @@ function HomeView({
           })}
         </ul>
       )}
-
-      <h2>Pläne prüfen (G1)</h2>
-      <ul style={{ listStyle: "none", padding: 0 }}>
-        {ACTUAL_SIZES.map((s) => (
-          <li key={s.id} style={{ marginBottom: "0.75rem" }}>
-            <Button variant="secondary" fullWidth onClick={() => onPreview(s.id)}>
-              <span style={{ textAlign: "left", display: "block" }}>
-                <strong>
-                  Größe {s.label} <small>(Tabelle {s.chartSizeLabel})</small>
-                </strong>
-                <div style={{ fontWeight: 400, opacity: 0.85 }}>Strickplan ansehen</div>
-              </span>
-            </Button>
-          </li>
-        ))}
-      </ul>
     </main>
   );
 }
@@ -230,7 +221,9 @@ function NewSessionView({
   onCancel: () => void;
   onCreate: (s: PairSession) => void;
 }) {
-  const [actualSizeId, setActualSizeId] = useState(ACTUAL_SIZES[0]?.id ?? "");
+  const [pairLabel, setPairLabel] = useState(OFFERED_PAIRS[0] ?? "");
+  const pair = useMemo(() => sizePair(pairLabel), [pairLabel]);
+  const plan = useMemo(() => materializePlan(REGIA_4_FAEDIG_PATTERN, pair), [pair]);
 
   return (
     <main style={shell}>
@@ -238,29 +231,33 @@ function NewSessionView({
       <p>
         Muster: <strong>REGIA 4-fädig</strong> · ein Paar (2 Socken)
       </p>
-      <label htmlFor="actual">
-        Ist-Größe / Notiz:{" "}
-        <select id="actual" value={actualSizeId} onChange={(e) => setActualSizeId(e.target.value)}>
-          {ACTUAL_SIZES.map((s) => (
-            <option key={s.id} value={s.id}>
-              {s.label} (Tabelle {s.chartSizeLabel})
+      <label htmlFor="size" style={{ fontSize: "1.15rem" }}>
+        Größe:{" "}
+        <select
+          id="size"
+          value={pairLabel}
+          onChange={(e) => setPairLabel(e.target.value)}
+          style={{ fontSize: "1.15rem", padding: "0.35rem" }}
+        >
+          {OFFERED_PAIRS.map((label) => (
+            <option key={label} value={label}>
+              {label} · {sizePair(label).construction.castOnTotal} Maschen
             </option>
           ))}
         </select>
       </label>
       <div style={{ marginTop: "1rem", display: "flex", gap: "0.5rem" }}>
         <Button
-          onClick={() => {
-            const actual = ACTUAL_SIZES.find((s) => s.id === actualSizeId);
-            if (!actual) return;
+          onClick={() =>
             onCreate(
               createPairSession({
                 userId: DEMO_USER,
                 pattern: REGIA_4_FAEDIG_PATTERN,
-                actualSize: actual,
+                pair,
+                plan,
               })
-            );
-          }}
+            )
+          }
         >
           Starten
         </Button>
@@ -268,6 +265,8 @@ function NewSessionView({
           Zurück
         </Button>
       </div>
+      <h2>Strickplan {plan.sizeLabel}</h2>
+      <PlanList plan={plan} />
     </main>
   );
 }
@@ -292,6 +291,7 @@ function KnitSessionView({
   const closeStep = step ? isCloseStep(step) : false;
   const tipRow = step?.stepKey === "tip";
   const onceStep = step?.unit === "once";
+  const title = sizeTitle(session);
 
   let confirmLabel = "Reihe fertig";
   if (closeStep) confirmLabel = "Socke fertig";
@@ -306,8 +306,7 @@ function KnitSessionView({
         ← Übersicht
       </Button>
       <h1>
-        Größe {session.actualSizeLabel}{" "}
-        <small style={{ fontWeight: "normal" }}>(Tabelle {session.chartSizeLabel})</small>
+        Größe {title.size} <small style={{ fontWeight: "normal" }}>{title.detail}</small>
       </h1>
       <p style={{ marginTop: 0 }}>
         Aktuell: <strong>Socke {session.activeSock}</strong> von 2 (nacheinander)
@@ -335,9 +334,13 @@ function KnitSessionView({
                     ? `Aufteilung: ${step.displayValue}`
                     : step.stepKey === "pickup" && step.displayValue
                       ? `${step.displayValue} Maschen aufnehmen`
-                      : step.stepKey === "reduceToCastOn" && step.displayValue
-                        ? `Reduzieren auf ${step.displayValue} Maschen (wie Anschlag)`
-                        : countLineForStep(step.stepKey, step.targetCount, step.unit, "knit")}
+                      : step.stepKey === "reduceToCastOn" &&
+                          step.unit === "rounds" &&
+                          step.displayValue
+                        ? reduceLine(step.targetCount, step.displayValue)
+                        : step.stepKey === "reduceToCastOn" && step.displayValue
+                          ? `Reduzieren auf ${step.displayValue} Maschen (wie Anschlag)`
+                          : countLineForStep(step.stepKey, step.targetCount, step.unit, "knit")}
               </p>
             )}
 
@@ -530,69 +533,44 @@ function SockProgress({
   );
 }
 
-function PreviewView({ actualSizeId, onBack }: { actualSizeId: string; onBack: () => void }) {
-  const plan: SteppedPlan | null = useMemo(() => {
-    const actual = ACTUAL_SIZES.find((s) => s.id === actualSizeId);
-    return actual ? materializePlan(REGIA_4_FAEDIG_PATTERN, actual) : null;
-  }, [actualSizeId]);
-
-  if (!plan) return null;
-
+/** Every step of a plan with its count, shown before "Starten" (FR-006). */
+function PlanList({ plan }: { plan: SteppedPlan }) {
+  const c = plan.construction;
   return (
-    <main style={shell}>
-      <Button variant="ghost" onClick={onBack}>
-        ← Übersicht
-      </Button>
-      <h1>
-        {plan.patternName} · {plan.actualSizeLabel}{" "}
-        <small style={{ fontWeight: "normal" }}>(Tabelle {plan.chartSizeLabel})</small>
-      </h1>
-      <section style={card}>
-        <ul style={{ margin: 0, paddingLeft: "1.25rem" }}>
-          <li>
-            Anschlag: <strong>{plan.chart.castOnTotal}</strong> ({plan.needleCount} Nadeln ={" "}
-            {plan.chart.castOnPerNeedle2} / Nadel)
-          </li>
-          <li>
-            Fersenhöhe: <strong>{plan.chart.heelHeightRows} Reihen</strong>
-          </li>
-          <li>
-            Aufteilung: <strong>{fmtHeelSplit(plan.chart.heelSplit)}</strong>
-          </li>
-          <li>
-            Aufnahme: <strong>{plan.chart.pickupStitchesBothSides}</strong>
-          </li>
-        </ul>
-      </section>
-      <ol>
-        {plan.steps.map((step) => (
-          <li key={step.stepKey} style={{ marginBottom: "0.75rem" }}>
-            <strong>{STEP_LABELS[step.stepKey]}</strong>
-            <div>
-              {step.stepKey === "split"
-                ? fmtHeelSplit(plan.chart.heelSplit)
+    <ol style={{ paddingLeft: "1.25rem" }}>
+      {plan.steps.map((step) => (
+        <li key={step.stepKey} style={{ marginBottom: "0.75rem" }}>
+          <strong>{STEP_LABELS[step.stepKey]}</strong>
+          <div>
+            {step.stepKey === "castOn"
+              ? `${c.castOnTotal} Maschen (${plan.needleCount} Nadeln = ${c.castOnPerNeedle2} / Nadel)`
+              : step.stepKey === "split"
+                ? fmtHeelSplit(c.heelSplit)
                 : step.stepKey === "pickup"
-                  ? `${plan.chart.pickupStitchesBothSides} Maschen`
-                  : countLineForStep(step.stepKey, step.targetCount, step.unit, step.stitch)}
+                  ? `${c.pickupStitchesBothSides} Maschen aufnehmen`
+                  : step.stepKey === "reduceToCastOn"
+                    ? reduceLine(step.targetCount, c.castOnTotal)
+                    : countLineForStep(step.stepKey, step.targetCount, step.unit, step.stitch)}
+          </div>
+          {step.techniqueNoteKey ? (
+            <div>
+              <em>{TECHNIQUE_NOTES[step.techniqueNoteKey]}</em>
             </div>
-            {step.tipRounds?.length ? (
-              <ul>
-                {step.tipRounds.map((r) => (
-                  <li key={r.index}>
-                    {r.title}: {formatTipRound(r)}
-                  </li>
-                ))}
-              </ul>
-            ) : null}
-          </li>
-        ))}
-      </ol>
-    </main>
+          ) : null}
+          {step.tipRounds?.length ? (
+            <ul>
+              {step.tipRounds.map((r) => (
+                <li key={r.index}>
+                  {r.title}: {formatTipRound(r)}
+                </li>
+              ))}
+            </ul>
+          ) : null}
+        </li>
+      ))}
+    </ol>
   );
 }
-
-// Wire preview into App via view state — keep App as single switch
-// (PreviewView used when view.name === "preview")
 
 const shell: React.CSSProperties = {
   fontFamily: "system-ui, sans-serif",

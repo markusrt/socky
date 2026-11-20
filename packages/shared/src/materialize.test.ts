@@ -1,13 +1,20 @@
 import { describe, expect, it } from "vitest";
-import { ACTUAL_SIZES, mustActualSize, REGIA_4_FAEDIG_PATTERN } from "./fixtures/pattern-seed";
+import { REGIA_4_FAEDIG_PATTERN } from "./fixtures/pattern-seed";
 import { formatCountLine, formatTipCount } from "./labels";
-import { isPairStepComplete, materializePlan, tickRow, untickRow } from "./materialize";
+import {
+  isPairStepComplete,
+  materializePlan,
+  REDUCE_LAST_ROW_NOTE_KEY,
+  tickRow,
+  untickRow,
+} from "./materialize";
 import {
   deriveTipRounds,
   getChartSize,
   SIZE_CHART,
   tipRoundsForChartSize,
 } from "./size-chart-seed";
+import { sizePair } from "./size-pairs";
 
 describe("size chart seed (REGIA 4-fädig PDF)", () => {
   it("has 15 chart sizes from 22/23 to 50/51", () => {
@@ -98,100 +105,93 @@ describe("deriveTipRounds", () => {
   });
 });
 
-describe("materializePlan", () => {
-  it("size-40-41: chart 44/45 + actual 40/41 → plain 51, tip from chart", () => {
-    const plan = materializePlan(REGIA_4_FAEDIG_PATTERN, mustActualSize("size-40-41"));
+const plan = (label: string) => materializePlan(REGIA_4_FAEDIG_PATTERN, sizePair(label));
+const byKey = (label: string) => Object.fromEntries(plan(label).steps.map((s) => [s.stepKey, s]));
 
-    expect(plan.patternName).toBe("REGIA 4-fädig");
-    expect(plan.chartSizeLabel).toBe("44/45");
-    expect(plan.actualSizeLabel).toBe("40/41");
-    expect(plan.chart.heelSplit).toEqual([11, 12, 11]);
-    expect(plan.chart.pickupStitchesBothSides).toBe(17);
-    expect(plan.needleCount).toBe(2);
-    expect(plan.chart.castOnPerNeedle2).toBe(34);
-
-    const byKey = Object.fromEntries(plan.steps.map((s) => [s.stepKey, s]));
-    expect(byKey.cuff?.targetCount).toBe(40);
-    expect(byKey.leg?.targetCount).toBe(15);
-    expect(byKey.heel?.targetCount).toBe(32);
-    expect(byKey.postJoin?.targetCount).toBe(5);
-    expect(byKey.plainFoot?.targetCount).toBe(51);
-    expect(byKey.tip?.targetCount).toBe(3);
-    expect(byKey.tip?.tipRounds?.[2]?.times).toBe(4);
+describe("materializePlan (size pairs, ADR 0007)", () => {
+  it("27/28: construction from 56 M, foot rows from the pair", () => {
+    const p = plan("27/28");
+    expect(p.patternName).toBe("REGIA 4-fädig");
+    expect(p.sizeLabel).toBe("27/28");
+    expect(p.needleCount).toBe(2);
+    expect(p.construction).toMatchObject({
+      castOnTotal: 56,
+      castOnPerNeedle2: 28,
+      heelHeightRows: 26,
+      heelSplit: [9, 10, 9],
+      pickupStitchesBothSides: 14,
+    });
+    const k = byKey("27/28");
+    expect(k.cuff?.targetCount).toBe(33);
+    expect(k.leg?.targetCount).toBe(11);
+    expect(k.heel?.targetCount).toBe(26);
+    expect(k.postJoin?.targetCount).toBe(3);
+    expect(k.reduceToCastOn?.targetCount).toBe(3);
+    expect(k.plainFoot?.targetCount).toBe(41);
+    // Spitze 2-1 ×2, 1-1 ×3
+    expect(k.tip?.tipRounds?.map((r) => [r.unitSegments[0].count, r.times])).toEqual([
+      [2, 2],
+      [1, 3],
+    ]);
   });
 
-  it("size-37-38: same chart base 44/45 but plain 45 (actual 37/38)", () => {
-    const plan = materializePlan(REGIA_4_FAEDIG_PATTERN, mustActualSize("size-37-38"));
-    expect(plan.chartSizeLabel).toBe("44/45");
-    expect(plan.actualSizeLabel).toBe("37/38");
-    const plain = plan.steps.find((s) => s.stepKey === "plainFoot");
-    expect(plain?.targetCount).toBe(45);
-  });
-
-  it("size-50-51: plain 62 and tip round 3 has 5 decrease units", () => {
-    const plan = materializePlan(REGIA_4_FAEDIG_PATTERN, mustActualSize("size-50-51"));
-    const plain = plan.steps.find((s) => s.stepKey === "plainFoot");
-    const tip = plan.steps.find((s) => s.stepKey === "tip");
-    expect(plain?.targetCount).toBe(62);
-    expect(tip?.tipRounds?.[2]?.times).toBe(5);
-  });
-
-  it("size-18: child 18 on 22/23, plain 25, tip only 2 rounds", () => {
-    const plan = materializePlan(REGIA_4_FAEDIG_PATTERN, mustActualSize("size-18"));
-    expect(plan.chartSizeLabel).toBe("22/23");
-    expect(plan.actualSizeLabel).toBe("18");
-    const plain = plan.steps.find((s) => s.stepKey === "plainFoot");
-    const tip = plan.steps.find((s) => s.stepKey === "tip");
-    expect(plain?.targetCount).toBe(25);
-    expect(tip?.targetCount).toBe(2);
-    expect(tip?.tipRounds).toHaveLength(2);
-    expect(tip?.tipRounds?.[0]?.unitSegments[0]).toEqual({ kind: "knit", count: 2 });
+  it("37/38 (knitted): 68 M, 11-12-11, Fuß 45, Spitze 3-1 ×1, 2-1 ×2, 1-1 ×4", () => {
+    const k = byKey("37/38");
+    expect(plan("37/38").construction.heelSplit).toEqual([11, 12, 11]);
+    expect(k.cuff?.targetCount).toBe(40);
+    expect(k.plainFoot?.targetCount).toBe(45);
+    expect(k.tip?.tipRounds?.map((r) => [r.unitSegments[0].count, r.times])).toEqual([
+      [3, 1],
+      [2, 2],
+      [1, 4],
+    ]);
   });
 
   it("preserves stitch direction (knit / mixed)", () => {
-    const plan = materializePlan(REGIA_4_FAEDIG_PATTERN, mustActualSize("size-40-41"));
-    const byKey = Object.fromEntries(plan.steps.map((s) => [s.stepKey, s]));
-    expect(byKey.postJoin?.stitch).toBe("knit");
-    expect(byKey.plainFoot?.stitch).toBe("knit");
-    expect(byKey.leg?.stitch).toBe("knit");
-    expect(byKey.heel?.stitch).toBe("mixed");
+    const k = byKey("39/40");
+    expect(k.postJoin?.stitch).toBe("knit");
+    expect(k.plainFoot?.stitch).toBe("knit");
+    expect(k.leg?.stitch).toBe("knit");
+    expect(k.heel?.stitch).toBe("mixed");
   });
 
-  it("size-15: custom construction from notes (36 M, 6-6-6, 9 pickup), tip 2 rounds", () => {
-    const plan = materializePlan(REGIA_4_FAEDIG_PATTERN, mustActualSize("size-15"));
-    expect(plan.actualSizeLabel).toBe("15");
-    expect(plan.chart.castOnTotal).toBe(36);
-    expect(plan.chart.castOnPerNeedle2).toBe(18);
-    expect(plan.chart.heelSplit).toEqual([6, 6, 6]);
-    expect(plan.chart.heelHeightRows).toBe(16);
-    expect(plan.chart.pickupStitchesBothSides).toBe(9);
-    const byKey = Object.fromEntries(plan.steps.map((s) => [s.stepKey, s]));
-    expect(byKey.cuff?.targetCount).toBe(21);
-    expect(byKey.leg?.targetCount).toBe(5);
-    expect(byKey.heel?.targetCount).toBe(16);
-    expect(byKey.postJoin?.targetCount).toBe(3);
-    expect(byKey.plainFoot?.targetCount).toBe(17);
-    expect(byKey.tip?.targetCount).toBe(2);
-    expect(byKey.tip?.tipRounds?.[0]?.unitSegments[0]).toEqual({ kind: "knit", count: 2 });
-    expect(byKey.tip?.tipRounds?.[1]?.times).toBe(3);
+  it("once steps (cast-on, Aufteilung, aufnehmen) are single confirmations", () => {
+    const k = byKey("45/46");
+    expect(k.castOn?.targetCount).toBe(1);
+    expect(k.split?.targetCount).toBe(1);
+    expect(k.pickup?.targetCount).toBe(1);
+    expect(k.close?.unit).toBe("finish");
   });
 
-  it("throws when a step has no configured count (never invent)", () => {
-    const broken = {
-      ...mustActualSize("size-40-41"),
-      counts: { cuff: 40 },
+  it("throws when a step has no count (never invent)", () => {
+    const pair = sizePair("27/28");
+    // A counted step the pair has no count for and the pattern no default.
+    const noCount = {
+      ...REGIA_4_FAEDIG_PATTERN,
+      steps: [
+        { key: "castOn" as const, titleKey: "x", unit: "rows" as const, stitch: "none" as const },
+      ],
     };
-    expect(() => materializePlan(REGIA_4_FAEDIG_PATTERN, broken)).toThrow(/do not invent/i);
+    expect(() => materializePlan(noCount, pair)).toThrow(/do not invent/i);
   });
+});
 
-  it("seeded actual sizes cover the four reference configs", () => {
-    expect(ACTUAL_SIZES.map((s) => s.id).sort()).toEqual([
-      "size-15",
-      "size-18",
-      "size-37-38",
-      "size-40-41",
-      "size-50-51",
-    ]);
+describe("Maschen reduzieren (r23): counted rows, 2-stitch note", () => {
+  it.each([
+    ["15/16", 2, true],
+    ["17/18", 2, false],
+    ["19/20", 2, false],
+    ["27/28", 3, true],
+    ["29/30", 3, true],
+    ["31/32", 3, true],
+    ["33/34", 3, false],
+    ["37/38", 3, false],
+    ["45/46", 3, false],
+  ])("%s: %i rows, note %s", (label, rows, note) => {
+    const step = byKey(label).reduceToCastOn;
+    expect(step?.unit).toBe("rounds");
+    expect(step?.targetCount).toBe(rows);
+    expect(step?.techniqueNoteKey === REDUCE_LAST_ROW_NOTE_KEY).toBe(note);
   });
 });
 
@@ -201,6 +201,7 @@ describe("German wording (Reihen vs Runden)", () => {
     expect(formatCountLine(51, "rounds", "knit")).toBe("51 rechte Reihen");
     expect(formatCountLine(32, "rows", "mixed")).toBe("32 rechte + linke Reihen");
     expect(formatCountLine(40, "rows", "none")).toBe("40 Reihen");
+    expect(formatCountLine(3, "rounds", "none")).toBe("3 Reihen");
     expect(formatTipCount(3)).toBe("3 Runden");
     expect(formatTipCount(2)).toBe("2 Runden");
   });

@@ -18,6 +18,7 @@ import {
 } from "./storage";
 import fixture from "./storage-fixtures/sessions-v1.json";
 import damagedFixture from "./storage-fixtures/sessions-v1-damaged.json";
+import pairsFixture from "./storage-fixtures/sessions-v1-pairs.json";
 import copyFixture from "./storage-fixtures/unreadable-copy-v1.json";
 
 /**
@@ -96,6 +97,60 @@ describe("stored sessions v1 (live format)", () => {
     const [savedFoot, ...savedOthers] = loadSessions() as [PairSession, ...PairSession[]];
     expect(currentStep(savedFoot)?.sock1Done).toBe(21);
     expect(savedOthers).toEqual(others);
+  });
+
+  it("a saved single-tap Maschen reduzieren stays a single tap (003, P4)", () => {
+    for (const session of loadSessions()) {
+      const reduce = session.steps.find((s) => s.stepKey === "reduceToCastOn");
+      expect(reduce).toMatchObject({ unit: "once", targetCount: 1 });
+    }
+  });
+});
+
+/**
+ * 003-size-generator (ADR 0007): FROZEN snapshot of a size-pair session
+ * (generated 2026-11-20 from the shared code at that time): 27/28 on sock 1,
+ * one of three counted "Maschen reduzieren" rows done. Never edit it.
+ */
+describe("stored size-pair sessions (pairs-v1)", () => {
+  beforeEach(() => {
+    const storage = new MemoryStorage();
+    storage.setItem(LIVE_KEY, JSON.stringify(pairsFixture));
+    Object.defineProperty(globalThis, "localStorage", { value: storage, configurable: true });
+  });
+
+  it("loads unchanged with no notice", () => {
+    const result = loadStorage();
+    expect(result.sessions).toEqual(pairsFixture);
+    expect(result.notices).toEqual([]);
+    expect(result.writeBlocked).toBe(false);
+  });
+
+  it("resumes inside the counted reduce step with its note", () => {
+    const [pair] = loadSessions() as [PairSession];
+    expect(pair).toMatchObject({
+      actualSizeLabel: "27/28",
+      chartSizeLabel: "",
+      sizeModel: "pairs-v1",
+      castOnTotal: 56,
+    });
+    const step = currentStep(pair);
+    expect(step).toMatchObject({
+      stepKey: "reduceToCastOn",
+      unit: "rounds",
+      targetCount: 3,
+      sock1Done: 1,
+    });
+    expect(TECHNIQUE_NOTES[step?.techniqueNoteKey ?? ""]).toBe(
+      "Letzte Reihe: nur 2 Maschen abnehmen"
+    );
+  });
+
+  it("old and new pairs load side by side", () => {
+    localStorage.setItem(LIVE_KEY, JSON.stringify([...fixture, ...pairsFixture]));
+    const result = loadStorage();
+    expect(result.sessions).toHaveLength(fixture.length + pairsFixture.length);
+    expect(result.notices).toEqual([]);
   });
 });
 

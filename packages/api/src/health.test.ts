@@ -37,3 +37,31 @@ describe("session routes auth", () => {
     expect(await res.json()).toEqual({ error: "unauthorized" });
   });
 });
+
+describe("plan preview by size pair (ADR 0007)", () => {
+  it("returns the 27/28 plan", async () => {
+    const res = await app.request("/preview/plan/27/28", {}, testEnv);
+    expect(res.status).toBe(200);
+    const plan = (await res.json()) as { sizeLabel: string; construction: { castOnTotal: number } };
+    expect(plan.sizeLabel).toBe("27/28");
+    expect(plan.construction.castOnTotal).toBe(56);
+  });
+
+  it.each(["47/48", "40/41", "15/17"])("rejects %s (not offered)", async (pair) => {
+    const res = await app.request(`/preview/plan/${pair}`, {}, testEnv);
+    expect(res.status).toBe(404);
+  });
+
+  it("creating a session still requires a signed-in user", async () => {
+    const res = await app.request(
+      "/api/sessions",
+      {
+        method: "POST",
+        body: JSON.stringify({ pair: "27/28" }),
+        headers: { "Content-Type": "application/json" },
+      },
+      testEnv
+    );
+    expect(res.status).toBe(401);
+  });
+});

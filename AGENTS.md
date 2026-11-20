@@ -305,20 +305,27 @@ fixtures and `materialize` tests in the same change; conventional commits.
 
 Full rules: `docs/domain/groessenmodell.md`.
 
-- Base pattern **REGIA 4-fädig** (Käppchenferse); her established rules win
-  over the chart (amendment P1); the chart size drives construction + tip
-- Actual size drives plain-foot row counts (amendment P3)
+- Base pattern **REGIA 4-fädig** (Käppchenferse). Sizes are **size pairs**
+  15/16 … 45/46 offered (47/48, 49/50 computable, not offered), made for the
+  larger size; model `packages/shared/src/size-pairs.ts` = research 002
+  (`specs/002-sizing-research/report.md`), ADR 0007, amendment P1
+- The pair chooses the cast-on M; **M** drives Aufteilung, Ferse, aufnehmen,
+  tip; the **pair** drives plain-foot rows (amendment P3). Pairs with equal M
+  share the construction. The REGIA chart is a historical reference
+- Values: her choice, else her knitted pair, else computed; no "berechnet"
+  marking in the app; the golden fixture `size-pairs-v1.json` is frozen
 - She knits on **2 needles** (`castOnPerNeedle2`)
-- Tip: chart Bandspitze first three rows only; "In jeder Runde" close is not
+- Maschen reduzieren: counted, ceil(middle / 4) Reihen of 4 decreases; note
+  "Letzte Reihe: nur 2 Maschen abnehmen" when the middle is 6 or 10
+- Tip: first three schedule rows only; "In jeder Runde" close is not
   counted; one tap per single rechts / Abnahme
 - A **pair session** tracks two socks, knitted one after the other
-- Wording: **Reihen** everywhere, the tip uses **Runden** ("N Runden", never
-  "N rechte Runden"); buttons `rows` → Reihe fertig, `once` → Fertig,
-  close → Socke fertig
-- The knit UI shows only her configured counts, no chart hints next to them
-- Aufteilung always from the chart base size; chart Fußlänge cm is reference only
-- Trap: chart 40/41 = 10-12-10, but actual 40/41 on chart 44/45 = 11-12-11
-- Size 15 uses construction overrides (36 M, 6-6-6, 9 pick-up), not REGIA 22/23
+- Wording: **Reihen** everywhere (also Maschen reduzieren), the tip uses
+  **Runden** ("N Runden", never "N rechte Runden"); buttons `rows`/`rounds`
+  → Reihe fertig, `once` → Fertig, close → Socke fertig
+- The knit UI shows only the pair's counts, no chart hints next to them
+- Saved pairs from before ADR 0007 keep their stored chart/actual labels and
+  single-tap Maschen reduzieren (P4)
 
 ## Rounds, checkpoints and handoff
 

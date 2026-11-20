@@ -24,21 +24,23 @@ commands, outcomes, review findings and screenshots go to
 ## Where we are
 
 - Process: mvp-starter (ADR 0004); baseline PR #1 merged 2026-11-18
-- Built before adoption: `specs/000-baseline/spec.md` (R1–R4; knitting UI
-  live, M3 API foundation in `packages/api` not deployed)
+- Before adoption: `specs/000-baseline/spec.md` (UI live, API not deployed)
 - `001-storage-safety` (Light): merged 2026-11-19 (PR #2, `83287c1`), live
   and checked by the owner (r27)
 - `002-sizing-research` (Spike): C1 accepted 2026-11-19 (round 3, r18–r26),
   docs-only PR. Result: size pairs 15/16 … 49/50, model and constants in
   `specs/002-sizing-research/report.md`, script `pairs.mjs`; go for 003
-- Knitter: knits 27/28 next as computed (first children's pair, r26)
-- Pending owner decisions: none (merge PR #3, 002)
+- `003-size-generator` (Light): C3 accepted 2026-11-20 (round 4, r28);
+  pairs 15/16 … 45/46 are the standard (ADR 0007, constitution 2.0.0);
+  merged via its PR (expert-review) and live once the owner merges
+- Knitter: starts 27/28 on the live app; that is her first check of 003
+  (r29, P2, SC-005 open)
+- Pending owner decisions: none
 
 ## Counters
 
-- Rounds held: 3 (round 1 = 001 C3, round 2 = 002 C1, round 3 = 002 C1
-  repeat); counters are global across both branches
-- Last feedback id: r27 (r15, r27 on 001; r01–r14, r16–r26 on 002)
+- Rounds held: 4 (1 = 001 C3, 2–3 = 002 C1, 4 = 003 C3); global counters
+- Last feedback id: r29 (r15, r27 on 001; r01–r14, r16–r26 on 002; r28–r29 on 003)
 
 ## Machine
 
@@ -46,8 +48,8 @@ commands, outcomes, review findings and screenshots go to
 
 ## Worktree
 
-- Branches `001-storage-safety`, `002-sizing-research` from `main`; Spec
-  Kit: set `SPECIFY_FEATURE_DIRECTORY=specs/<feature of current branch>`
+- Active branch `003-size-generator` (from `main` after PR #3); Spec Kit:
+  `SPECIFY_FEATURE_DIRECTORY=specs/003-size-generator`
 
 ## Roadmap (owner-approved order, 2026-11-14)
 
@@ -62,17 +64,15 @@ commands, outcomes, review findings and screenshots go to
 ## Limits
 
 - Progress is per browser; clearing site data loses it (accepted, no export)
-- Cloudflare (Worker, D1, Google login) not configured; setup steps in
-  `README.md`. Moving the web app there happens only between sock projects
-  (ADR 0005)
+- Cloudflare not configured (setup in `README.md`); moving the web app
+  there only between sock projects (ADR 0005)
 - `POST /migrate` in `packages/api` is unauthenticated; guard before deploying
 - TypeScript 7 blocked on dependency-cruiser (ADR 0003)
 
 ## Exact next action
 
-1. PR #3 merged (this file is `main` after it); work continues in the one
-   folder `D:\Development\KnitHelper` (second worktree removed 2026-11-19).
-2. Start `003-size-generator` on a new branch from `main`: interview, then
-   `/speckit-specify`. Inputs: report.md (rules P1–P4, open points),
-   r23 (count the "Maschen reduzieren" rounds), r25 (sizes above 45/46
-   computable later), r06 (app label 50/51 = 45/46 foot). Next id r27.
+1. After the owner merged the 003 PR: create branch `003-size-generator-c2`
+   from the updated `main`, first commit = STATUS "live" + PR number.
+2. When the owner reports her 27/28 check (r30+): record it in
+   `specs/003-size-generator/feedback/round-5.md`; a wrong count is a fix
+   on a new branch. Next roadmap item: M3 (web login + D1, size editor).

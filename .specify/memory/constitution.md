@@ -220,24 +220,25 @@ narrows or overrides a rule above, the amendment wins for this product.
 ## Project amendments
 
 Adopted 2026-11-14 (ADR 0004). P1–P13 carry over the former `CONSTITUTION.md`
-§1–§11; P2 and P4 are new.
+§1–§11; P2 and P4 are new. P1 and P3 redefined 2026-11-19 (ADR 0007).
 
 ### P1. Domain authority (overrides nothing; sharpens II)
 
 Knitting counts, steps and terminology come from, in this order:
 
-1. **The knitter's established rules** and the sizes she has knitted
-   (`docs/domain/`, fixtures under `packages/shared/`, her confirmations).
+1. **The knitter's established rules**, her confirmations, and the
+   **size-pair model** she accepted in `specs/002-sizing-research` (ADR 0007),
+   which is the standard: pairs 15/16 … 49/50, values from her choice, else
+   her knitted pair, else computed (`docs/domain/`, `packages/shared/`).
 2. **The REGIA 4-fädig chart** (`docs/reference/`), as historical reference
    only; her rules already depart from it, especially for foot sizes.
 
-The team never invents a count. A count produced by a model or algorithm
-(for example a size generator) is a **proposal**: it is stored with its
-inputs and algorithm version, marked "berechnet" in the UI, and becomes
-knittable only after the knitter accepts it (P2). A model must reproduce
-every size she has knitted, or document each deviation and its reason.
-Promoting a research-based model to "the standard" is a future ADR the owner
-decides. If a rule is unclear: ask.
+The team never invents a count. A change to the model's rules or constants,
+or a new size outside it, is a **proposal**: the knitter accepts it in a
+review round (P2) before it ships. Counts carry no "berechnet" marking in the
+app; the research record keeps which values are knitted, chosen or computed.
+The model must reproduce every size she has knitted, or document each
+deviation and its reason. If a rule is unclear: ask.
 
 ### P2. The knitter accepts domain and knitting-feel changes
 
@@ -247,12 +248,15 @@ Such a checkpoint's round report includes German steps for her to try, and
 the gate passes only with her result recorded (replaces the former gates G1
 "domain truth" and G2 "knitting feel").
 
-### P3. Chart size ≠ actual size
+### P3. Construction class ≠ foot size
 
-Keep both concepts distinct at every layer (types, data, UI, tests). The chart
-base size (e.g. 44/45) drives construction (cast-on, heel, split, pick-up) and
-the tip; the actual size (e.g. 40/41, 18) drives plain-foot counts.
-Collapsing them is a defect.
+Keep both concepts distinct at every layer (types, data, UI, tests). The
+construction class, the cast-on stitch count M (e.g. 68), drives Aufteilung,
+Ferse, aufnehmen and the tip; the foot size, the pair (e.g. 39/40), drives
+plain-foot rows. The pair chooses M, but a pair is never used as a
+construction class or M as a foot size. Collapsing them is a defect. The
+REGIA chart is a historical reference. Pairs saved before ADR 0007 keep their
+stored chart and actual size labels.
 
 ### P4. Never harm the live knitter's work in progress
 
@@ -324,4 +328,4 @@ Architecture, schema or process changes get one ADR per decision theme under
 `docs/adr/` (four-digit numbering). The pre-adoption requirements are frozen
 in `specs/000-baseline/spec.md`.
 
-**Version**: 1.0.0 (Socky; based on mvp-starter constitution 3.0.0) | **Ratified**: 2026-11-14 | **Last Amended**: 2026-11-14
+**Version**: 2.0.0 (Socky; based on mvp-starter constitution 3.0.0) | **Ratified**: 2026-11-14 | **Last Amended**: 2026-11-19

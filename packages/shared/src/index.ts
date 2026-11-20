@@ -1,11 +1,13 @@
 export type {
-  ActualSizeConfig,
+  Construction,
   PairSession,
   PairSessionStatus,
   Pattern,
   PatternStep,
   PlannedStep,
   SessionStepProgress,
+  SizePair,
+  SizePairCounts,
   StepKey,
   SteppedPlan,
   StepUnit,
@@ -16,12 +18,7 @@ export type {
   TipSegment,
   UserRole,
 } from "./domain";
-export {
-  ACTUAL_SIZES,
-  getActualSize,
-  mustActualSize,
-  REGIA_4_FAEDIG_PATTERN,
-} from "./fixtures/pattern-seed";
+export { REGIA_4_FAEDIG_PATTERN } from "./fixtures/pattern-seed";
 export {
   formatCountLine,
   formatTipCount,
@@ -34,6 +31,7 @@ export {
   isPairStepComplete,
   isStepComplete,
   materializePlan,
+  REDUCE_LAST_ROW_NOTE_KEY,
   tickRow,
   untickRow,
 } from "./materialize";
@@ -63,4 +61,14 @@ export {
   SIZE_CHART_NEEDLE_MM,
   tipRoundsForChartSize,
 } from "./size-chart-seed";
+export {
+  COMPUTABLE_PAIRS,
+  castOnForSize,
+  constructionFor,
+  footLengthCm,
+  isOfferedPair,
+  OFFERED_PAIRS,
+  SIZE_MODEL_VERSION,
+  sizePair,
+} from "./size-pairs";
 export { isReadablePairSession, storedPairSessionSchema } from "./stored-session";
