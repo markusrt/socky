@@ -182,6 +182,9 @@ describe("Maschen reduzieren (r23): counted rows, 2-stitch note", () => {
     ["17/18", 2, false],
     ["19/20", 2, false],
     ["27/28", 3, true],
+    ["29/30", 3, true],
+    ["31/32", 3, true],
+    ["33/34", 3, false],
     ["37/38", 3, false],
     ["45/46", 3, false],
   ])("%s: %i rows, note %s", (label, rows, note) => {

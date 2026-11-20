@@ -15,7 +15,7 @@
 - [x] T002 Model port `packages/shared/src/size-pairs.ts` per plan.md decision 1 (`computePair`, `tablePair`, `construction(m)`, `footCounts(pair)`, `OFFERED_PAIRS` 15/16 … 45/46, `SIZE_MODEL_VERSION`), no I/O (FR-003, FR-004, FR-005)
 - [x] T003 Frozen golden fixture `packages/shared/src/fixtures/size-pairs-v1.json` from `pairs.mjs --pair` for all 18 pairs; `size-pairs.test.ts`: every field equals the fixture, 16 rows equal Tabelle 1 transcribed in the test, her knitted/chosen pairs (17/18, 19/20, 37/38, 39/40 = 50, 45/46) exact, pairs with equal M share construction, 47/48 and 49/50 computable but not offered, M > 76 throws (FR-003, FR-004, FR-005, SC-001, SC-002)
 - [x] T004 Types and materialize: `Construction`, `SizePair` in `domain.ts`; `materializePlan(pattern, pair)` with `construction` in `SteppedPlan`; `createPairSession` stores `sizeModel`, `castOnTotal`, `chartSizeLabel = ""`; remove `ActualSizeConfig` runtime path and `ACTUAL_SIZES` seed (keep JSON files and `SIZE_CHART` as reference data); update `index.ts`, `materialize.test.ts`, `session.test.ts`, `stored-session.ts` (+ optional fields) and its test (FR-003, FR-005, FR-011)
-- [x] T005 [ROUTINE] API: `packages/api/src/index.ts` `/plans/:id` and `sessions.ts` `POST` take a pair label (zod `^\d{2}/\d{2}$`, offered pairs only, 400 otherwise); role guards unchanged; update api tests (FR-001, FR-011)
+- [x] T005 [ROUTINE] API: `packages/api/src/index.ts` `/preview/plan/:lo/:hi` and `sessions.ts` `POST` take a pair label (zod `^\d{2}/\d{2}$`; invalid body 400, pair not offered 404); role guards unchanged; update api tests (FR-001, FR-011)
 
 ## Phase 3: User Story 1 - Start a pair by size pair (P1)
 
@@ -34,7 +34,7 @@
 ## Phase 6: Polish
 
 - [x] T011 [P] Docs: AGENTS.md knitting cheat-sheet to the pair model (pairs, M classes, reduce rounds; remove chart/trap lines that no longer apply); `docs/domain/groessenmodell.md` pointer to ADR 0007 and `report.md`; `docs/domain/gestrickte-groessen.md` note that the size JSONs are reference data
-- [ ] T012 [P] [ROUTINE] Wording pass: German display text follows `docs/domain/groessenmodell.md` "Display and wording rules"; select and plan fit at Pixel 7 width
+- [x] T012 [P] [ROUTINE] Wording pass: German display text follows `docs/domain/groessenmodell.md` "Display and wording rules"; select and plan fit at Pixel 7 width
 
 ## Phase 7: Acceptance
 

@@ -84,3 +84,28 @@ Owner answers (round 1 Q1–Q7, round 2 Q8):
   violations, 64 modules), shared 109, web 22, api 11 tests, Playwright 28
   passed (desktop + Pixel 7). One earlier run failed on Biome formatting only;
   fixed with `biome check --write`.
+
+## 2026-11-20 — GATE T013, round 4 (C3)
+
+- Dev server `pnpm --filter @socky/web dev --host 127.0.0.1 --port 5173
+  --strictPort`; `curl http://127.0.0.1:5173/` → 200 (this computer only).
+- Reviewer (fresh context): no blockers. Verified the golden fixture against
+  fresh `pairs.mjs` output (18 pairs, 0 mismatches); old fixtures byte-identical
+  to `main`; seeded an old 40/41 pair parked at "Maschen reduzieren" in the
+  browser: "Reduzieren auf 68 Maschen (wie Anschlag)", "Fertig", 0 / 1, one tap
+  to Fuß, no fields added on save (covers US3 scenario 2 in a browser). Reran
+  `pnpm test`, lint, typecheck, dep:cruise: green.
+- Should-fix, fixed: (1) the 2-stitch note also applies to 29/30 and 31/32
+  (60 M, 10-10-10): spec US2 scenario 3 corrected; the earlier journal line
+  "15/16 and 21/22 … 27/28" is wrong, correct is "15/16 and 21/22 … 31/32";
+  `materialize.test.ts` gains 29/30, 31/32, 33/34 rows (shared 112 tests
+  pass). (2) T012 ticked: reviewer's Pixel 7 screenshots show select, plan
+  and the wrapped reduce line fit; German wording unchanged from the rules.
+  (3) STATUS updated.
+- Nits: report step 1 now lists "3 nach dem Zusammenstricken"; "her choice
+  39/40 = 50" worded apart from knitted pairs; T005 text aligned (404 for a
+  pair not offered); Bündchen "33 Reihen" (plan) vs "33 rechte Reihen"
+  (knitting screen) is pre-existing, listed as a known limit, not changed
+  without her say; select defaults to 15/16 as planned.
+- Screenshots: `specs/003-size-generator/review/round-4/{1,2,3}-{desktop,mobile}.png`.
+- Context at end of this session part: about 200k tokens.

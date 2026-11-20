@@ -4,7 +4,7 @@
 
 **Created**: 2026-11-19
 
-**Status**: Draft
+**Status**: C3 round 4 pending owner decision (2026-11-20)
 
 **Spec Language**: en
 
@@ -65,7 +65,7 @@ After "Nach dem Zusammenstricken" she reduces the picked-up stitches: 4 per roun
 
 1. **Given** a new pair at "Maschen reduzieren", **When** she looks at the step, **Then** she sees the number of rounds and the cast-on count to reach, for example "3 Reihen" and "bis 68 Maschen (wie Anschlag)".
 2. **Given** that step, **When** she taps "Reihe fertig" once per round, **Then** the counter advances by one per tap and the step ends after the last round.
-3. **Given** a pair whose Aufteilung middle is 6 or 10 (15/16 and 21/22 … 27/28), **When** she is on that step, **Then** she sees "Letzte Reihe: nur 2 Maschen abnehmen"; pairs with middle 8 or 12 show no such note.
+3. **Given** a pair whose Aufteilung middle is 6 or 10 (15/16 and 21/22 … 31/32), **When** she is on that step, **Then** she sees "Letzte Reihe: nur 2 Maschen abnehmen"; pairs with middle 8 or 12 show no such note.
 4. **Given** the step, **When** she undoes a tap, **Then** the counter goes back by one, as on other counted steps.
 
 ---
