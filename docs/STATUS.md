@@ -41,7 +41,7 @@ commands, outcomes, review findings and screenshots go to
 ## Counters
 
 - Rounds held: 4 (1 = 001 C3, 2–3 = 002 C1, 4 = 003 C3); global counters
-- Last feedback id: r27 (r15, r27 on 001; r01–r14, r16–r26 on 002)
+- Last feedback id: r29 (r15, r27 on 001; r01–r14, r16–r26 on 002; r28–r29 on 003)
 
 ## Machine
 
