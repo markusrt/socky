@@ -29,6 +29,11 @@ Research 002 produced a sizing model by size pair (15/16 … 49/50) that the kni
 - Q: Timing? → A: One review round; 27/28 has not been started; the change waits on the pull request until she has tried it.
 - Q: Amend constitution P1 and P3? → A: Yes, as worded (ADR 0007, constitution 2.0.0).
 
+### Session 2026-11-20
+
+- Q: Wording and button for the counted "Maschen reduzieren"? → A: Always "Reihen", as everywhere else ("the sock is round and a technical row is always a circle, still we name it Row"): "3 Reihen · bis 56 Maschen (wie Anschlag)", "Letzte Reihe: nur 2 Maschen abnehmen", button "Reihe fertig".
+- Q: Plan shown inline on "Neue Socke" instead of the "Pläne prüfen" list? → A: Yes.
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Start a pair by size pair (Priority: P1)
@@ -42,7 +47,7 @@ The knitter taps "Neue Socke starten" and chooses her size from one list "Größ
 **Acceptance Scenarios**:
 
 1. **Given** the home screen, **When** she taps "Neue Socke starten", **Then** she sees the list "Größe" with exactly the 16 pairs 15/16 … 45/46 in ascending order, each as "<Paar> · <M> Maschen", and no other size.
-2. **Given** the list, **When** she chooses 27/28, **Then** the plan below shows 56 Maschen (28 / Nadel), Bündchen 33, Rechte Reihen 11, Ferse 26, Aufteilung 9-10-9, 14 aufnehmen, 3 nach dem Zusammenstricken, Maschen reduzieren 3 Runden, Fuß 41, Spitze 2-1 ×2, 1-1 ×3.
+2. **Given** the list, **When** she chooses 27/28, **Then** the plan below shows 56 Maschen (28 / Nadel), Bündchen 33, Rechte Reihen 11, Ferse 26, Aufteilung 9-10-9, 14 aufnehmen, 3 nach dem Zusammenstricken, Maschen reduzieren 3 Reihen, Fuß 41, Spitze 2-1 ×2, 1-1 ×3.
 3. **Given** 27/28 chosen, **When** she taps "Starten", **Then** the knitting screen shows "Größe 27/28 · 56 Maschen" and the first step "Maschen anschlagen: 56 Maschen (2 Nadeln = 28 / Nadel)".
 4. **Given** any pair, **When** she starts it, **Then** every count equals the accepted table, including her choice 39/40 = 50 foot rows and her knitted pairs 17/18, 19/20, 37/38, 45/46.
 
@@ -50,7 +55,7 @@ The knitter taps "Neue Socke starten" and chooses her size from one list "Größ
 
 ### User Story 2 - Count the "Maschen reduzieren" rounds (Priority: P2)
 
-After "Nach dem Zusammenstricken" she reduces the picked-up stitches: 4 per round (one at each edge of each needle) until the cast-on count is back. The app shows "Maschen reduzieren: 3 Runden, bis 68 Maschen (wie Anschlag)" and counts one tap per round like every other counted step. When the extra stitches are 6 or 10, it says "Letzte Runde: nur 2 Maschen abnehmen".
+After "Nach dem Zusammenstricken" she reduces the picked-up stitches: 4 per round (one at each edge of each needle) until the cast-on count is back. The app shows "Maschen reduzieren: 3 Reihen, bis 68 Maschen (wie Anschlag)" and counts one tap per round like every other counted step. When the extra stitches are 6 or 10, it says "Letzte Reihe: nur 2 Maschen abnehmen".
 
 **Why this priority**: She asked for it (r23); today it is one "Fertig" tap and she counts these rounds in her head.
 
@@ -58,9 +63,9 @@ After "Nach dem Zusammenstricken" she reduces the picked-up stitches: 4 per roun
 
 **Acceptance Scenarios**:
 
-1. **Given** a new pair at "Maschen reduzieren", **When** she looks at the step, **Then** she sees the number of rounds and the cast-on count to reach, for example "3 Runden" and "bis 68 Maschen (wie Anschlag)".
+1. **Given** a new pair at "Maschen reduzieren", **When** she looks at the step, **Then** she sees the number of rounds and the cast-on count to reach, for example "3 Reihen" and "bis 68 Maschen (wie Anschlag)".
 2. **Given** that step, **When** she taps "Reihe fertig" once per round, **Then** the counter advances by one per tap and the step ends after the last round.
-3. **Given** a pair whose Aufteilung middle is 6 or 10 (15/16 … 27/28), **When** she is on that step, **Then** she sees "Letzte Runde: nur 2 Maschen abnehmen"; pairs with middle 8 or 12 show no such note.
+3. **Given** a pair whose Aufteilung middle is 6 or 10 (15/16 and 21/22 … 27/28), **When** she is on that step, **Then** she sees "Letzte Reihe: nur 2 Maschen abnehmen"; pairs with middle 8 or 12 show no such note.
 4. **Given** the step, **When** she undoes a tap, **Then** the counter goes back by one, as on other counted steps.
 
 ---
@@ -98,8 +103,8 @@ Pairs she saved before this change (old sizes, single-tap "Maschen reduzieren") 
 - **FR-004**: The counts MUST come from one size-pair model (rules of `report.md` §4) with the precedence her choice, else her knitted pair, else computed; the model MUST also produce 47/48 and 49/50 so they can be offered later without new rules.
 - **FR-005**: The construction class (M: Aufteilung, Ferse, aufnehmen, Spitze) and the foot size (pair: foot rows) MUST stay distinct in data, logic, display and tests (P3).
 - **FR-006**: Before "Starten", the screen MUST show the plan of the chosen pair (every step with its count), updating when she chooses another pair.
-- **FR-007**: For new pairs, "Maschen reduzieren" MUST be a counted step: target = the table's rounds, one tap per round, undo as on other counted steps; it shows "<N> Runden" and "bis <M> Maschen (wie Anschlag)".
-- **FR-008**: When the Aufteilung middle leaves a 2-stitch last round (middle not divisible by 4), the step MUST show "Letzte Runde: nur 2 Maschen abnehmen".
+- **FR-007**: For new pairs, "Maschen reduzieren" MUST be a counted step: target = the table's rounds, one tap per round, undo as on other counted steps; it shows "<N> Reihen" and "bis <M> Maschen (wie Anschlag)".
+- **FR-008**: When the Aufteilung middle leaves a 2-stitch last round (middle not divisible by 4), the step MUST show "Letzte Reihe: nur 2 Maschen abnehmen".
 - **FR-009**: The knitting screen and the home list MUST show new pairs as "<Paar> · <M> Maschen"; pairs saved before this feature MUST keep their stored labels as today.
 - **FR-010**: Saved pairs in today's stored format (key `Socky.sessions.v1`, frozen fixtures in `packages/web/src/storage-fixtures/`) MUST load, resume and count unchanged, including their single-tap "Maschen reduzieren", with no storage notice (P4).
 - **FR-011**: New pairs MUST be saved in a shape that the current stored-pair check accepts, so that reading never depends on the size list.

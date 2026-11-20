@@ -83,7 +83,7 @@ Re-checked after design: pass, no violations.
    and `SIZE_CHART` stay as historical reference data (docs link to them) and
    are used only by a test that her knitted sizes match their pairs (SC-002).
 5. **Pattern**: `reduceToCastOn` becomes `unit: "rounds"`, count from the pair;
-   new technique note key `note.reduce_last_round_two` = "Letzte Runde: nur 2
+   new technique note key `note.reduce_last_round_two` = "Letzte Reihe: nur 2
    Maschen abnehmen", set on the step when `heelSplit[1] % 4 !== 0`.
 6. **Session shape** (new pairs only): `actualSizeLabel = "27/28"`,
    `chartSizeLabel = ""` (schema field stays required; empty = no chart),
@@ -91,7 +91,7 @@ Re-checked after design: pass, no violations.
    `sizeTitle(session)`: with `sizeModel` → "27/28 · 56 Maschen", else
    "40/41 (Tabelle 44/45)". The stored-session schema adds both fields as
    optional; older shapes unchanged.
-7. **Reduce display**: unit `rounds` on `reduceToCastOn` → "<N> Runden · bis
+7. **Reduce display**: unit `rounds` on `reduceToCastOn` → "<N> Reihen · bis
    <M> Maschen (wie Anschlag)", button "Reihe fertig" (same as tip rows, where
    each tap is one round); unit `once` (saved pairs) → today's text and "Fertig".
 8. **Web**: `NewSessionView` lists `OFFERED_PAIRS` (15/16 … 45/46) as

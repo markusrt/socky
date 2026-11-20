@@ -34,3 +34,14 @@ Owner answers (round 1 Q1–Q7, round 2 Q8):
   FR-013→T006/T008/T012; SC-001/002→T003/T007, SC-003→T007, SC-004→T010,
   SC-005→T013. No gaps. Note: T001's fixture can only be written after
   T004/T008 produce the new shape (recorded in tasks.md order).
+
+## 2026-11-20 — plan review by the owner (technical experience)
+
+- Override 1: "Maschen reduzieren" shows Reihen, not Runden ("3 Reihen · bis 56
+  Maschen (wie Anschlag)", "Letzte Reihe: nur 2 Maschen abnehmen"), button
+  "Reihe fertig". Folded into spec Clarifications, FR-007/008, plan, tasks,
+  quickstart. Spec fix: the note applies to 15/16 and 21/22 … 27/28 (17/18
+  and 19/20 have middle 8).
+- Choice 2 (inline plan on "Neue Socke"): yes.
+- Open, non-blocking: does "always Reihen" also change the tip header
+  ("Bandspitze · Runde 1 von 3")? Kept as is until the owner says otherwise.

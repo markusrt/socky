@@ -24,7 +24,7 @@
 
 ## Phase 4: User Story 2 - Count the "Maschen reduzieren" rounds (P2)
 
-- [ ] T008 [US2] Pattern `reduceToCastOn` unit `rounds`, count from the pair; note key `note.reduce_last_round_two` in `labels.ts` ("Letzte Runde: nur 2 Maschen abnehmen") set when `heelSplit[1] % 4 !== 0`; web display "<N> Runden · bis <M> Maschen (wie Anschlag)" for unit `rounds`, today's text and "Fertig" for unit `once`; unit tests for 37/38 (3, no note), 27/28 (3, note), 15/16 (2, note), 19/20 (2, no note) (FR-007, FR-008, FR-013)
+- [ ] T008 [US2] Pattern `reduceToCastOn` unit `rounds`, count from the pair; note key `note.reduce_last_round_two` in `labels.ts` ("Letzte Reihe: nur 2 Maschen abnehmen") set when `heelSplit[1] % 4 !== 0`; web display "<N> Reihen · bis <M> Maschen (wie Anschlag)" for unit `rounds`, today's text and "Fertig" for unit `once`; unit tests for 37/38 (3, no note), 27/28 (3, note), 15/16 (2, note), 19/20 (2, no note) (FR-007, FR-008, FR-013)
 - [ ] T009 [US2] [ROUTINE] Playwright: a pair stored at "Maschen reduzieren" (from `sessions-v1-pairs.json`) shows rounds, note and target; three "Reihe fertig" taps finish it; undo goes back one (FR-007, FR-008)
 
 ## Phase 5: User Story 3 - Saved pairs keep working (P3)
