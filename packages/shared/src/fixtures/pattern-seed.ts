@@ -1,17 +1,10 @@
 /**
- * Seeded actual sizes from her sock Notes (reference for G1).
- * JSON under packages/shared/data/actual-sizes/ is the admin-editable source.
- * Tip rounds come from the chart tip schedule unless a file overrides tipRounds.
+ * The REGIA 4-fädig Käppchenferse pattern: step list and defaults.
+ * Counts come from the size-pair model (`../size-pairs.ts`, ADR 0007).
  *
- * German only in name/description/tags/notes — not in keys or enum values.
+ * German only in name/description — not in keys or enum values.
  */
-import size15 from "../../data/actual-sizes/size-15.json";
-import size18 from "../../data/actual-sizes/size-18.json";
-import size3738 from "../../data/actual-sizes/size-37-38.json";
-import size4041 from "../../data/actual-sizes/size-40-41.json";
-import size5051 from "../../data/actual-sizes/size-50-51.json";
-import type { ActualSizeConfig, Pattern, TipRound } from "../domain";
-import { getChartSize, tipRoundsForChartSize } from "../size-chart-seed";
+import type { Pattern } from "../domain";
 
 export const REGIA_4_FAEDIG_PATTERN: Pattern = {
   id: "regia-4-faedig",
@@ -42,9 +35,8 @@ export const REGIA_4_FAEDIG_PATTERN: Pattern = {
     {
       key: "reduceToCastOn",
       titleKey: "step.reduceToCastOn",
-      unit: "once",
+      unit: "rounds",
       stitch: "none",
-      defaultCount: 1,
     },
     { key: "plainFoot", titleKey: "step.plainFoot", unit: "rounds", stitch: "knit" },
     {
@@ -63,56 +55,3 @@ export const REGIA_4_FAEDIG_PATTERN: Pattern = {
     },
   ],
 };
-
-type ActualSizeJson = {
-  id: string;
-  patternId: string;
-  label: string;
-  chartSizeLabel: string;
-  tags?: string[];
-  notes?: string;
-  counts: ActualSizeConfig["counts"];
-  tipRounds?: TipRound[];
-  construction?: ActualSizeConfig["construction"];
-};
-
-function loadActualSize(raw: ActualSizeJson): ActualSizeConfig {
-  const chart = getChartSize(raw.chartSizeLabel);
-  if (!chart) {
-    throw new Error(`actual size ${raw.id}: unknown chart "${raw.chartSizeLabel}"`);
-  }
-  return {
-    id: raw.id,
-    patternId: raw.patternId,
-    label: raw.label,
-    chartSizeLabel: raw.chartSizeLabel,
-    counts: raw.counts,
-    tipRounds: raw.tipRounds?.length ? raw.tipRounds : tipRoundsForChartSize(raw.chartSizeLabel),
-    ...(raw.construction ? { construction: raw.construction } : {}),
-    ...(raw.tags ? { tags: raw.tags } : {}),
-    ...(raw.notes !== undefined ? { notes: raw.notes } : {}),
-  };
-}
-
-const JSON_SEEDS: ActualSizeJson[] = [
-  size4041,
-  size3738,
-  size5051,
-  size18,
-  size15,
-] as ActualSizeJson[];
-
-export const ACTUAL_SIZES: readonly ActualSizeConfig[] = JSON_SEEDS.map(loadActualSize);
-
-export function getActualSize(id: string): ActualSizeConfig | undefined {
-  return ACTUAL_SIZES.find((s) => s.id === id);
-}
-
-/** Test helper: assert a seeded actual size exists. */
-export function mustActualSize(id: string): ActualSizeConfig {
-  const actual = getActualSize(id);
-  if (!actual) {
-    throw new Error(`missing fixture actual size: ${id}`);
-  }
-  return actual;
-}

@@ -1,65 +1,62 @@
-import type { ActualSizeConfig, Pattern, PatternStep, PlannedStep, SteppedPlan } from "./domain";
-import { getChartSize, NEEDLE_COUNT } from "./size-chart-seed";
+import type {
+  Pattern,
+  PatternStep,
+  PlannedStep,
+  SizePair,
+  SizePairCounts,
+  SteppedPlan,
+} from "./domain";
+import { deriveTipRounds, NEEDLE_COUNT } from "./size-chart-seed";
+
+/** Technique note on "Maschen reduzieren" when the last row takes only 2 stitches. */
+export const REDUCE_LAST_ROW_NOTE_KEY = "note.reduce_last_row_two";
+
+const PAIR_COUNT_KEYS: ReadonlySet<string> = new Set<keyof SizePairCounts>([
+  "cuff",
+  "leg",
+  "heel",
+  "postJoin",
+  "reduceToCastOn",
+  "plainFoot",
+]);
 
 /**
- * Materialize a stepped plan for one chart base + actual size.
+ * Materialize a stepped plan for one size pair (ADR 0007).
  *
- * Constitution §2: construction comes from the chart size; foot-length and tip
- * from the actual-size config. Pattern steps supply the step list and defaults.
+ * Constitution P3: construction (cast-on, Aufteilung, aufnehmen, tip) comes
+ * from the pair's construction class; row counts from the pair's counts.
  */
-export function materializePlan(pattern: Pattern, actualSize: ActualSizeConfig): SteppedPlan {
-  const chart = getChartSize(actualSize.chartSizeLabel);
-  if (!chart) {
-    throw new Error(
-      `Unknown chart size "${actualSize.chartSizeLabel}" for actual size ${actualSize.label}.`
-    );
-  }
-
-  // Notes may override construction (e.g. child size 15: 36 M, 6-6-6, 9 aufnehmen).
-  const o = actualSize.construction ?? {};
-  const effectiveChart = {
-    ...chart,
-    castOnTotal: o.castOnTotal ?? chart.castOnTotal,
-    castOnPerNeedle2: o.castOnPerNeedle2 ?? chart.castOnPerNeedle2,
-    heelStitches: o.heelStitches ?? chart.heelStitches,
-    heelHeightRows: o.heelHeightRows ?? chart.heelHeightRows,
-    heelSplit: o.heelSplit ?? chart.heelSplit,
-    pickupStitchesBothSides: o.pickupStitchesBothSides ?? chart.pickupStitchesBothSides,
-  };
-
+export function materializePlan(pattern: Pattern, pair: SizePair): SteppedPlan {
   const steps: PlannedStep[] = pattern.steps.map((step, sortIndex) =>
-    materializeStep(step, sortIndex, actualSize)
+    materializeStep(step, sortIndex, pair)
   );
 
   return {
     patternId: pattern.id,
     patternName: pattern.name,
-    chartSizeLabel: actualSize.chartSizeLabel,
-    actualSizeLabel: actualSize.label,
-    chart: effectiveChart,
+    sizeLabel: pair.label,
+    construction: pair.construction,
     needleCount: NEEDLE_COUNT,
     steps,
   };
 }
 
-function materializeStep(
-  step: PatternStep,
-  sortIndex: number,
-  actualSize: ActualSizeConfig
-): PlannedStep {
-  const notePart =
-    step.techniqueNoteKey !== undefined ? { techniqueNoteKey: step.techniqueNoteKey } : {};
+function materializeStep(step: PatternStep, sortIndex: number, pair: SizePair): PlannedStep {
+  const noteKey =
+    step.key === "reduceToCastOn" && pair.construction.heelSplit[1] % 4 !== 0
+      ? REDUCE_LAST_ROW_NOTE_KEY
+      : step.techniqueNoteKey;
   const base = {
     stepKey: step.key,
     sortIndex,
     titleKey: step.titleKey,
-    ...notePart,
+    ...(noteKey !== undefined ? { techniqueNoteKey: noteKey } : {}),
     unit: step.unit,
     stitch: step.stitch,
   };
 
   if (step.key === "tip") {
-    const tipRounds = actualSize.tipRounds.length ? actualSize.tipRounds : (step.tipRounds ?? []);
+    const tipRounds = deriveTipRounds(pair.construction.tipSchedule);
     return {
       ...base,
       targetCount: tipRounds.length,
@@ -75,11 +72,13 @@ function materializeStep(
     };
   }
 
-  const override = actualSize.counts[step.key];
-  const targetCount = override ?? step.defaultCount;
+  const fromPair = PAIR_COUNT_KEYS.has(step.key)
+    ? pair.counts[step.key as keyof SizePairCounts]
+    : undefined;
+  const targetCount = fromPair ?? step.defaultCount;
   if (targetCount === undefined) {
     throw new Error(
-      `No count for step "${step.key}" (actual size ${actualSize.label}). Constitution: do not invent counts — configure the actual size.`
+      `No count for step "${step.key}" (pair ${pair.label}). Constitution P1: do not invent counts.`
     );
   }
 

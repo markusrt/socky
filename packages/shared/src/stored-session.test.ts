@@ -1,7 +1,7 @@
 import { describe, expect, expectTypeOf, it } from "vitest";
 import type { z } from "zod";
 import type { PairSessionStatus, StepKey, StepUnit, TipRowDirection } from "./domain";
-import { ACTUAL_SIZES, mustActualSize, REGIA_4_FAEDIG_PATTERN } from "./fixtures/pattern-seed";
+import { REGIA_4_FAEDIG_PATTERN } from "./fixtures/pattern-seed";
 import {
   createPairSession,
   currentStep,
@@ -9,6 +9,7 @@ import {
   switchToSock2,
   tickActiveSock,
 } from "./session";
+import { OFFERED_PAIRS, sizePair } from "./size-pairs";
 import { isReadablePairSession, type storedPairSessionSchema } from "./stored-session";
 
 type Stored = z.infer<typeof storedPairSessionSchema>;
@@ -18,7 +19,7 @@ function freshSession() {
   return createPairSession({
     userId: "local",
     pattern: REGIA_4_FAEDIG_PATTERN,
-    actualSize: mustActualSize("size-18"),
+    pair: sizePair("17/18"),
   });
 }
 
@@ -66,13 +67,13 @@ describe("schema stays in sync with the domain types", () => {
     expectTypeOf<NonNullable<StoredStep["tipDirection"]>>().toEqualTypeOf<TipRowDirection>();
   });
 
-  it.each(ACTUAL_SIZES.map((size) => [size.id, size] as const))(
+  it.each(OFFERED_PAIRS.map((label) => [label] as const))(
     "%s stays readable through a whole pair (stored as JSON)",
-    (_id, actualSize) => {
+    (label) => {
       let session = createPairSession({
         userId: "local",
         pattern: REGIA_4_FAEDIG_PATTERN,
-        actualSize,
+        pair: sizePair(label),
       });
       for (let i = 0; i < 2000 && session.status !== "DONE"; i++) {
         const step = currentStep(session);

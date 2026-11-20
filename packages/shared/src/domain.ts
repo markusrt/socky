@@ -110,30 +110,40 @@ export interface Pattern {
   steps: PatternStep[];
 }
 
-/** Concrete counts for one actual size on a pattern. */
-export interface ActualSizeConfig {
-  id: string;
-  patternId: string;
-  /** User-facing size label (may be German-ish, e.g. "40/41", "18"). */
+/**
+ * Construction class: everything the cast-on M decides (constitution P3).
+ * Independent of the foot size.
+ */
+export interface Construction {
+  castOnTotal: number;
+  /** Per needle on 2 needles (her method): total / 2. */
+  castOnPerNeedle2: number;
+  heelHeightRows: number;
+  heelSplit: [number, number, number];
+  /** Per side ("Beidseitige M-Aufnahme"). */
+  pickupStitchesBothSides: number;
+  tipSchedule: TipDecreaseSchedule;
+}
+
+/** Counts of a size pair (rows); the foot size decides only `plainFoot`. */
+export interface SizePairCounts {
+  cuff: number;
+  leg: number;
+  heel: number;
+  postJoin: number;
+  /** Maschen reduzieren: rows of 4 decreases until the cast-on count is back. */
+  reduceToCastOn: number;
+  plainFoot: number;
+}
+
+/** A sold size pair (e.g. 27/28), made for its larger size (ADR 0007). */
+export interface SizePair {
+  /** e.g. "27/28" */
   label: string;
-  chartSizeLabel: string;
-  counts: Partial<Record<StepKey, number>>;
-  tipRounds: TipRound[];
-  /**
-   * Construction overrides when the sock does not follow the REGIA chart
-   * exactly (e.g. child size 15 from Notes: 36 stitches, 6-6-6, 9 pickup).
-   * Unset fields fall back to `chartSizeLabel`.
-   */
-  construction?: Partial<{
-    castOnTotal: number;
-    castOnPerNeedle2: number;
-    heelStitches: number;
-    heelHeightRows: number;
-    heelSplit: [number, number, number];
-    pickupStitchesBothSides: number;
-  }>;
-  tags?: string[];
-  notes?: string;
+  lo: number;
+  hi: number;
+  construction: Construction;
+  counts: SizePairCounts;
 }
 
 export type TipRowDirection = "knit" | "decrease";
@@ -173,6 +183,13 @@ export interface PairSession {
   activeSock: 1 | 2;
   createdAt: string;
   notes?: string;
+  /**
+   * Set on pairs started from the size-pair model (ADR 0007), e.g. "pairs-v1".
+   * Absent on pairs saved before; those show their chart label (P4).
+   */
+  sizeModel?: string;
+  /** Cast-on M of a size-pair session (construction class, P3). */
+  castOnTotal?: number;
 }
 
 /** Materialized plan step shown to the knitter. */
@@ -190,9 +207,9 @@ export interface PlannedStep {
 export interface SteppedPlan {
   patternId: string;
   patternName: string;
-  chartSizeLabel: string;
-  actualSizeLabel: string;
-  chart: ChartSize;
+  /** Size pair label, e.g. "27/28". */
+  sizeLabel: string;
+  construction: Construction;
   needleCount: number;
   steps: PlannedStep[];
 }

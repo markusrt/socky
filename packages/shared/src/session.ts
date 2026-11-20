@@ -1,12 +1,13 @@
 import type {
-  ActualSizeConfig,
   PairSession,
   Pattern,
   SessionStepProgress,
+  SizePair,
   SteppedPlan,
   TipRound,
 } from "./domain";
 import { materializePlan } from "./materialize";
+import { SIZE_MODEL_VERSION } from "./size-pairs";
 
 /**
  * Pair session: two socks knitted **one after the other** (not in parallel).
@@ -18,10 +19,10 @@ import { materializePlan } from "./materialize";
 export function createPairSession(input: {
   userId: string;
   pattern: Pattern;
-  actualSize: ActualSizeConfig;
+  pair: SizePair;
   plan?: SteppedPlan;
 }): PairSession {
-  const plan = input.plan ?? materializePlan(input.pattern, input.actualSize);
+  const plan = input.plan ?? materializePlan(input.pattern, input.pair);
   const steps: SessionStepProgress[] = [];
   let sortIndex = 0;
 
@@ -36,13 +37,13 @@ export function createPairSession(input: {
 
     let displayValue: string | undefined;
     if (step.stepKey === "castOn") {
-      displayValue = `${plan.chart.castOnTotal} Maschen (${plan.needleCount} Nadeln = ${plan.chart.castOnPerNeedle2} / Nadel)`;
+      displayValue = `${plan.construction.castOnTotal} Maschen (${plan.needleCount} Nadeln = ${plan.construction.castOnPerNeedle2} / Nadel)`;
     } else if (step.stepKey === "split") {
-      displayValue = `${plan.chart.heelSplit[0]}-${plan.chart.heelSplit[1]}-${plan.chart.heelSplit[2]}`;
+      displayValue = `${plan.construction.heelSplit[0]}-${plan.construction.heelSplit[1]}-${plan.construction.heelSplit[2]}`;
     } else if (step.stepKey === "pickup") {
-      displayValue = String(plan.chart.pickupStitchesBothSides);
+      displayValue = String(plan.construction.pickupStitchesBothSides);
     } else if (step.stepKey === "reduceToCastOn") {
-      displayValue = String(plan.chart.castOnTotal);
+      displayValue = String(plan.construction.castOnTotal);
     }
 
     steps.push({
@@ -64,12 +65,15 @@ export function createPairSession(input: {
     id: `session-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`,
     userId: input.userId,
     patternId: plan.patternId,
-    chartSizeLabel: plan.chartSizeLabel,
-    actualSizeLabel: plan.actualSizeLabel,
+    // Size-pair sessions have no REGIA chart size (ADR 0007, P3).
+    chartSizeLabel: "",
+    actualSizeLabel: plan.sizeLabel,
     status: "ACTIVE",
     steps,
     activeSock: 1,
     createdAt: new Date().toISOString(),
+    sizeModel: SIZE_MODEL_VERSION,
+    castOnTotal: plan.construction.castOnTotal,
   };
 }
 

@@ -67,6 +67,9 @@ export const storedPairSessionSchema = z.looseObject({
   activeSock: z.union([z.literal(1), z.literal(2)]),
   createdAt: z.string(),
   notes: z.string().optional(),
+  // Size-pair sessions (ADR 0007); absent on pairs saved before.
+  sizeModel: z.string().optional(),
+  castOnTotal: count.optional(),
 });
 
 /** True when the app can show and continue this stored pair. */

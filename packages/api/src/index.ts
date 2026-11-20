@@ -1,4 +1,4 @@
-import { getActualSize, materializePlan, REGIA_4_FAEDIG_PATTERN } from "@socky/shared";
+import { isOfferedPair, materializePlan, REGIA_4_FAEDIG_PATTERN, sizePair } from "@socky/shared";
 import { getMigrations } from "better-auth/db/migration";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
@@ -25,14 +25,13 @@ app.use("*", async (c, next) => {
 
 app.get("/health", (c) => c.json({ ok: true, service: "socky-api" }));
 
-/** Dev-only preview of a materialized plan (G1 domain review). */
-app.get("/preview/plan/:actualSizeId", (c) => {
-  const id = c.req.param("actualSizeId");
-  const actual = getActualSize(id);
-  if (!actual) {
-    return c.json({ error: "unknown actual size", id }, 404);
+/** Dev-only preview of a materialized plan for a size pair, e.g. /preview/plan/27/28. */
+app.get("/preview/plan/:lo/:hi", (c) => {
+  const pair = `${c.req.param("lo")}/${c.req.param("hi")}`;
+  if (!isOfferedPair(pair)) {
+    return c.json({ error: "unknown_size_pair", pair }, 404);
   }
-  return c.json(materializePlan(REGIA_4_FAEDIG_PATTERN, actual));
+  return c.json(materializePlan(REGIA_4_FAEDIG_PATTERN, sizePair(pair)));
 });
 
 /**
