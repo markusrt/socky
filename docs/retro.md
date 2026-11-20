@@ -5,7 +5,7 @@ bullets here: what slowed the team down, which template rule would have
 helped, which rule was ambiguous. "Send retro" turns unsent entries into an
 issue on `markusrt/mvp-starter` (AGENTS.md, handoff step 9) and links it here.
 
-## 2026-11-14 — adopting mvp-starter into an existing product (not sent)
+## 2026-11-14 — adopting mvp-starter into an existing product (sent: markusrt/mvp-starter#3)
 
 - The template has no path for adopting it into an existing repository; the
   owned paths (AGENTS.md, tasks override, agents, CI) assume a single-root,
@@ -15,7 +15,7 @@ issue on `markusrt/mvp-starter` (AGENTS.md, handoff step 9) and links it here.
 - The template has no rule protecting a live user's stored data across
   deploys; Socky needed amendment P4 and a frozen-fixture test for that.
 
-## 2026-11-19 — 001-storage-safety accepted (C3, Light; not sent)
+## 2026-11-19 — 001-storage-safety accepted (C3, Light; sent: markusrt/mvp-starter#3)
 
 - Two features in parallel on two branches each carried their own
   `docs/STATUS.md`. A fresh session reads only the checked-out one, so the
@@ -31,7 +31,7 @@ issue on `markusrt/mvp-starter` (AGENTS.md, handoff step 9) and links it here.
 - The round report asked two questions in chat but the saved report held
   only one; the owner answered the saved one. Report and chat must match.
 
-## 2026-11-20 — 003-size-generator accepted (C3, Light; not sent)
+## 2026-11-20 — 003-size-generator accepted (C3, Light; sent: markusrt/mvp-starter#3)
 
 - The owner's "technical" setting worked well at the plan step: a short plan
   summary with two named overridable choices drew one precise correction
