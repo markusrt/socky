@@ -15,6 +15,10 @@ This is the single table the sizing model is checked against. Field names follow
 | `size-15.json`, `size-18.json`, `size-37-38.json`, `size-40-41.json`, `size-50-51.json` | The sizes the app knits from today, `packages/shared/data/actual-sizes/` |
 | `vergleich-sock-01-02.md`, `vergleich-sock-03.md`, `vergleich-sock-04.md` | Key points of her four earlier notes, `docs/domain/` |
 
+Since ADR 0007 (003-size-generator) the five `size-*.json` files are reference data
+only: the app offers size pairs from `packages/shared/src/size-pairs.ts`, and a test
+checks that the pairs 17/18, 37/38 and 45/46 still equal these files.
+
 ## Assumed foot length
 
 A note gives a shoe size, not a foot length. For fitting, each size gets one EU size and

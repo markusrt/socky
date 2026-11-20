@@ -1,5 +1,13 @@
 # Größenmodell (Domain)
 
+> **Current model (2026-11-20, ADR 0007):** sizes are **size pairs** 15/16 … 45/46;
+> the pair chooses the cast-on M, M drives the construction, the pair drives the
+> plain-foot rows. Rules: `specs/002-sizing-research/report.md`; code:
+> `packages/shared/src/size-pairs.ts`. The chart-size / actual-size sections below
+> describe the model before ADR 0007 and still explain pairs saved with it. The
+> display and wording rules below still apply; "Maschen reduzieren" is now counted
+> in Reihen with one tap per Reihe.
+
 > Status: **G1 + G2** — wife reviewed PDF + Notes (G1) and knitted real socks including **size 15** (6-6-6, 9 pickup, tip 2 rounds) on the live UI (G2). Base pattern: **REGIA 4-fädig**.
 
 ## Two size concepts

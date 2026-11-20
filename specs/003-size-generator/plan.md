@@ -83,7 +83,7 @@ Re-checked after design: pass, no violations.
    and `SIZE_CHART` stay as historical reference data (docs link to them) and
    are used only by a test that her knitted sizes match their pairs (SC-002).
 5. **Pattern**: `reduceToCastOn` becomes `unit: "rounds"`, count from the pair;
-   new technique note key `note.reduce_last_round_two` = "Letzte Reihe: nur 2
+   new technique note key `note.reduce_last_row_two` = "Letzte Reihe: nur 2
    Maschen abnehmen", set on the step when `heelSplit[1] % 4 !== 0`.
 6. **Session shape** (new pairs only): `actualSizeLabel = "27/28"`,
    `chartSizeLabel = ""` (schema field stays required; empty = no chart),
